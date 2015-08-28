@@ -61,7 +61,7 @@ Step 5: Run SPARQL queries
 MyRdfDatabase> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
 PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
-SELECT ?player (STR(COUNT(*)) as ?count) {
+SELECT ?player (COUNT(*) as ?count) {
    ?game pbprdf:foulDrawnBy ?player .
 }
 GROUP BY ?player
@@ -72,16 +72,16 @@ Evaluating SPARQL query...
 +-------------------------------------+-------------------------------------+
 | player                              | count                               |
 +-------------------------------------+-------------------------------------+
-| "Riquna Williams"                   | "96"                                |
-| "Sophia Young-Malcolm"              | "95"                                |
-| "Karima Christmas"                  | "94"                                |
-| "Nneka Ogwumike"                    | "90"                                |
-| "Ally Malott"                       | "9"                                 |
-| "Jamierra Faulkner"                 | "9"                                 |
-| "Tina Charles"                      | "89"                                |
-| "Plenette Pierson"                  | "88"                                |
-| "Stefanie Dolson"                   | "86"                                |
-| "Tiffany Hayes"                     | "86"                                |
+| "Elena Delle Donne"                 | "156"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Angel McCoughtry"                  | "151"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Maya Moore"                        | "143"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "DeWanna Bonner"                    | "106"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Riquna Williams"                   | "96"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Sophia Young-Malcolm"              | "95"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Karima Christmas"                  | "94"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Nneka Ogwumike"                    | "90"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Tina Charles"                      | "89"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Plenette Pierson"                  | "88"^^<http://www.w3.org/2001/XMLSchema#integer>|
 +-------------------------------------+-------------------------------------+
 10 result(s) (85 ms)
 ```

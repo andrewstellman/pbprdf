@@ -44,13 +44,13 @@ $ for ((i=400610636;i<=400610798;i++))
 
 Step 3: Run pbprdf and generate the Turtle file
 ```
-$ sbt run wnba-games wnba-rdf.ttl
+$ sbt "run wnba-games wnba-rdf.ttl"
 ```
 
 Step 4: Import the Turtle file into Sesame
 ```
 $ console -s http://localhost:8080/openrdf-sesame MyRdfDatabase
-SforS> load wnba-rdf.ttl
+MyRdfDatabase> load wnba-rdf.ttl
 ```
 
 Step 5: Run SPARQL queries

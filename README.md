@@ -22,6 +22,12 @@ $ sbt eclipse
 ```
 
 
+Example: Generate Turtle from the unit test data
+------------------------------------------------
+```
+$ sbt "run src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636.ttl"
+```
+
 Example: Analyze a set of games
 -------------------------------
 

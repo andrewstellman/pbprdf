@@ -65,7 +65,7 @@ object PbpRdfApp extends App with LazyLogging {
       logger.info(s"Reading plays from ${file.getName} (file ${i} of ${files.size})")
       val xmlStream = new FileInputStream(file)
       val rootElem = XmlHelper.parseXml(xmlStream)
-      val playByPlay = new EspnPlayByPlay(file.getName, rootElem)
+      val playByPlay: PlayByPlay = new EspnPlayByPlay(file.getName, rootElem)
       playByPlay.addRdf(rep)
     })
 
@@ -83,6 +83,6 @@ object PbpRdfApp extends App with LazyLogging {
     val outputStream = new FileOutputStream(outputFilename)
     Rio.write(model, outputStream, RDFFormat.TURTLE)
     
-    logger.info("Finished writing")
+    logger.info(s"Finished writing ${outputFilename}")
   }
 }

@@ -4,7 +4,7 @@ import java.io.FileInputStream
 import org.scalatest._
 import com.stellmangreene.pbprdf.EspnPlayByPlay
 import com.stellmangreene.pbprdf.util.XmlHelper
-import com.stellmangreene.pbprdf.Play
+import com.stellmangreene.pbprdf.plays.Play
 import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import org.openrdf.repository.RepositoryResult
@@ -74,7 +74,7 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
     playByPlay.addRdf(rep)
 
-    rep.executeQuery("SELECT * { ?s ?p ?o }").toIterator().size should be(4097)
+    rep.executeQuery("SELECT * { ?s ?p ?o }").toIterator().size should be(4103)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/1> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

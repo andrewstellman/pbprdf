@@ -1,24 +1,30 @@
 package com.stellmangreene.pbprdf
 
-import scala.xml.Elem
-import scala.xml.NodeSeq
-import com.typesafe.scalalogging.LazyLogging
 import scala.language.postfixOps
-import org.openrdf.repository.sail.SailRepository
+import scala.xml.Elem
+
+import org.openrdf.model.URI
 import org.openrdf.model.vocabulary.RDF
+import org.openrdf.repository.Repository
+
 import com.stellmangreene.pbprdf.model.Entities
 import com.stellmangreene.pbprdf.model.Ontology
-import com.stellmangreene.pbprdf.util.XmlHelper
+import com.stellmangreene.pbprdf.plays.PlayFactory
 import com.stellmangreene.pbprdf.util.RdfOperations
+import com.stellmangreene.pbprdf.util.XmlHelper
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * @author andrewstellman
  */
-class EspnPlayByPlay(gameId: String, rootElem: Elem) extends LazyLogging with RdfOperations {
+class EspnPlayByPlay(gameId: String, rootElem: Elem) extends PlayByPlay with LazyLogging with RdfOperations {
 
   private val divs = (rootElem \\ "body" \\ "div")
 
   private val awayTeamElems = XmlHelper.getElemByClassAndTag(divs, "team away", "a")
+
+  /** URI of this game */
+  val gameUri: URI = Entities.getGameUri(gameId)
 
   /** Away team name */
   val awayTeam = XmlHelper.getElemByClassAndTag(divs, "team away", "a").map(_.text)
@@ -81,13 +87,18 @@ class EspnPlayByPlay(gameId: String, rootElem: Elem) extends LazyLogging with Rd
             val score = (td(2) text).mkString
             val awayPlay = (td(1) text).mkString.trim
             val homePlay = (td(3) text).mkString.trim
-            
-            if (homePlay.size > 1) {
+
+            val teamNameAndPlay: Option[(String, String)] =
+              if (homePlay.size > 1)
+                Some((homeTeam.getOrElse("HOME TEAM"), homePlay))
+              else if (awayPlay.size > 1)
+                Some((awayTeam.getOrElse("AWAY TEAM"), awayPlay))
+              else
+                None
+
+            if (teamNameAndPlay.isDefined) {
               eventNumber += 1
-              Some(new Play(gameId, eventNumber, period, time, homeTeam.getOrElse("HOME TEAM"), homePlay, score))
-            } else if (awayPlay.size > 1) {
-              eventNumber += 1
-              Some(new Play(gameId, eventNumber, period, time, awayTeam.getOrElse("AWAY TEAM"), awayPlay, score))
+              Some(PlayFactory.createPlay(gameId, eventNumber, period, time, teamNameAndPlay.get._1, teamNameAndPlay.get._2, score))
             } else
               None
 
@@ -107,9 +118,16 @@ class EspnPlayByPlay(gameId: String, rootElem: Elem) extends LazyLogging with Rd
 
   logger.info(s"Finished reading game ${this}")
 
-  def addRdf(rep: SailRepository) = {
-    rep.addTriple(Entities.getGameUri("400610636"), RDF.TYPE, Ontology.GAME, Entities.contextUri)
+  /**
+   * Add the events to an RDF repository
+   *
+   * @param rep
+   *            Sesame repository to add the events to
+   */
+  override def addRdf(rep: Repository) = {
+    rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME, Entities.contextUri)
     events.foreach(_.addRdf(rep))
+    super.addRdf(rep)
   }
 
   override def toString(): String = {

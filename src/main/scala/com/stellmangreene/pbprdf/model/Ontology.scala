@@ -16,6 +16,7 @@ object Ontology {
   val EVENT = valueFactory.createURI(NAMESPACE, "Event");
   val PLAY = valueFactory.createURI(NAMESPACE, "Play");
   val GAME = valueFactory.createURI(NAMESPACE, "Game");
+  val IN_PLAY_BY_PLAY = valueFactory.createURI(NAMESPACE, "inPlayByPlay");
   
   val TEAM = valueFactory.createURI(NAMESPACE, "team");
   val TIME = valueFactory.createURI(NAMESPACE, "time");
@@ -53,6 +54,7 @@ object Ontology {
   val IS_CHARGE = valueFactory.createURI(NAMESPACE, "isCharge")
   val IS_THREE_SECOND = valueFactory.createURI(NAMESPACE, "isThreeSecond")
   val IS_DELAY_OF_GAME = valueFactory.createURI(NAMESPACE, "isDelayOfGame")
+  val TECHNICAL_FOUL_NUMBER = valueFactory.createURI(NAMESPACE, "technicalFoulNumber")
   
   val ENTERS = valueFactory.createURI(NAMESPACE, "Enters")
   val PLAYER_ENTERING = valueFactory.createURI(NAMESPACE, "playerEntering")

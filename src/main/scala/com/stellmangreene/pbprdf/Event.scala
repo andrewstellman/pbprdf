@@ -33,23 +33,32 @@ case class Event(gameId: String, eventNumber: Int, period: Int, time: String, de
 
   override def toString = "Period " + period + " " + time + " - " + description
 
+  /** URI of this event for RDF */
   val eventUri = Entities.valueFactory.createURI(Entities.NAMESPACE, s"${gameId}/${eventNumber.toString}")
 
+  /**
+   * Add this event to an RDF repository
+   *
+   * @param rep
+   *            Sesame repository to add the events to
+   */
   def addRdf(rep: Repository) = {
-    val triples: Set[(Resource, URI, Value)] = generateTriples(rep.getValueFactory)
-    rep.addTriples(triples, Entities.contextUri)
+    val valueFactory = rep.getValueFactory
+    rep.addTriples(eventTriples(valueFactory), Entities.contextUri)
+    rep.addTriples(secondsIntoGameTriple(valueFactory), Entities.contextUri)
+    rep.addTriples(parseTimeoutTriplesIfPossible(valueFactory), Entities.contextUri)
   }
 
-  private def generateTriples(valueFactory: ValueFactory): Set[(Resource, URI, Value)] = {
+  /** Generate the type, period, time, and label triples that every event must have */
+  private def eventTriples(valueFactory: ValueFactory): Set[(Resource, URI, Value)] = {
     Set(
       (eventUri, RDF.TYPE, Ontology.EVENT),
       (eventUri, Ontology.PERIOD, valueFactory.createLiteral(period)),
       (eventUri, Ontology.TIME, valueFactory.createLiteral(time)),
-      (eventUri, RDFS.LABEL, valueFactory.createLiteral(description))) ++
-      secondsIntoGameTriple(valueFactory) ++
-      parseTimeoutTriples(valueFactory)
+      (eventUri, RDFS.LABEL, valueFactory.createLiteral(description)))
   }
 
+  /** Generate the pbprdf:secondsIntoGame triple */
   private def secondsIntoGameTriple(valueFactory: ValueFactory): Set[(Resource, URI, Value)] = {
     val timeRegex = """^(\d+):(\d+)$""".r
 
@@ -82,11 +91,15 @@ case class Event(gameId: String, eventNumber: Int, period: Int, time: String, de
     }
   }
 
-  private def parseTimeoutTriples(valueFactory: ValueFactory): Set[(Resource, URI, Value)] = {
-    val regex = """^(.*) (Full|20 Sec\.) timeout$""".r
+  /**
+   * Generate the triples for a timeout event
+   * @return Triples for a timeout event, or Set() if this is not a timeout event
+   */
+  private def parseTimeoutTriplesIfPossible(valueFactory: ValueFactory): Set[(Resource, URI, Value)] = {
+    val timeoutRegex = """^(.*) (Full|20 Sec\.) timeout$""".r
 
     description match {
-      case regex(team, duration) => {
+      case timeoutRegex(team, duration) => {
         Set(
           (eventUri, RDF.TYPE, Ontology.TIMEOUT),
           (eventUri, Ontology.TEAM, valueFactory.createLiteral(team)),

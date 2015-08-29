@@ -50,7 +50,38 @@ $ sbt "run wnba-games wnba-rdf.ttl"
 Step 4: Import the Turtle file into Sesame
 ```
 $ console -s http://localhost:8080/openrdf-sesame MyRdfDatabase
+Type 'help' for help.
 MyRdfDatabase> load wnba-rdf.ttl
+Loading data...
+Data has been added to the repository (20410 ms)
 ```
 
 Step 5: Run SPARQL queries
+```
+MyRdfDatabase> SPARQL
+enter multi-line SPARQL query (terminate with line containing single '.')
+PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
+SELECT ?player (COUNT(*) as ?count) {
+   ?game pbprdf:foulDrawnBy ?player .
+}
+GROUP BY ?player
+ORDER BY DESC(?count)
+LIMIT 10
+.
+Evaluating SPARQL query...
++-------------------------------------+-------------------------------------+
+| player                              | count                               |
++-------------------------------------+-------------------------------------+
+| "Elena Delle Donne"                 | "156"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Angel McCoughtry"                  | "151"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Maya Moore"                        | "143"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "DeWanna Bonner"                    | "106"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Riquna Williams"                   | "96"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Sophia Young-Malcolm"              | "95"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Karima Christmas"                  | "94"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Nneka Ogwumike"                    | "90"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Tina Charles"                      | "89"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Plenette Pierson"                  | "88"^^<http://www.w3.org/2001/XMLSchema#integer>|
++-------------------------------------+-------------------------------------+
+10 result(s) (85 ms)
+```

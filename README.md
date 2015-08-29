@@ -1,7 +1,5 @@
 # pbprdf
-Generate RDF for basketball play-by-play data. 
-o Read a folder full of ESPN-style play-by-play HTML pages (eg. [Mystics vs. Sun on 7:00 PM ET, June 5, 2015](http://scores.espn.go.com/wnba/playbyplay?gameId=400610636))
-o Generate a Turtle file that contains all of the plays from each game
+Generate RDF for basketball play-by-play data by reading a folder full of ESPN-style play-by-play HTML pages (eg. [Mystics vs. Sun on 7:00 PM ET, June 5, 2015](http://scores.espn.go.com/wnba/playbyplay?gameId=400610636)), adding each play in each game to an in-memory Sesame repository, and generating a Turtle file that contains all of the plays from each game.
 
 Install and run
 ===============

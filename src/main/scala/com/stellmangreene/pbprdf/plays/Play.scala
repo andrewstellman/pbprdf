@@ -7,6 +7,7 @@ import com.stellmangreene.pbprdf.util.RdfOperations
 import org.openrdf.model.URI
 import com.stellmangreene.pbprdf.model.Ontology
 import org.openrdf.model.vocabulary.RDF
+import com.stellmangreene.pbprdf.model.EntityUriFactory
 
 /**
  * A Play is an event that matches a play-by-play regex, and can be checked to see if it
@@ -22,9 +23,11 @@ abstract class Play(gameId: String, eventNumber: Int, period: Int, time: String,
    * Add the type and pbprdf:team triples that every Play event must have
    */
   override def addRdf(rep: Repository) {
-    rep.addTriple(eventUri, RDF.TYPE, Ontology.PLAY)
-    rep.addTriple(eventUri, Ontology.TEAM, rep.getValueFactory.createLiteral(team))
+    rep.addTriple(eventUri, RDF.TYPE, Ontology.PLAY, EntityUriFactory.contextUri)
+    rep.addTriple(eventUri, Ontology.TEAM_PROPERTY, rep.getValueFactory.createLiteral(team), EntityUriFactory.contextUri)
     super.addRdf(rep)
   }
-
+  
+  def getTeam = team
+  
 }

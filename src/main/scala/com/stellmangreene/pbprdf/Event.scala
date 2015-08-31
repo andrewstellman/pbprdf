@@ -1,15 +1,16 @@
 package com.stellmangreene.pbprdf
 
-import org.openrdf.repository.Repository
-import com.stellmangreene.pbprdf.util.RdfOperations
-import org.openrdf.model.vocabulary.RDFS
-import org.openrdf.model.vocabulary.RDF
-import com.stellmangreene.pbprdf.model.Entities
-import com.stellmangreene.pbprdf.model.Ontology
-import org.openrdf.model.Value
-import org.openrdf.model.URI
 import org.openrdf.model.Resource
+import org.openrdf.model.URI
+import org.openrdf.model.Value
 import org.openrdf.model.ValueFactory
+import org.openrdf.model.vocabulary.RDF
+import org.openrdf.model.vocabulary.RDFS
+import org.openrdf.repository.Repository
+
+import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.Ontology
+import com.stellmangreene.pbprdf.util.RdfOperations
 import com.typesafe.scalalogging.LazyLogging
 
 /**
@@ -34,7 +35,7 @@ case class Event(gameId: String, eventNumber: Int, period: Int, time: String, de
   override def toString = "Period " + period + " " + time + " - " + description
 
   /** URI of this event for RDF */
-  val eventUri = Entities.valueFactory.createURI(Entities.NAMESPACE, s"${gameId}/${eventNumber.toString}")
+  val eventUri = EntityUriFactory.getEventUri(gameId, eventNumber)
 
   /**
    * Add this event to an RDF repository
@@ -44,9 +45,9 @@ case class Event(gameId: String, eventNumber: Int, period: Int, time: String, de
    */
   def addRdf(rep: Repository) = {
     val valueFactory = rep.getValueFactory
-    rep.addTriples(eventTriples(valueFactory), Entities.contextUri)
-    rep.addTriples(secondsIntoGameTriple(valueFactory), Entities.contextUri)
-    rep.addTriples(parseTimeoutTriplesIfPossible(valueFactory), Entities.contextUri)
+    rep.addTriples(eventTriples(valueFactory), EntityUriFactory.contextUri)
+    rep.addTriples(secondsIntoGameTriple(valueFactory), EntityUriFactory.contextUri)
+    rep.addTriples(parseTimeoutTriplesIfPossible(valueFactory), EntityUriFactory.contextUri)
   }
 
   /** Generate the type, period, time, and label triples that every event must have */
@@ -102,7 +103,7 @@ case class Event(gameId: String, eventNumber: Int, period: Int, time: String, de
       case timeoutRegex(team, duration) => {
         Set(
           (eventUri, RDF.TYPE, Ontology.TIMEOUT),
-          (eventUri, Ontology.TEAM, valueFactory.createLiteral(team)),
+          (eventUri, Ontology.TEAM_PROPERTY, valueFactory.createLiteral(team)),
           (eventUri, Ontology.TIMEOUT_DURATION, valueFactory.createLiteral(duration)))
       }
       case _ => {

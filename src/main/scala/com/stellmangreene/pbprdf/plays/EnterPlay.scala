@@ -5,8 +5,7 @@ import org.openrdf.model.URI
 import org.openrdf.model.Value
 import org.openrdf.model.vocabulary.RDF
 import org.openrdf.repository.Repository
-
-import com.stellmangreene.pbprdf.model.Entities
+import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.typesafe.scalalogging.LazyLogging
@@ -47,15 +46,32 @@ class EnterPlay(gameId: String, eventNumber: Int, period: Int, time: String, tea
             (eventUri, Ontology.PLAYER_EXITING, rep.getValueFactory.createLiteral(playerExiting)))
         }
 
-        case _ => Set()
+        case _ => {
+          logger.warn(s"Unable to parse entering play: ${play}")
+          Set()
+        }
       }
 
     if (!triples.isEmpty)
-      rep.addTriples(triples, Entities.contextUri)
+      rep.addTriples(triples, EntityUriFactory.contextUri)
 
     super.addRdf(rep)
   }
 
+  private val playersEnteringAndExiting =
+    play match {
+      case EnterPlay.playByPlayRegex(playerEntering, playerExiting) => {
+        (Some(playerEntering.trim), Some(playerExiting.trim))
+      }
+
+      case _ => (None, None)
+    }
+
+  /** The player entering the game (None if there's a problem parsing the player) */
+  val playerEntering: Option[String] = playersEnteringAndExiting._1
+
+  /** The player exiting the game (None if there's a problem parsing the player) */
+  val playerExiting: Option[String] = playersEnteringAndExiting._2
 }
 
 /**

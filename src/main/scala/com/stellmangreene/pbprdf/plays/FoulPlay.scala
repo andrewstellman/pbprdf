@@ -5,8 +5,7 @@ import org.openrdf.model.URI
 import org.openrdf.model.Value
 import org.openrdf.model.vocabulary.RDF
 import org.openrdf.repository.Repository
-
-import com.stellmangreene.pbprdf.model.Entities
+import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.typesafe.scalalogging.LazyLogging
@@ -76,7 +75,7 @@ class FoulPlay(gameId: String, eventNumber: Int, period: Int, time: String, team
       }
 
     if (!triples.isEmpty)
-      rep.addTriples(triples, Entities.contextUri)
+      rep.addTriples(triples, EntityUriFactory.contextUri)
 
     super.addRdf(rep)
   }

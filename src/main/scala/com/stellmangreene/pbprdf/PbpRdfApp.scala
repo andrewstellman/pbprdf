@@ -23,6 +23,8 @@ import java.io.FileOutputStream
 
 object PbpRdfApp extends App with LazyLogging {
 
+  //TODO: Make sure each triple is added to its own context, save TriG format
+
   def printUsageAndExit(message: Option[String] = None) = {
     if (message.isDefined)
       println(message.get)
@@ -79,10 +81,10 @@ object PbpRdfApp extends App with LazyLogging {
     model.setNamespace("rdfs", RDFS.NAMESPACE)
     model.setNamespace("xsd", XMLSchema.NAMESPACE)
     model.setNamespace("pbprdf", Ontology.NAMESPACE)
-    
+
     val outputStream = new FileOutputStream(outputFilename)
     Rio.write(model, outputStream, RDFFormat.TURTLE)
-    
+
     logger.info(s"Finished writing ${outputFilename}")
   }
 }

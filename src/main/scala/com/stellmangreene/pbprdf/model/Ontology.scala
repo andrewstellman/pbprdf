@@ -33,7 +33,7 @@ object Ontology {
   val TEAM_IN_GAME = valueFactory.createURI(NAMESPACE, "teamInGame")
   val PLAYER_ON_TEAM = valueFactory.createURI(NAMESPACE, "playerOnTeam")
 
-  val TEAM_PROPERTY = valueFactory.createURI(NAMESPACE, "team")
+  val TEAM = valueFactory.createURI(NAMESPACE, "team")
   val TIME = valueFactory.createURI(NAMESPACE, "time")
   val PERIOD = valueFactory.createURI(NAMESPACE, "period")
   val SECONDS_INTO_GAME = valueFactory.createURI(NAMESPACE, "secondsIntoGame")

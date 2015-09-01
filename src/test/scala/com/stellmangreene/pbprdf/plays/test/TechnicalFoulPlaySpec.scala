@@ -34,8 +34,8 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:37",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 743",
-          "http://www.stellman-greene.com/pbprdf#team -> Mercury",
-          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> Diana Taurasi",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Diana_Taurasi",
           "http://www.stellman-greene.com/pbprdf#technicalFoulNumber -> 1",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: Diana Taurasi technical foul(1st technical foul)"))
 

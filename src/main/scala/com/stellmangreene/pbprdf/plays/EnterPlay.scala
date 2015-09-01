@@ -42,8 +42,8 @@ class EnterPlay(gameId: String, eventNumber: Int, period: Int, time: String, tea
         case EnterPlay.playByPlayRegex(playerEntering, playerExiting) => {
           Set(
             (eventUri, RDF.TYPE, Ontology.ENTERS),
-            (eventUri, Ontology.PLAYER_ENTERING, rep.getValueFactory.createLiteral(playerEntering)),
-            (eventUri, Ontology.PLAYER_EXITING, rep.getValueFactory.createLiteral(playerExiting)))
+            (eventUri, Ontology.PLAYER_ENTERING, EntityUriFactory.getPlayerUri(playerEntering)),
+            (eventUri, Ontology.PLAYER_EXITING, EntityUriFactory.getPlayerUri(playerExiting)))
         }
 
         case _ => {

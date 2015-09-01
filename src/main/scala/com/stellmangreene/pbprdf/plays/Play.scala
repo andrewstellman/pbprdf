@@ -24,7 +24,7 @@ abstract class Play(gameId: String, eventNumber: Int, period: Int, time: String,
    */
   override def addRdf(rep: Repository) {
     rep.addTriple(eventUri, RDF.TYPE, Ontology.PLAY, EntityUriFactory.contextUri)
-    rep.addTriple(eventUri, Ontology.TEAM_PROPERTY, rep.getValueFactory.createLiteral(team), EntityUriFactory.contextUri)
+    rep.addTriple(eventUri, Ontology.TEAM_PROPERTY, EntityUriFactory.getTeamUri(team), EntityUriFactory.contextUri)
     super.addRdf(rep)
   }
   

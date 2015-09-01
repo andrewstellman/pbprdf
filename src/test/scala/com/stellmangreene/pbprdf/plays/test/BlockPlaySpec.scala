@@ -35,9 +35,9 @@ class BlockPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:48",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 732",
-          "http://www.stellman-greene.com/pbprdf#team -> Mystics",
-          "http://www.stellman-greene.com/pbprdf#shotBy -> Jasmine Thomas",
-          "http://www.stellman-greene.com/pbprdf#shotBlockedBy -> Tayler Hill",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#shotBy -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
+          "http://www.stellman-greene.com/pbprdf#shotBlockedBy -> http://www.stellman-greene.com/pbprdf/players/Tayler_Hill",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Tayler Hill blocks Jasmine Thomas's layup"))
   }
 

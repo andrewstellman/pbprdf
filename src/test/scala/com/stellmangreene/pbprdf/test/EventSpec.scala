@@ -64,7 +64,7 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 775",
-          "http://www.stellman-greene.com/pbprdf#team -> Connecticut",
+          "http://www.stellman-greene.com/pbprdf#timeoutTeam -> Connecticut",
           "http://www.stellman-greene.com/pbprdf#timeoutDuration -> Full",
           "http://www.w3.org/2000/01/rdf-schema#label -> Connecticut Full timeout"))
   }

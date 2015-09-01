@@ -44,8 +44,8 @@ class BlockPlay(gameId: String, eventNumber: Int, period: Int, time: String, tea
         Set(
           (eventUri, RDF.TYPE, Ontology.SHOT),
           (eventUri, RDF.TYPE, Ontology.BLOCK),
-          (eventUri, Ontology.SHOT_BY, rep.getValueFactory.createLiteral(shotBy.trim)),
-          (eventUri, Ontology.SHOT_BLOCKED_BY, rep.getValueFactory.createLiteral(blockedBy.trim)))
+          (eventUri, Ontology.SHOT_BY, EntityUriFactory.getPlayerUri(shotBy)),
+          (eventUri, Ontology.SHOT_BLOCKED_BY, EntityUriFactory.getPlayerUri(blockedBy)))
       }
       case _ => Set()
     }

@@ -10,6 +10,7 @@ import org.openrdf.sail.memory.MemoryStore
 import org.openrdf.repository.RepositoryResult
 import info.aduna.iteration.Iteration
 import com.stellmangreene.pbprdf.util.RdfOperations
+import com.stellmangreene.pbprdf.plays.test.EnterPlaySpec
 
 /**
  * Test the EspnPlayByPlay class
@@ -74,7 +75,7 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
     playByPlay.addRdf(rep)
 
-    rep.executeQuery("SELECT * { ?s ?p ?o }").toIterator().size should be(4151)
+    rep.executeQuery("SELECT * { ?s ?p ?o }").toIterator().size should be(4162)
 
     rep.executeQuery("""
 BASE <http://www.stellman-greene.com>
@@ -114,13 +115,13 @@ SELECT * {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#JumpBall",
+          "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 10:00",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 0",
-          "http://www.stellman-greene.com/pbprdf#team -> Sun",
-          "http://www.stellman-greene.com/pbprdf#period -> 1",
-          "http://www.stellman-greene.com/pbprdf#jumpBallAwayPlayer -> Stefanie Dolson",
-          "http://www.stellman-greene.com/pbprdf#jumpBallHomePlayer -> Kelsey Bone",
-          "http://www.stellman-greene.com/pbprdf#jumpBallGainedPossession -> Jasmine Thomas",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#jumpBallHomePlayer -> http://www.stellman-greene.com/pbprdf/players/Kelsey_Bone",
+          "http://www.stellman-greene.com/pbprdf#jumpBallAwayPlayer -> http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson",
+          "http://www.stellman-greene.com/pbprdf#jumpBallGainedPossession -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Stefanie Dolson vs. Kelsey Bone (Jasmine Thomas gains possession)"))
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/166> ?p ?o }")
@@ -133,14 +134,13 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 1:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1135",
-          "http://www.stellman-greene.com/pbprdf#team -> Mystics",
-          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> Kayla Thornton",
-          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> Jasmine Thomas",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Kayla_Thornton",
+          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
           "http://www.stellman-greene.com/pbprdf#isCharge -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)"))
 
-    rep
-      .executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/119> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/119> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
@@ -149,8 +149,8 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 775",
-          "http://www.stellman-greene.com/pbprdf#team -> Connecticut",
           "http://www.stellman-greene.com/pbprdf#timeoutDuration -> Full",
+          "http://www.stellman-greene.com/pbprdf#timeoutTeam -> Connecticut",
           "http://www.w3.org/2000/01/rdf-schema#label -> Connecticut Full timeout"))
 
   }

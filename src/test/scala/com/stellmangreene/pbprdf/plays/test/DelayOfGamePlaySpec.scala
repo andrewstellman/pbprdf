@@ -35,7 +35,7 @@ class DelayOfGamePlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 10:00",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 600",
-          "http://www.stellman-greene.com/pbprdf#team -> Sparks",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sparks",
           "http://www.stellman-greene.com/pbprdf#isDelayOfGame -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: Los Angeles delay of game violation"))
 
@@ -49,7 +49,7 @@ class DelayOfGamePlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 3",
           "http://www.stellman-greene.com/pbprdf#time -> 1:39",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1701",
-          "http://www.stellman-greene.com/pbprdf#team -> Sparks",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sparks",
           "http://www.stellman-greene.com/pbprdf#isDelayOfGame -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: delay techfoul"))
   }

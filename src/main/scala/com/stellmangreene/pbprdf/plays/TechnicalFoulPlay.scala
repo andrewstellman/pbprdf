@@ -43,7 +43,7 @@ class TechnicalFoulPlay(gameId: String, eventNumber: Int, period: Int, time: Str
           Set(
             (eventUri, RDF.TYPE, Ontology.TECHNICAL_FOUL),
             (eventUri, Ontology.TECHNICAL_FOUL_NUMBER, rep.getValueFactory.createLiteral(foulNumber.toInt)),
-            (eventUri, Ontology.FOUL_COMMITTED_BY, rep.getValueFactory.createLiteral(committedBy)))
+            (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy)))
         }
 
         case _ => Set()

@@ -70,18 +70,25 @@ class ShotPlay(gameId: String, eventNumber: Int, period: Int, time: String, team
           val assistedByTriple: Set[(Resource, URI, Value)] =
             assists match {
               case assistsRegex(assistedBy) =>
-                Set((eventUri, Ontology.SHOT_ASSISTED_BY, rep.getValueFactory.createLiteral(assistedBy)))
+                Set((eventUri, Ontology.SHOT_ASSISTED_BY, EntityUriFactory.getPlayerUri(assistedBy)))
               case _ => Set()
             }
 
+          val shotTypeTriple: Set[(Resource, URI, Value)] =
+            if (!shotType.trim.isEmpty)
+              Set((eventUri, Ontology.SHOT_TYPE, rep.getValueFactory.createLiteral(shotType.trim)))
+            else
+              Set()
+
           Set(
             (eventUri, RDF.TYPE, Ontology.SHOT),
-            (eventUri, Ontology.SHOT_BY, rep.getValueFactory.createLiteral(player.trim)),
-            (eventUri, Ontology.SHOT_MADE, rep.getValueFactory.createLiteral(made)),
-            (eventUri, Ontology.SHOT_TYPE, rep.getValueFactory.createLiteral(shotType.trim))) ++
+            (eventUri, Ontology.SHOT_BY, EntityUriFactory.getPlayerUri(player)),
+            (eventUri, Ontology.SHOT_MADE, rep.getValueFactory.createLiteral(made))) ++
             pointsTriple ++
+            shotTypeTriple ++
             assistedByTriple
         }
+
         case _ => Set()
       }
 
@@ -98,6 +105,6 @@ class ShotPlay(gameId: String, eventNumber: Int, period: Int, time: String, team
  */
 object ShotPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*) (makes|misses) (.*?)( \(.* assists\))?$""".r
+  val playByPlayRegex = """^(.*) (makes|misses) ?(.*?)( \(.* assists\))?$""".r
 
 }

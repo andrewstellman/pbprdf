@@ -34,9 +34,9 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 4:56",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 304",
-          "http://www.stellman-greene.com/pbprdf#team -> Sun",
-          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> Camille Little",
-          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> Stefanie Dolson",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Camille_Little",
+          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Camille Little personal foul  (Stefanie Dolson draws the foul)"))
   }
 
@@ -53,9 +53,9 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 3:51",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 369",
-          "http://www.stellman-greene.com/pbprdf#team -> Sun",
-          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> Kelsey Bone",
-          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> Stefanie Dolson",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Kelsey_Bone",
+          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson",
           "http://www.stellman-greene.com/pbprdf#isOffensive -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Kelsey Bone offensive foul  (Stefanie Dolson draws the foul)"))
   }
@@ -73,9 +73,9 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 9:15",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 645",
-          "http://www.stellman-greene.com/pbprdf#team -> Mystics",
-          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> Kayla Thornton",
-          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> Alyssa Thomas",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Kayla_Thornton",
+          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Alyssa_Thomas",
           "http://www.stellman-greene.com/pbprdf#isShootingFoul -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Kayla Thornton shooting foul  (Alyssa Thomas draws the foul)"))
   }
@@ -93,9 +93,9 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 1:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1135",
-          "http://www.stellman-greene.com/pbprdf#team -> Mystics",
-          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> Kayla Thornton",
-          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> Jasmine Thomas",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Kayla_Thornton",
+          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
           "http://www.stellman-greene.com/pbprdf#isCharge -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)"))
   }
@@ -113,9 +113,9 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 3",
           "http://www.stellman-greene.com/pbprdf#time -> 1:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1735",
-          "http://www.stellman-greene.com/pbprdf#team -> Sparks",
-          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> Jantel Lavender",
-          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> Sylvia Fowles",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sparks",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Jantel_Lavender",
+          "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Sylvia_Fowles",
           "http://www.stellman-greene.com/pbprdf#isLooseBallFoul -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: Jantel Lavender loose ball foul (Sylvia Fowles draws the foul)"))
   }

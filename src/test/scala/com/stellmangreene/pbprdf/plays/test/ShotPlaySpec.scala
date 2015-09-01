@@ -34,11 +34,29 @@ class ShotPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 9:18",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 42",
-          "http://www.stellman-greene.com/pbprdf#team -> Mystics",
-          "http://www.stellman-greene.com/pbprdf#shotBy -> Stefanie Dolson",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#shotBy -> http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson",
           "http://www.stellman-greene.com/pbprdf#shotType -> 13-foot jumper",
           "http://www.stellman-greene.com/pbprdf#shotMade -> false",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Stefanie Dolson misses 13-foot jumper"))
+
+    new ShotPlay("400610636", 5, 1, "9:15", "Sun", "Kelsey Bone  misses", "0-0").addRdf(rep)
+
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/5> ?p ?o }")
+      .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
+      .toSet should be(
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Shot",
+          "http://www.stellman-greene.com/pbprdf#period -> 1",
+          "http://www.stellman-greene.com/pbprdf#time -> 9:15",
+          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 45",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#shotBy -> http://www.stellman-greene.com/pbprdf/players/Kelsey_Bone",
+          "http://www.stellman-greene.com/pbprdf#shotMade -> false",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Kelsey Bone  misses"))
+
   }
 
   it should "parse assisted shots" in {
@@ -54,9 +72,9 @@ class ShotPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 9:11",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 649",
-          "http://www.stellman-greene.com/pbprdf#team -> Mystics",
-          "http://www.stellman-greene.com/pbprdf#shotBy -> Ivory Latta",
-          "http://www.stellman-greene.com/pbprdf#shotAssistedBy -> Tierra Ruffin-Pratt",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#shotBy -> http://www.stellman-greene.com/pbprdf/players/Ivory_Latta",
+          "http://www.stellman-greene.com/pbprdf#shotAssistedBy -> http://www.stellman-greene.com/pbprdf/players/Tierra_Ruffin-Pratt",
           "http://www.stellman-greene.com/pbprdf#shotType -> 24-foot three point jumper",
           "http://www.stellman-greene.com/pbprdf#shotMade -> true",
           "http://www.stellman-greene.com/pbprdf#shotPoints -> 3",
@@ -76,8 +94,8 @@ class ShotPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 9:15",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 645",
-          "http://www.stellman-greene.com/pbprdf#team -> Sun",
-          "http://www.stellman-greene.com/pbprdf#shotBy -> Alyssa Thomas",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#shotBy -> http://www.stellman-greene.com/pbprdf/players/Alyssa_Thomas",
           "http://www.stellman-greene.com/pbprdf#shotType -> free throw 2 of 2",
           "http://www.stellman-greene.com/pbprdf#shotMade -> true",
           "http://www.stellman-greene.com/pbprdf#shotPoints -> 1",

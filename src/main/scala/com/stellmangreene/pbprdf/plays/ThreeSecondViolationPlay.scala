@@ -48,7 +48,7 @@ class ThreeSecondViolationPlay(gameId: String, eventNumber: Int, period: Int, ti
           Set(
             (eventUri, Ontology.IS_THREE_SECOND, rep.getValueFactory.createLiteral(true)),
             (eventUri, RDF.TYPE, Ontology.TECHNICAL_FOUL),
-            (eventUri, Ontology.FOUL_COMMITTED_BY, rep.getValueFactory.createLiteral(committedBy))) ++ offensiveTriples
+            (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy))) ++ offensiveTriples
         }
 
         case _ => Set()

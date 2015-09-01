@@ -39,22 +39,29 @@ class JumpBallPlay(gameId: String, eventNumber: Int, period: Int, time: String, 
   override def addRdf(rep: Repository) = {
     val triples: Set[(Resource, URI, Value)] =
       play match {
-        case JumpBallPlay.playByPlayRegex(awayPlayer, homePlayer, gainsPossessionPlayer) => {
+        case JumpBallPlay.playByPlayRegex(awayPlayer, homePlayerAndGainsPossession) => {
           logger.debug(s"Parsing jump ball from play: ${play}")
-          val lostPossessionPlayer =
-            if (awayPlayer.trim == gainsPossessionPlayer.trim)
-              homePlayer
-            else
-              awayPlayer
-          Set(
-            (eventUri, RDF.TYPE, Ontology.JUMP_BALL),
-            (eventUri, Ontology.JUMP_BALL_HOME_PLAYER, rep.getValueFactory.createLiteral(homePlayer)),
-            (eventUri, Ontology.JUMP_BALL_AWAY_PLAYER, rep.getValueFactory.createLiteral(awayPlayer)),
-            (eventUri, Ontology.JUMP_BALL_GAINED_POSSESSION, rep.getValueFactory.createLiteral(gainsPossessionPlayer)))
+
+          val gainsPossessionRegex = """(.*) \((.*) gains possession\)""".r
+
+          homePlayerAndGainsPossession match {
+            case gainsPossessionRegex(homePlayer, gainedPossessionPlayer) =>
+              Set(
+                (eventUri, RDF.TYPE, Ontology.JUMP_BALL),
+                (eventUri, Ontology.JUMP_BALL_HOME_PLAYER, EntityUriFactory.getPlayerUri(homePlayer)),
+                (eventUri, Ontology.JUMP_BALL_AWAY_PLAYER, EntityUriFactory.getPlayerUri(awayPlayer)),
+                (eventUri, Ontology.JUMP_BALL_GAINED_POSSESSION, EntityUriFactory.getPlayerUri(gainedPossessionPlayer)))
+
+            case _ => Set(
+              (eventUri, RDF.TYPE, Ontology.JUMP_BALL),
+              (eventUri, Ontology.JUMP_BALL_HOME_PLAYER, EntityUriFactory.getPlayerUri(homePlayerAndGainsPossession)),
+              (eventUri, Ontology.JUMP_BALL_AWAY_PLAYER, EntityUriFactory.getPlayerUri(awayPlayer)))
+          }
         }
+
         case _ => Set()
       }
-    
+
     if (!triples.isEmpty)
       rep.addTriples(triples, EntityUriFactory.contextUri)
 
@@ -68,6 +75,6 @@ class JumpBallPlay(gameId: String, eventNumber: Int, period: Int, time: String, 
  */
 object JumpBallPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*) vs. (.*) \((.*) gains possession\)$""".r
+  val playByPlayRegex = """^(.*) vs. (.*)$""".r
 
 }

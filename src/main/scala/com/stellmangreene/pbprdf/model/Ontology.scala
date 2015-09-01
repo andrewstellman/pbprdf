@@ -39,6 +39,7 @@ object Ontology {
   val SECONDS_INTO_GAME = valueFactory.createURI(NAMESPACE, "secondsIntoGame")
 
   val TIMEOUT = valueFactory.createURI(NAMESPACE, "Timeout")
+  val TIMEOUT_TEAM = valueFactory.createURI(NAMESPACE, "timeoutTeam")
   val TIMEOUT_DURATION = valueFactory.createURI(NAMESPACE, "timeoutDuration")
 
   val JUMP_BALL = valueFactory.createURI(NAMESPACE, "JumpBall")
@@ -78,9 +79,5 @@ object Ontology {
   val TURNOVER = valueFactory.createURI(NAMESPACE, "Turnover")
   val STOLEN_BY = valueFactory.createURI(NAMESPACE, "stolenBy")
   val TURNED_OVER_BY = valueFactory.createURI(NAMESPACE, "turnedOverBy")
-  val IS_SHOT_CLOCK_VIOLATION = valueFactory.createURI(NAMESPACE, "isShotClockViolation")
-  val IS_BAD_PASS = valueFactory.createURI(NAMESPACE, "isBadPass")
-  val IS_TRAVEL = valueFactory.createURI(NAMESPACE, "isTravel")
-  val IS_KICKED_BALL_VIOLATION = valueFactory.createURI(NAMESPACE, "isKickedBallViolation")
-  val IS_LOST_BALL = valueFactory.createURI(NAMESPACE, "isLostBall")
+  val TURNOVER_TYPE = valueFactory.createURI(NAMESPACE, "turnoverType")
 }

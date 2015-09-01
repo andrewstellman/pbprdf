@@ -53,7 +53,7 @@ class ReboundPlay(gameId: String, eventNumber: Int, period: Int, time: String, t
 
           Set(
             (eventUri, RDF.TYPE, Ontology.REBOUND),
-            (eventUri, Ontology.REBOUNDED_BY, rep.getValueFactory.createLiteral(reboundedBy))) ++
+            (eventUri, Ontology.REBOUNDED_BY, EntityUriFactory.getPlayerUri(reboundedBy))) ++
             offensiveReboundTriples
         }
         case _ => Set()

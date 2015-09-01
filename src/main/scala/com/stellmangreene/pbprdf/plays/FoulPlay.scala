@@ -67,8 +67,8 @@ class FoulPlay(gameId: String, eventNumber: Int, period: Int, time: String, team
 
           Set(
             (eventUri, RDF.TYPE, Ontology.FOUL),
-            (eventUri, Ontology.FOUL_COMMITTED_BY, rep.getValueFactory.createLiteral(committedBy)),
-            (eventUri, Ontology.FOUL_DRAWN_BY, rep.getValueFactory.createLiteral(drawnBy))) ++
+            (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy)),
+            (eventUri, Ontology.FOUL_DRAWN_BY, EntityUriFactory.getPlayerUri(drawnBy))) ++
             isShootingFoulTriple ++ offensiveTriples ++ looseBallTriple
         }
         case _ => Set()
@@ -87,6 +87,6 @@ class FoulPlay(gameId: String, eventNumber: Int, period: Int, time: String, team
  */
 object FoulPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*) (personal foul|shooting foul|offensive foul|offensive Charge|loose ball foul|personal take foul) +\((.*) draws the foul\)$""".r
+  val playByPlayRegex = """^(.*) (personal foul|shooting foul|offensive foul|offensive Charge|loose ball foul|personal take foul|shooting block foul|personal block|in.?bound foul|away from play foul|clear path foul|flagrant foul type .) +\((.*) draws the foul\)$""".r
 
 }

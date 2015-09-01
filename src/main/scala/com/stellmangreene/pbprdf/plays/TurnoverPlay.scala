@@ -49,30 +49,24 @@ class TurnoverPlay(gameId: String, eventNumber: Int, period: Int, time: String, 
 
           val turnoverPlayerTriple: Set[(Resource, URI, Value)] =
             if (!player.trim.isEmpty)
-              Set((eventUri, Ontology.TURNED_OVER_BY, rep.getValueFactory.createLiteral(player.trim)))
+              if (player.trim == "shot clock")
+                Set((eventUri, Ontology.TURNOVER_TYPE, rep.getValueFactory.createLiteral("shot clock")))
+              else
+                Set((eventUri, Ontology.TURNED_OVER_BY, EntityUriFactory.getPlayerUri(player)),
+                  (eventUri, Ontology.TURNOVER_TYPE, rep.getValueFactory.createLiteral(turnoverType.trim)))
             else
               Set()
 
-          val turnoverTypeTriple: Set[(Resource, URI, Value)] =
-            turnoverType match {
-              case "lost ball turnover"    => Set((eventUri, Ontology.IS_LOST_BALL, rep.getValueFactory.createLiteral(true)))
-              case "bad pass"              => Set((eventUri, Ontology.IS_BAD_PASS, rep.getValueFactory.createLiteral(true)))
-              case "traveling"             => Set((eventUri, Ontology.IS_TRAVEL, rep.getValueFactory.createLiteral(true)))
-              case "kicked ball violation" => Set((eventUri, Ontology.IS_KICKED_BALL_VIOLATION, rep.getValueFactory.createLiteral(true)))
-              case "shot clock turnover"   => Set((eventUri, Ontology.IS_SHOT_CLOCK_VIOLATION, rep.getValueFactory.createLiteral(true)))
-              case _                       => Set()
-            }
-
-          val stealsRegex = """^\( (.*) steals\)""".r
+          val stealsRegex = """ ?\((.*) steals\)""".r
 
           val stolenByTriple: Set[(Resource, URI, Value)] =
             steals match {
               case stealsRegex(stolenByPlayer) =>
-                Set((eventUri, Ontology.STOLEN_BY, rep.getValueFactory.createLiteral(stolenByPlayer)))
+                Set((eventUri, Ontology.STOLEN_BY, EntityUriFactory.getPlayerUri(stolenByPlayer)))
               case _ => Set()
             }
 
-          Set((eventUri, RDF.TYPE, Ontology.TURNOVER)) ++ turnoverPlayerTriple ++ turnoverTypeTriple ++ stolenByTriple
+          Set((eventUri, RDF.TYPE, Ontology.TURNOVER)) ++ turnoverPlayerTriple ++ stolenByTriple
         }
 
         case _ => Set()
@@ -91,6 +85,6 @@ class TurnoverPlay(gameId: String, eventNumber: Int, period: Int, time: String, 
  */
 object TurnoverPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*?) *(turnover|lost ball turnover|traveling|shot clock turnover|bad pass|kicked ball violation)( +\(.* steals\))?$""".r
+  val playByPlayRegex = """^(.*?) +(turnover|lost ball turnover|traveling|turnover|bad pass|kicked ball violation|lane violation|turnover \(lane violation\)|double lane violation|jump ball violation)( ?.*)$""".r
 
 }

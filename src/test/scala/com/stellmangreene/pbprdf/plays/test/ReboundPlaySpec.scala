@@ -38,8 +38,8 @@ class ReboundPlaySpec extends FlatSpec with Matchers with RdfOperations {
         "http://www.stellman-greene.com/pbprdf#period -> 2",
         "http://www.stellman-greene.com/pbprdf#time -> 4:02",
         "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 958",
-        "http://www.stellman-greene.com/pbprdf#team -> Mystics",
-        "http://www.stellman-greene.com/pbprdf#reboundedBy -> Emma Meesseman",
+        "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+        "http://www.stellman-greene.com/pbprdf#reboundedBy -> http://www.stellman-greene.com/pbprdf/players/Emma_Meesseman",
         "http://www.stellman-greene.com/pbprdf#isOffensive -> true",
         "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Emma Meesseman offensive rebound"))
   }

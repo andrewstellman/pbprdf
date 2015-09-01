@@ -103,7 +103,7 @@ case class Event(gameId: String, eventNumber: Int, period: Int, time: String, de
       case timeoutRegex(team, duration) => {
         Set(
           (eventUri, RDF.TYPE, Ontology.TIMEOUT),
-          (eventUri, Ontology.TEAM_PROPERTY, valueFactory.createLiteral(team)),
+          (eventUri, Ontology.TIMEOUT_TEAM, valueFactory.createLiteral(team)),
           (eventUri, Ontology.TIMEOUT_DURATION, valueFactory.createLiteral(duration)))
       }
       case _ => {

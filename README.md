@@ -25,7 +25,7 @@ $ sbt eclipse
 Example: Generate TriG from the unit test data
 ------------------------------------------------
 ```
-$ sbt "run src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636.html"
+$ sbt "run src/test/resources/com/stellmangreene/pbprdf/test/htmldata/"
 ```
 
 Example: Analyze a set of games

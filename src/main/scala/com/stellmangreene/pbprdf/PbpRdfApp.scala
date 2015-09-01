@@ -23,18 +23,16 @@ import java.io.FileOutputStream
 
 object PbpRdfApp extends App with LazyLogging {
 
-  //TODO: Make sure each triple is added to its own context, save TriG format
-
   def printUsageAndExit(message: Option[String] = None) = {
     if (message.isDefined)
       println(message.get)
-    println("usage: pbprdf folder filename.ttl")
+    println("usage: pbprdf folder [filename.ttl]")
     println("  Read all of the files in the folder and attempt to process them")
-    println("  Write all plays for each game to filename.ttl")
+    println("  Write all plays for each game to stdout, or file if specified")
     System.exit(1)
   }
 
-  if (args.size != 2) {
+  if (args.size != 1 && args.size != 2) {
     printUsageAndExit()
   } else {
 
@@ -46,15 +44,22 @@ object PbpRdfApp extends App with LazyLogging {
     }
 
     if (!folder.exists || !folder.isDirectory)
-      printUsageAndExit(Some("Invalid folder: ${inputFolderPath}"))
+      printUsageAndExit(Some(s"Invalid folder: ${inputFolderPath}"))
 
     val files = folder.listFiles
     if (files.isEmpty)
-      printUsageAndExit(Some("No files found in folder: ${inputFolderPath}"))
+      printUsageAndExit(Some(s"No files found in folder: ${inputFolderPath}"))
 
-    val outputFilename = args(1)
-    if (new File(outputFilename).exists)
-      printUsageAndExit(Some(s"File already exists, will not overwrite: ${outputFilename}"))
+    val outputFile =
+      if (args.size >= 2) {
+        if (new File(args(1)).exists)
+          printUsageAndExit(Some(s"File already exists, will not overwrite: ${args(1)}"))
+        Some(args(1))
+
+      } else {
+        None
+
+      }
 
     logger.info(s"Reading ${files.size} files from folder ${inputFolderPath}")
 
@@ -71,8 +76,6 @@ object PbpRdfApp extends App with LazyLogging {
       playByPlay.addRdf(rep)
     })
 
-    logger.info(s"Writing Turtle to ${outputFilename}")
-
     val conn = rep.getConnection
     var statements = conn.getStatements(null, null, null, true)
 
@@ -82,9 +85,15 @@ object PbpRdfApp extends App with LazyLogging {
     model.setNamespace("xsd", XMLSchema.NAMESPACE)
     model.setNamespace("pbprdf", Ontology.NAMESPACE)
 
-    val outputStream = new FileOutputStream(outputFilename)
-    Rio.write(model, outputStream, RDFFormat.TURTLE)
+    if (outputFile.isDefined) {
+      val outputStream = new FileOutputStream(outputFile.get)
+      logger.info(s"Writing TriG to ${outputFile.get}")
+      Rio.write(model, outputStream, RDFFormat.TRIG)
+    } else {
+      logger.info("Writing TriG to standard output")
+      Rio.write(model, System.out, RDFFormat.TRIG)
+    }
 
-    logger.info(s"Finished writing ${outputFilename}")
+    logger.info(s"Finished writing TriG")
   }
 }

@@ -1,5 +1,5 @@
 # pbprdf
-Generate RDF for basketball play-by-play data by reading a folder full of ESPN-style play-by-play HTML pages (eg. [Mystics vs. Sun on 7:00 PM ET, June 5, 2015](http://scores.espn.go.com/wnba/playbyplay?gameId=400610636)), processing each play in each game file, and generating a Turtle file that contains all of the plays from each game.
+Generate RDF for basketball play-by-play data by reading a folder full of ESPN-style play-by-play HTML pages (eg. [Mystics vs. Sun on 7:00 PM ET, June 5, 2015](http://scores.espn.go.com/wnba/playbyplay?gameId=400610636)), processing each play in each game file, and generating a TriG file that contains all of the plays from each game.
 
 Install and run
 ===============
@@ -22,10 +22,10 @@ $ sbt eclipse
 ```
 
 
-Example: Generate Turtle from the unit test data
+Example: Generate TriG from the unit test data
 ------------------------------------------------
 ```
-$ sbt "run src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636.ttl"
+$ sbt "run src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636.html"
 ```
 
 Example: Analyze a set of games
@@ -40,22 +40,22 @@ $ cd pbprdf
 Step 2: Download a set of play-by-play HTML files
 ```
 $ mkdir wnba-games
-$ for ((i=400610636;i<=400610798;i++))
+$ for ((i=400610636;i<=400610811;i++))
 > do
 > curl http://scores.espn.go.com/wnba/playbyplay?gameId=$i > wnba-games/$i.html
 > done
 ```
 
-Step 3: Run pbprdf and generate the Turtle file
+Step 3: Run pbprdf and generate the TriG file
 ```
-$ sbt "run wnba-games wnba-rdf.ttl"
+$ sbt "run wnba-games wnba-rdf.trig"
 ```
 
-Step 4: Import the Turtle file into Sesame
+Step 4: Import the TriG file into Sesame
 ```
 $ console -s http://localhost:8080/openrdf-sesame MyRdfDatabase
 Type 'help' for help.
-MyRdfDatabase> load wnba-rdf.ttl
+MyRdfDatabase> load wnba-rdf.trig
 Loading data...
 Data has been added to the repository (20410 ms)
 ```

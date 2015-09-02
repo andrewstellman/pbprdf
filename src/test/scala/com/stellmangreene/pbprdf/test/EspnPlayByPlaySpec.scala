@@ -82,6 +82,32 @@ BASE <http://www.stellman-greene.com>
 PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
 
 SELECT * {  
+   ?s pbprdf:hasAwayTeamRoster ?roster .
+   ?roster ?p ?o .
+}
+""")
+      .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
+      .toSet should be(
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Roster",
+          "http://www.stellman-greene.com/pbprdf#rosterTeam -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#hasPlayer -> http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson",
+          "http://www.stellman-greene.com/pbprdf#hasPlayer -> http://www.stellman-greene.com/pbprdf/players/Emma_Meesseman",
+          "http://www.stellman-greene.com/pbprdf#hasPlayer -> http://www.stellman-greene.com/pbprdf/players/Ivory_Latta",
+          "http://www.stellman-greene.com/pbprdf#hasPlayer -> http://www.stellman-greene.com/pbprdf/players/Armintie_Herrington",
+          "http://www.stellman-greene.com/pbprdf#hasPlayer -> http://www.stellman-greene.com/pbprdf/players/Kayla_Thornton",
+          "http://www.stellman-greene.com/pbprdf#hasPlayer -> http://www.stellman-greene.com/pbprdf/players/Tierra_Ruffin-Pratt",
+          "http://www.stellman-greene.com/pbprdf#hasPlayer -> http://www.stellman-greene.com/pbprdf/players/Natasha_Cloud",
+          "http://www.stellman-greene.com/pbprdf#hasPlayer -> http://www.stellman-greene.com/pbprdf/players/Tayler_Hill",
+          "http://www.stellman-greene.com/pbprdf#hasPlayer -> http://www.stellman-greene.com/pbprdf/players/Kara_Lawson",
+          "http://www.stellman-greene.com/pbprdf#hasPlayer -> http://www.stellman-greene.com/pbprdf/players/Ally_Malott",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Mystics"))
+
+    rep.executeQuery("""
+BASE <http://www.stellman-greene.com>
+PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
+
+SELECT * {  
    ?s pbprdf:hasHomeTeamRoster ?roster .
    ?roster ?p ?o .
 }

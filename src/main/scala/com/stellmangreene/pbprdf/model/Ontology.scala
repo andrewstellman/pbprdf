@@ -9,7 +9,7 @@ import org.openrdf.model.impl.ValueFactoryImpl
  */
 object Ontology {
 
-  //TODO: Add addRef() method that generates the ontology in its own context
+  //TODO: Add addRdf() method that generates the ontology in its own context
   
   private val valueFactory = ValueFactoryImpl.getInstance()
 

@@ -85,6 +85,6 @@ class TurnoverPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, te
  */
 object TurnoverPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*?) +(turnover|lost ball turnover|traveling|turnover|bad pass|kicked ball violation|lane violation|turnover \(lane violation\)|double lane violation|jump ball violation)( ?.*)$""".r
+  val playByPlayRegex = """^(.*?) +(turnover|lost ball turnover|traveling|turnover|bad pass|kicked ball violation|lane violation|turnover \(lane violation\)|double lane violation|jump ball violation|defensive goaltending violation)( ?.*)$""".r
 
 }

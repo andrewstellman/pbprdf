@@ -39,6 +39,24 @@ class BlockPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#shotBy -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
           "http://www.stellman-greene.com/pbprdf#shotBlockedBy -> http://www.stellman-greene.com/pbprdf/players/Tayler_Hill",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Tayler Hill blocks Jasmine Thomas's layup"))
+
+    new BlockPlay(TestUri.create("400539625"), 53, 1, "2:37", "Mercury", "Krystal Thomas blocks Erin Phillips' 3-foot  layup", "19-23").addRdf(rep)
+
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400539625/53> ?p ?o }")
+      .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
+      .toSet should be(
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Shot",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Block",
+          "http://www.stellman-greene.com/pbprdf#period -> 1",
+          "http://www.stellman-greene.com/pbprdf#time -> 2:37",
+          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 443",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
+          "http://www.stellman-greene.com/pbprdf#shotBy -> http://www.stellman-greene.com/pbprdf/players/Erin_Phillips",
+          "http://www.stellman-greene.com/pbprdf#shotBlockedBy -> http://www.stellman-greene.com/pbprdf/players/Krystal_Thomas",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: Krystal Thomas blocks Erin Phillips' 3-foot  layup"))
   }
 
 }

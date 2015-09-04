@@ -16,6 +16,7 @@ import com.typesafe.scalalogging.LazyLogging
  * <p>
  * Examples:
  * Emma Meesseman blocks Camille Little 's 2-foot  jumper
+ * Krystal Thomas blocks Erin Phillips' 3-foot  layup
  *
  * @param gameID
  *        Unique ID of the game
@@ -63,6 +64,6 @@ class BlockPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team:
  */
 object BlockPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*) blocks (.*)'s (.*)$""".r
+  val playByPlayRegex = """^(.*) blocks (.*)'s? (.*)$""".r
 
 }

@@ -1,5 +1,5 @@
 # pbprdf
-Generate RDF for basketball play-by-play data by reading a folder full of ESPN-style play-by-play HTML pages (eg. [Mystics vs. Sun on 7:00 PM ET, June 5, 2015](http://scores.espn.go.com/wnba/playbyplay?gameId=400610636)), processing each play in each game file, and generating a TriG file that contains all of the plays from each game.
+Generate RDF for basketball play-by-play data by reading a folder full of ESPN-style play-by-play HTML pages (eg. [Mystics vs. Sun on 7:00 PM ET, June 5, 2015](http://scores.espn.go.com/wnba/playbyplay?gameId=400610636)), processing each play in each game file, and generating a Turtle file that contains all of the plays from each game.
 
 Install and run
 ===============
@@ -22,7 +22,7 @@ $ sbt eclipse
 ```
 
 
-Example: Generate TriG from the unit test data
+Example: Generate Turtle from the unit test data
 ------------------------------------------------
 ```
 $ sbt "run src/test/resources/com/stellmangreene/pbprdf/test/htmldata/"
@@ -46,16 +46,16 @@ $ for ((i=400610636;i<=400610811;i++))
 > done
 ```
 
-Step 3: Run pbprdf and generate the TriG file
+Step 3: Run pbprdf and generate the Turtle file
 ```
-$ sbt "run wnba-games wnba-rdf.trig"
+$ sbt "run wnba-games wnba-rdf.ttl"
 ```
 
-Step 4: Import the TriG file into Sesame
+Step 4: Import the Turtle file into Sesame
 ```
 $ console -s http://localhost:8080/openrdf-sesame MyRdfDatabase
 Type 'help' for help.
-MyRdfDatabase> load wnba-rdf.trig
+MyRdfDatabase> load wnba-rdf.ttl
 Loading data...
 Data has been added to the repository (20410 ms)
 ```
@@ -64,28 +64,33 @@ Step 5: Run SPARQL queries
 ```
 MyRdfDatabase> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
+BASE <http://www.stellman-greene.com/>
 PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
-SELECT ?player (COUNT(*) as ?count) {
-   ?game pbprdf:foulDrawnBy ?player .
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?teamName (COUNT(*) AS ?foulsDrawn) WHERE { 
+  ?fouledPlayer pbprdf:foulDrawnBy ?player .
+  ?roster pbprdf:hasPlayer ?player .
+  ?roster rdfs:label ?teamName .
 }
-GROUP BY ?player
-ORDER BY DESC(?count)
-LIMIT 10
+GROUP BY ?teamName
+ORDER BY ?foulsDrawn
 .
 Evaluating SPARQL query...
 +-------------------------------------+-------------------------------------+
-| player                              | count                               |
+| teamName                            | foulsDrawn                          |
 +-------------------------------------+-------------------------------------+
-| "Elena Delle Donne"                 | "156"^^<http://www.w3.org/2001/XMLSchema#integer>|
-| "Angel McCoughtry"                  | "151"^^<http://www.w3.org/2001/XMLSchema#integer>|
-| "Maya Moore"                        | "143"^^<http://www.w3.org/2001/XMLSchema#integer>|
-| "DeWanna Bonner"                    | "106"^^<http://www.w3.org/2001/XMLSchema#integer>|
-| "Riquna Williams"                   | "96"^^<http://www.w3.org/2001/XMLSchema#integer>|
-| "Sophia Young-Malcolm"              | "95"^^<http://www.w3.org/2001/XMLSchema#integer>|
-| "Karima Christmas"                  | "94"^^<http://www.w3.org/2001/XMLSchema#integer>|
-| "Nneka Ogwumike"                    | "90"^^<http://www.w3.org/2001/XMLSchema#integer>|
-| "Tina Charles"                      | "89"^^<http://www.w3.org/2001/XMLSchema#integer>|
-| "Plenette Pierson"                  | "88"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Sparks"                            | "10136"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Sun"                               | "12101"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Mystics"                           | "12882"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Lynx"                              | "13129"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Storm"                             | "13452"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Dream"                             | "13457"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Stars"                             | "13932"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Liberty"                           | "13954"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Mercury"                           | "13992"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Fever"                             | "13997"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Shock"                             | "14329"^^<http://www.w3.org/2001/XMLSchema#integer>|
+| "Sky"                               | "14909"^^<http://www.w3.org/2001/XMLSchema#integer>|
 +-------------------------------------+-------------------------------------+
-10 result(s) (85 ms)
+12 result(s) (1033 ms)
 ```

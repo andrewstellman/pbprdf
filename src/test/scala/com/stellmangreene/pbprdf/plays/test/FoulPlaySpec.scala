@@ -119,5 +119,25 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#isLooseBallFoul -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: Jantel Lavender loose ball foul (Sylvia Fowles draws the foul)"))
   }
+  
+  it should "parse fouls when no player draws the foul" in {
+    new FoulPlay(TestUri.create("400539523"), 13, 1, "8:12", "Sparks", "Jenna O'Hea offensive foul", "8-8").addRdf(rep)
+
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400539523/13> ?p ?o }")
+      .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
+      .toSet should be(
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Foul",
+          "http://www.stellman-greene.com/pbprdf#period -> 1",
+          "http://www.stellman-greene.com/pbprdf#time -> 8:12",
+          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 108",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sparks",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Jenna_O'Hea",
+          "http://www.stellman-greene.com/pbprdf#isOffensive -> true",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: Jenna O'Hea offensive foul"))
+    
+  }
 
 }

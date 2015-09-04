@@ -43,7 +43,16 @@ class FoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
   override def addRdf(rep: Repository) = {
     val triples: Set[(Resource, URI, Value)] =
       play match {
-        case FoulPlay.playByPlayRegex(committedBy, foulType, drawnBy) => {
+        case FoulPlay.playByPlayRegex(committedBy, foulType, drawnByGroup) => {
+
+          val drawnByRegex = """ +\((.*) draws the foul\)""".r
+
+          val drawnByTriple: Set[(Resource, URI, Value)] =
+            drawnByGroup match {
+              case drawnByRegex(drawnBy) => Set((eventUri, Ontology.FOUL_DRAWN_BY, EntityUriFactory.getPlayerUri(drawnBy)))
+              case _                     => Set()
+            }
+
           val isShootingFoulTriple: Set[(Resource, URI, Value)] =
             if (foulType.trim == "shooting foul")
               Set((eventUri, Ontology.IS_SHOOTING_FOUL, rep.getValueFactory.createLiteral(true)))
@@ -67,9 +76,8 @@ class FoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
 
           Set(
             (eventUri, RDF.TYPE, Ontology.FOUL),
-            (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy)),
-            (eventUri, Ontology.FOUL_DRAWN_BY, EntityUriFactory.getPlayerUri(drawnBy))) ++
-            isShootingFoulTriple ++ offensiveTriples ++ looseBallTriple
+            (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy))) ++
+            drawnByTriple ++ isShootingFoulTriple ++ offensiveTriples ++ looseBallTriple
         }
         case _ => Set()
       }
@@ -87,6 +95,6 @@ class FoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
  */
 object FoulPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*) (personal foul|shooting foul|offensive foul|offensive Charge|loose ball foul|personal take foul|shooting block foul|personal block|in.?bound foul|away from play foul|clear path foul|flagrant foul type .) +\((.*) draws the foul\)$""".r
+  val playByPlayRegex = """^(.*) (personal foul|shooting foul|offensive foul|offensive Charge|loose ball foul|personal take foul|shooting block foul|personal block|in.?bound foul|away from play foul|clear path foul|flagrant foul type .)( +\(.* draws the foul\))?$""".r
 
 }

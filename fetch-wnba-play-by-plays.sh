@@ -2,10 +2,11 @@ $!/bin/bash
 
 # fetch 2014 regular season
 mkdir wnba-2014-season
-for ((i=400539461;i<=400539664;i++))
+for ((i=400539461;i<=400539662;i++))
 do
    curl http://scores.espn.go.com/wnba/playbyplay?gameId=$i > wnba-2014-season/$i.html
 done
+curl http://scores.espn.go.com/wnba/playbyplay?gameId=$i > wnba-2014-season/400539664.html
 
 
 # fetch 2014 playoffs

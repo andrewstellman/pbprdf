@@ -144,7 +144,7 @@ class EspnPlayByPlay(rootElem: Elem, filename: String) extends PlayByPlay with L
     }
 
     if (eventsRead.isEmpty)
-      logger.warn(s"No events read")
+      logger.warn(s"No events read from ${filename}")
     logger.debug(s"Finished reading game")
 
     eventsRead

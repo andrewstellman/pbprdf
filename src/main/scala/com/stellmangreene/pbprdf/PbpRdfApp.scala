@@ -69,11 +69,17 @@ object PbpRdfApp extends App with LazyLogging {
     var i = 0
     files.foreach(file => {
       i += 1
-      logger.info(s"Reading plays from ${file.getName} (file ${i} of ${files.size})")
+      logger.debug(s"Reading plays from ${file.getCanonicalPath} (file ${i} of ${files.size})")
       val xmlStream = new FileInputStream(file)
       val rootElem = XmlHelper.parseXml(xmlStream)
-      val playByPlay: PlayByPlay = new EspnPlayByPlay(rootElem, file.getName)
-      playByPlay.addRdf(rep)
+      try {
+        val playByPlay: PlayByPlay = new EspnPlayByPlay(rootElem, file.getCanonicalPath)
+        playByPlay.addRdf(rep)
+      } catch {
+        case e: InvalidPlayByPlayException => {
+          logger.error(s"Error reading play-by-play: ${e.getMessage}")
+        }
+      }
     })
 
     val conn = rep.getConnection

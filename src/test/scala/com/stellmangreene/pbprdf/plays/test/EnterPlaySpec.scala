@@ -4,9 +4,9 @@ import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-
 import com.stellmangreene.pbprdf.plays.EnterPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
+import com.stellmangreene.pbprdf.test.TestUri
 
 /**
  * Test the EnterPlay class
@@ -26,7 +26,7 @@ class EnterPlaySpec extends FlatSpec with Matchers with RdfOperations {
     var rep = new SailRepository(new MemoryStore)
     rep.initialize
 
-    new EnterPlay("400610636", 101, 1, "8:00", "Sun", "Kelly Faris enters the game for Alyssa Thomas", "21-26").addRdf(rep)
+    new EnterPlay(TestUri.create("400610636"), 101, 1, "8:00", "Sun", "Kelly Faris enters the game for Alyssa Thomas", "21-26").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/101> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

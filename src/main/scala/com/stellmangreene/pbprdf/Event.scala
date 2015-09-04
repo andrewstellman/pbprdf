@@ -29,13 +29,13 @@ import com.typesafe.scalalogging.LazyLogging
  *
  * @author andrewstellman
  */
-case class Event(gameId: String, eventNumber: Int, period: Int, time: String, description: String)
+case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, description: String)
     extends RdfOperations with LazyLogging {
 
   override def toString = "Period " + period + " " + time + " - " + description
 
   /** URI of this event for RDF */
-  val eventUri = EntityUriFactory.getEventUri(gameId, eventNumber)
+  val eventUri = EntityUriFactory.getEventUri(gameUri, eventNumber)
 
   /**
    * Add this event to an RDF repository

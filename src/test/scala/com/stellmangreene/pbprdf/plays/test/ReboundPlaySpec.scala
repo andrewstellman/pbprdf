@@ -4,9 +4,9 @@ import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-
 import com.stellmangreene.pbprdf.plays.ReboundPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
+import com.stellmangreene.pbprdf.test.TestUri
 
 /**
  * Test the ReboundPlay class
@@ -22,7 +22,7 @@ class ReboundPlaySpec extends FlatSpec with Matchers with RdfOperations {
   rep.initialize
 
   it should "parse rebound triples" in {
-    val play = new ReboundPlay("400610636", 125, 2, "4:02", "Mystics", "Emma Meesseman offensive rebound", "31-30")
+    val play = new ReboundPlay(TestUri.create("400610636"), 125, 2, "4:02", "Mystics", "Emma Meesseman offensive rebound", "31-30")
     play.addRdf(rep)
 
     val statements = rep

@@ -15,8 +15,8 @@ import com.stellmangreene.pbprdf.model.EntityUriFactory
  *
  * @author andrewstellman
  */
-abstract class Play(gameId: String, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
-    extends Event(gameId: String, eventNumber, period, time, s"${team}: ${play}")
+abstract class Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
+    extends Event(gameUri: URI, eventNumber, period, time, s"${team}: ${play}")
     with RdfOperations {
 
   /**

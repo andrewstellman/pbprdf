@@ -31,8 +31,8 @@ import com.typesafe.scalalogging.LazyLogging
  *
  * @author andrewstellman
  */
-class EnterPlay(gameId: String, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
-    extends Play(gameId: String, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
+class EnterPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
+    extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
     with RdfOperations
     with LazyLogging {
 

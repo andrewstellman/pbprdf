@@ -4,9 +4,9 @@ import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-
 import com.stellmangreene.pbprdf.plays.DelayOfGamePlay
 import com.stellmangreene.pbprdf.util.RdfOperations
+import com.stellmangreene.pbprdf.test.TestUri
 
 /**
  * Test the DelayOfGamePlay class
@@ -22,8 +22,8 @@ class DelayOfGamePlaySpec extends FlatSpec with Matchers with RdfOperations {
   rep.initialize
 
   it should "parse a delay of game violation" in {
-    new DelayOfGamePlay("400610739", 86, 2, "10:00", "Sparks", "Los Angeles delay of game violation", "15-22").addRdf(rep)
-    new DelayOfGamePlay("400610739", 295, 3, "1:39", "Sparks", "delay techfoul", "54-56").addRdf(rep)
+    new DelayOfGamePlay(TestUri.create("400610739"), 86, 2, "10:00", "Sparks", "Los Angeles delay of game violation", "15-22").addRdf(rep)
+    new DelayOfGamePlay(TestUri.create("400610739"), 295, 3, "1:39", "Sparks", "delay techfoul", "54-56").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610739/86> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

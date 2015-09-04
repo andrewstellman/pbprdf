@@ -25,6 +25,8 @@ object Ontology {
   val ROSTER = valueFactory.createURI(NAMESPACE, "Roster")
   val ROSTER_TEAM = valueFactory.createURI(NAMESPACE, "rosterTeam")
   val HAS_PLAYER = valueFactory.createURI(NAMESPACE, "hasPlayer")
+  val GAME_TIME = valueFactory.createURI(NAMESPACE, "gameTime")
+  val GAME_LOCATION = valueFactory.createURI(NAMESPACE, "gameLocation")
 
   val PLAYER = valueFactory.createURI(NAMESPACE, "Player")
 

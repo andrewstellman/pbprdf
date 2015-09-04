@@ -2,6 +2,8 @@ package com.stellmangreene.pbprdf.model
 
 import org.openrdf.model.impl.ValueFactoryImpl
 import org.openrdf.model.URI
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 /**
  * RDF entities
@@ -10,7 +12,7 @@ import org.openrdf.model.URI
  */
 object EntityUriFactory {
 
-  private val valueFactory = ValueFactoryImpl.getInstance();
+  private val valueFactory = ValueFactoryImpl.getInstance()
 
   val NAMESPACE = "http://www.stellman-greene.com/pbprdf/"
 
@@ -19,15 +21,17 @@ object EntityUriFactory {
   /**
    * Generate the URI for a game entity
    */
-  def getGameUri(gameId: String): URI = {
-    valueFactory.createURI(NAMESPACE, gameId)
+  def getGameUri(homeTeam: String, awayTeam: String, gameTime: DateTime): URI = {
+    val fmt = DateTimeFormat.forPattern("YYYY-MM-dd")
+    valueFactory.createURI(NAMESPACE, s"games/${fmt.print(gameTime)}_${awayTeam}_at_${homeTeam}")
   }
   
   /**
    * Generate the URI for an event entity
    */
-  def getEventUri(gameId: String, eventNumber: Int): URI = {
-    valueFactory.createURI(NAMESPACE, s"${gameId}/${eventNumber.toString}")
+  def getEventUri(gameUri: URI, eventNumber: Int): URI = {
+    val fmt = DateTimeFormat.forPattern("YYYY-MM-dd")
+    valueFactory.createURI(s"${gameUri.stringValue}/${eventNumber.toString}")
   }
   
   /**

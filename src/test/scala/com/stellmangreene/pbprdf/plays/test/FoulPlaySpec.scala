@@ -4,9 +4,9 @@ import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-
 import com.stellmangreene.pbprdf.plays.FoulPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
+import com.stellmangreene.pbprdf.test.TestUri
 
 /**
  * Test the FoulPlay class
@@ -22,7 +22,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   rep.initialize
 
   it should "parse fouls" in {
-    new FoulPlay("400610636", 37, 1, "4:56", "Sun", "Camille Little personal foul  (Stefanie Dolson draws the foul)", "10-9").addRdf(rep)
+    new FoulPlay(TestUri.create("400610636"), 37, 1, "4:56", "Sun", "Camille Little personal foul  (Stefanie Dolson draws the foul)", "10-9").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/37> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -41,7 +41,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse offensive fouls" in {
-    new FoulPlay("400610636", 46, 1, "3:51", "Sun", "Kelsey Bone offensive foul  (Stefanie Dolson draws the foul)", "12-11").addRdf(rep)
+    new FoulPlay(TestUri.create("400610636"), 46, 1, "3:51", "Sun", "Kelsey Bone offensive foul  (Stefanie Dolson draws the foul)", "12-11").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/46> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -61,7 +61,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse shooting fouls" in {
-    new FoulPlay("400610636", 85, 2, "9:15", "Mystics", "Kayla Thornton shooting foul  (Alyssa Thomas draws the foul)", "18-26").addRdf(rep)
+    new FoulPlay(TestUri.create("400610636"), 85, 2, "9:15", "Mystics", "Kayla Thornton shooting foul  (Alyssa Thomas draws the foul)", "18-26").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/85> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -81,7 +81,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse offensive charges" in {
-    new FoulPlay("400610636", 166, 2, "1:05", "Mystics", "Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)", "40-38").addRdf(rep)
+    new FoulPlay(TestUri.create("400610636"), 166, 2, "1:05", "Mystics", "Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)", "40-38").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/166> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -101,7 +101,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse loose ball fouls" in {
-    new FoulPlay("400610739", 275, 3, "1:05", "Sparks", "Jantel Lavender loose ball foul (Sylvia Fowles draws the foul)", "54-59").addRdf(rep)
+    new FoulPlay(TestUri.create("400610739"), 275, 3, "1:05", "Sparks", "Jantel Lavender loose ball foul (Sylvia Fowles draws the foul)", "54-59").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610739/275> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

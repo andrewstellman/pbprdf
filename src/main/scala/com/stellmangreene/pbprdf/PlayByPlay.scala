@@ -10,6 +10,7 @@ import com.stellmangreene.pbprdf.plays.EnterPlay
 import com.typesafe.scalalogging.LazyLogging
 import org.openrdf.model.vocabulary.RDFS
 import org.openrdf.model.BNode
+import org.joda.time.DateTime
 
 /**
  * Play by play
@@ -40,7 +41,7 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
   val gameLocation: String
 
   /** Game time */
-  val gameTime: String
+  val gameTime: DateTime
 
   /**
    * Add the events to an RDF repository

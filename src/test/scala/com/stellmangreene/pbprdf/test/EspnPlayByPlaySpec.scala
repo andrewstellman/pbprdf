@@ -11,6 +11,8 @@ import org.openrdf.repository.RepositoryResult
 import info.aduna.iteration.Iteration
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.plays.test.EnterPlaySpec
+import org.joda.time.DateTime
+import com.stellmangreene.pbprdf.InvalidPlayByPlayException
 
 /**
  * Test the EspnPlayByPlay class
@@ -22,7 +24,7 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
   val xmlStream = new FileInputStream("src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636.html")
   val rootElem = XmlHelper.parseXml(xmlStream)
-  var playByPlay = new EspnPlayByPlay("400610636", rootElem)
+  var playByPlay = new EspnPlayByPlay(rootElem, "400610636.html")
 
   it should "read information about the game" in {
     playByPlay.homeTeam should be("Sun")
@@ -30,8 +32,8 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
     playByPlay.awayTeam should be("Mystics")
     playByPlay.awayScore should be("73")
     playByPlay.gameLocation should be("Mohegan Sun Arena, Uncasville, CT")
-    playByPlay.gameTime should be("7:00 PM ET, June 5, 2015")
-    playByPlay.toString should be("Mystics at Sun on 7:00 PM ET, June 5, 2015: 391 events")
+    playByPlay.gameTime should equal(new DateTime("2015-06-05T19:00:00.000-05:00"))
+    playByPlay.toString should be("Mystics (73) at Sun (68) on 2015-06-05: 391 events")
   }
 
   it should "read the events from the game" in {
@@ -57,15 +59,9 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
   it should "read an invalid XML file" in {
     val xmlStream = new FileInputStream("src/main/resources/logback.xml")
     val rootElem = XmlHelper.parseXml(xmlStream)
-    var emptyPlayByPlay = new EspnPlayByPlay("INVALID", rootElem)
-    emptyPlayByPlay.homeTeam should be("HOME TEAM NOT FOUND")
-    emptyPlayByPlay.homeScore should be("HOME SCORE NOT FOUND")
-    emptyPlayByPlay.awayTeam should be("AWAY TEAM NOT FOUND")
-    emptyPlayByPlay.awayScore should be("AWAY SCORE NOT FOUND")
-    emptyPlayByPlay.gameLocation should be("GAME LOCATION NOT FOUND")
-    emptyPlayByPlay.gameTime should be("GAME TIME NOT FOUND")
-    emptyPlayByPlay.events should be(Seq())
-    emptyPlayByPlay.toString should be("AWAY TEAM NOT FOUND at HOME TEAM NOT FOUND on GAME TIME NOT FOUND: 0 events")
+    intercept[InvalidPlayByPlayException] {
+      var invalidPlayByPlay = new EspnPlayByPlay(rootElem, "INVALID FILE")
+    }
   }
 
   it should "generate RDF" in {
@@ -75,7 +71,17 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
     playByPlay.addRdf(rep)
 
-    rep.executeQuery("SELECT * { ?s ?p ?o }").toIterator().size should be(4162)
+    rep.executeQuery("SELECT * { ?s ?p ?o }").toIterator().size should be(4165)
+
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun> ?p ?o }")
+      .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
+      .filter(!_.contains("node"))
+      .toSet should be(
+        Set(
+          "http://www.stellman-greene.com/pbprdf#gameTime -> 2015-06-05T19:00:00.000-05:00",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Game",
+          "http://www.stellman-greene.com/pbprdf#gameLocation -> Mohegan Sun Arena, Uncasville, CT",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Mystics (73) at Sun (68) on 2015-06-05: 391 events"))
 
     rep.executeQuery("""
 BASE <http://www.stellman-greene.com>
@@ -134,7 +140,7 @@ SELECT * {
       .toSet should be(
         Set("http://www.w3.org/2000/01/rdf-schema#label -> Stefanie Dolson"))
 
-    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/1> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/1> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
@@ -150,7 +156,7 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#jumpBallGainedPossession -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Stefanie Dolson vs. Kelsey Bone (Jasmine Thomas gains possession)"))
 
-    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/166> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/166> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
@@ -166,7 +172,7 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#isCharge -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)"))
 
-    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/119> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/119> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(

@@ -1,70 +1,92 @@
 package com.stellmangreene.pbprdf
 
 import scala.language.postfixOps
+import scala.util.Success
+import scala.util.Try
 import scala.xml.Elem
-
+import org.joda.time.format.DateTimeFormat
 import org.openrdf.model.URI
 import org.openrdf.model.vocabulary.RDF
+import org.openrdf.model.vocabulary.RDFS
 import org.openrdf.repository.Repository
-
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.stellmangreene.pbprdf.plays.PlayFactory
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.util.XmlHelper
 import com.typesafe.scalalogging.LazyLogging
+import javax.xml.datatype.DatatypeFactory
+import javax.xml.datatype.XMLGregorianCalendar
+import scala.util.Failure
+import org.joda.time.DateTime
 
 /**
  * @author andrewstellman
  */
-class EspnPlayByPlay(gameId: String, rootElem: Elem) extends PlayByPlay with LazyLogging with RdfOperations {
+class EspnPlayByPlay(rootElem: Elem, filename: String) extends PlayByPlay with LazyLogging with RdfOperations {
 
   private val divs = (rootElem \\ "body" \\ "div")
 
   private val awayTeamElems = XmlHelper.getElemByClassAndTag(divs, "team away", "a")
 
-  /** URI of this game */
-  val gameUri: URI = EntityUriFactory.getGameUri(gameId)
+  private def getElementFromXml(clazz: String, tag: String): String = {
+    Try(XmlHelper.getElemByClassAndTag(divs, clazz, tag).map(_.text).get) match {
+      case Success(s) => s
+      case _ => {
+        val msg = s"Unable to find ${clazz} in ${filename}"
+        logger.error(msg)
+        throw new InvalidPlayByPlayException(msg)
+      }
+    }
+  }
 
   /** Away team name */
-  override val awayTeam = XmlHelper.getElemByClassAndTag(divs, "team away", "a").map(_.text).getOrElse("AWAY TEAM NOT FOUND")
-  if (awayTeam == "AWAY TEAM NOT FOUND")
-    logger.warn("No away team name found")
+  override val awayTeam = getElementFromXml("team away", "a")
 
   /** Away team score */
-  override val awayScore = XmlHelper.getElemByClassAndTag(divs, "team away", "span").map(_.text).getOrElse("AWAY SCORE NOT FOUND")
-  if (awayScore == "AWAY SCORE NOT FOUND")
-    logger.warn("No away team score name found")
+  override val awayScore = getElementFromXml("team away", "span")
 
   /** Home team name */
-  override val homeTeam = XmlHelper.getElemByClassAndTag(divs, "team home", "a").map(_.text).getOrElse("HOME TEAM NOT FOUND")
-  if (homeTeam == "HOME TEAM NOT FOUND")
-    logger.warn("No home team name found")
+  override val homeTeam = getElementFromXml("team home", "a")
 
   /** Home team score */
-  override val homeScore = XmlHelper.getElemByClassAndTag(divs, "team home", "span").map(_.text).getOrElse("HOME SCORE NOT FOUND")
-  if (homeScore == "HOME SCORE NOT FOUND")
-    logger.warn("No home team score name found")
+  override val homeScore = getElementFromXml("team home", "span")
 
   private val gameTimeLocationDivs = XmlHelper.getElemByClassAndTag(divs, "game-time-location", "p")
   val timeAndLocation =
     if (gameTimeLocationDivs.isDefined && gameTimeLocationDivs.get.size == 2) {
       (gameTimeLocationDivs.get.head.text, gameTimeLocationDivs.get.tail.text)
     } else {
-      ("GAME TIME NOT FOUND", "GAME LOCATION NOT FOUND")
+        val msg = s"Unable to find game time and location in ${filename}"
+        logger.error(msg)
+        throw new InvalidPlayByPlayException(msg)
     }
 
   /** Game time */
-  override val gameTime = timeAndLocation._1
+  val dateTimeFormatter = DateTimeFormat.forPattern("h:m a 'ET', MMM d, y")
+  override val gameTime: DateTime =
+    Try(dateTimeFormatter.parseDateTime(timeAndLocation._1)) match {
+      case Success(dateTime) => {
+        dateTime
+      }
+      case Failure(e: Throwable) => {
+        val message = s"Unable to parse game time in ${filename}: ${e.getMessage}"
+        logger.error(message)
+        throw new InvalidPlayByPlayException(message)
+      }
+    }
 
   /** Game location */
   override val gameLocation = timeAndLocation._2
+
+  /** URI of this game */
+  val gameUri: URI = EntityUriFactory.getGameUri(homeTeam, awayTeam, gameTime)
 
   /** Events from the play-by-play */
   override val events: Seq[Event] = readEvents()
 
   private def readEvents(): Seq[Event] = {
-    logger.info("Reading game: " + (awayTeam, awayScore, homeTeam, homeScore).toString)
+    logger.debug("Reading game: " + (awayTeam, awayScore, homeTeam, homeScore).toString)
 
     val p = (rootElem \\ "table")
       .find(_.attribute("class").mkString == "mod-data mod-pbp")
@@ -81,7 +103,7 @@ class EspnPlayByPlay(gameId: String, rootElem: Elem) extends PlayByPlay with Laz
           val description = (r \\ "h4" text).mkString
           if (description.endsWith("Summary")) {
             period += 1
-            logger.info(s"Reading period ${period}: ${description}")
+            logger.debug(s"Reading period ${period}: ${description}")
           }
           None
 
@@ -89,7 +111,7 @@ class EspnPlayByPlay(gameId: String, rootElem: Elem) extends PlayByPlay with Laz
           val td = (r \\ "td")
           if (td.size == 2) {
             eventNumber += 1
-            Some(new Event(gameId, eventNumber, period, (td.head text).mkString.trim, (td.last text).mkString.trim))
+            Some(new Event(gameUri, eventNumber, period, (td.head text).mkString.trim, (td.last text).mkString.trim))
 
           } else if (td.size == 4) {
             val time = (td(0) text).mkString
@@ -107,7 +129,7 @@ class EspnPlayByPlay(gameId: String, rootElem: Elem) extends PlayByPlay with Laz
 
             if (teamNameAndPlay.isDefined) {
               eventNumber += 1
-              Some(PlayFactory.createPlay(gameId, eventNumber, period, time, teamNameAndPlay.get._1, teamNameAndPlay.get._2, score))
+              Some(PlayFactory.createPlay(gameUri, eventNumber, period, time, teamNameAndPlay.get._1, teamNameAndPlay.get._2, score))
             } else
               None
 
@@ -123,8 +145,8 @@ class EspnPlayByPlay(gameId: String, rootElem: Elem) extends PlayByPlay with Laz
 
     if (eventsRead.isEmpty)
       logger.warn(s"No events read")
-    logger.info(s"Finished reading game")
-    
+    logger.debug(s"Finished reading game")
+
     eventsRead
   }
 
@@ -136,12 +158,18 @@ class EspnPlayByPlay(gameId: String, rootElem: Elem) extends PlayByPlay with Laz
    */
   override def addRdf(rep: Repository) = {
     rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME, EntityUriFactory.contextUri)
+    rep.addTriple(gameUri, Ontology.GAME_LOCATION, rep.getValueFactory.createLiteral(gameLocation), EntityUriFactory.contextUri)
+    rep.addTriple(gameUri, RDFS.LABEL, rep.getValueFactory.createLiteral(this.toString), EntityUriFactory.contextUri)
+    val gregorianGameTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(gameTime.toGregorianCalendar())
+    rep.addTriple(gameUri, Ontology.GAME_TIME, rep.getValueFactory.createLiteral(gregorianGameTime), EntityUriFactory.contextUri)
+    
     events.foreach(_.addRdf(rep))
     super.addRdf(rep)
   }
 
   override def toString(): String = {
-    s"${awayTeam} at ${homeTeam} on ${gameTime}: ${events.size} events"
+    val fmt = DateTimeFormat.forPattern("YYYY-MM-dd")
+    s"${awayTeam} (${awayScore}) at ${homeTeam} (${homeScore}) on ${fmt.print(gameTime)}: ${events.size} events"
   }
 
 }

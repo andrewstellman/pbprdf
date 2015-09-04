@@ -13,6 +13,8 @@ libraryDependencies ++= Seq(
    "org.slf4j" % "slf4j-api" % "1.7.12",
    "ch.qos.logback" % "logback-classic" % "1.0.13",
    "org.ccil.cowan.tagsoup" % "tagsoup" % "1.2",
+   "joda-time" % "joda-time" % "2.8.2",
+   "org.joda" % "joda-convert" % "1.7",
 
    // Test dependencies
    "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"

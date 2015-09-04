@@ -4,9 +4,9 @@ import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-
 import com.stellmangreene.pbprdf.plays.ThreeSecondViolationPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
+import com.stellmangreene.pbprdf.test.TestUri
 
 /**
  * Test the ThreeSecondViolationPlay class
@@ -22,7 +22,7 @@ class ThreeSecondViolationPlaySpec extends FlatSpec with Matchers with RdfOperat
   rep.initialize
 
   it should "parse a three-second violation" in {
-    new ThreeSecondViolationPlay("400610636", 146, 1, "4:07", "Sun", "Kara Lawson offensive 3-seconds (Technical Foul)", "33-31").addRdf(rep)
+    new ThreeSecondViolationPlay(TestUri.create("400610636"), 146, 1, "4:07", "Sun", "Kara Lawson offensive 3-seconds (Technical Foul)", "33-31").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/146> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

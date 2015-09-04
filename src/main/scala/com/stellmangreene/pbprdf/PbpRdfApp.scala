@@ -72,7 +72,7 @@ object PbpRdfApp extends App with LazyLogging {
       logger.info(s"Reading plays from ${file.getName} (file ${i} of ${files.size})")
       val xmlStream = new FileInputStream(file)
       val rootElem = XmlHelper.parseXml(xmlStream)
-      val playByPlay: PlayByPlay = new EspnPlayByPlay(file.getName, rootElem)
+      val playByPlay: PlayByPlay = new EspnPlayByPlay(rootElem, file.getName)
       playByPlay.addRdf(rep)
     })
 

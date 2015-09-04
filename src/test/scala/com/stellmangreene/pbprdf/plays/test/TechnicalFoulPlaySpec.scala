@@ -4,9 +4,9 @@ import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-
 import com.stellmangreene.pbprdf.plays.TechnicalFoulPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
+import com.stellmangreene.pbprdf.test.TestUri
 
 /**
  * Test the TechnicalFoulPlay class
@@ -22,7 +22,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   rep.initialize
 
   it should "parse a technical foul" in {
-    new TechnicalFoulPlay("400496779", 93, 2, "7:37", "Mercury", "Diana Taurasi technical foul(1st technical foul)", "21-28").addRdf(rep)
+    new TechnicalFoulPlay(TestUri.create("400496779"), 93, 2, "7:37", "Mercury", "Diana Taurasi technical foul(1st technical foul)", "21-28").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400496779/93> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

@@ -129,7 +129,7 @@ class EspnPlayByPlay(rootElem: Elem, filename: String) extends PlayByPlay with L
 
             if (teamNameAndPlay.isDefined) {
               eventNumber += 1
-              Some(PlayFactory.createPlay(gameUri, eventNumber, period, time, teamNameAndPlay.get._1, teamNameAndPlay.get._2, score))
+              Some(PlayFactory.createPlay(gameUri, filename, eventNumber, period, time, teamNameAndPlay.get._1, teamNameAndPlay.get._2, score))
             } else
               None
 

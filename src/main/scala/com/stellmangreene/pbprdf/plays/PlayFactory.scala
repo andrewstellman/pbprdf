@@ -30,41 +30,43 @@ object PlayFactory extends LazyLogging with RdfOperations {
    *
    * @author andrewstellman
    */
-  def createPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String): Event = {
+  def createPlay(gameUri: URI, filename: String, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String): Event = {
 
+    val trimmedPlay = play.trim.replaceAll(" +", " ")
+    
     if (BlockPlay.matches(play))
-      new BlockPlay(gameUri, eventNumber, period, time, team, play, score)
+      new BlockPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
     else if (DelayOfGamePlay.matches(play))
-      new DelayOfGamePlay(gameUri, eventNumber, period, time, team, play, score)
+      new DelayOfGamePlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
     else if (EnterPlay.matches(play))
-      new EnterPlay(gameUri, eventNumber, period, time, team, play, score)
+      new EnterPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
     else if (FoulPlay.matches(play))
-      new FoulPlay(gameUri, eventNumber, period, time, team, play, score)
+      new FoulPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
     else if (JumpBallPlay.matches(play))
-      new JumpBallPlay(gameUri, eventNumber, period, time, team, play, score)
+      new JumpBallPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
     else if (ReboundPlay.matches(play))
-      new ReboundPlay(gameUri, eventNumber, period, time, team, play, score)
+      new ReboundPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
     else if (ShotPlay.matches(play))
-      new ShotPlay(gameUri, eventNumber, period, time, team, play, score)
+      new ShotPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
     else if (TechnicalFoulPlay.matches(play))
-      new TechnicalFoulPlay(gameUri, eventNumber, period, time, team, play, score)
+      new TechnicalFoulPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
     else if (ThreeSecondViolationPlay.matches(play))
-      new ThreeSecondViolationPlay(gameUri, eventNumber, period, time, team, play, score)
+      new ThreeSecondViolationPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
     else if (TurnoverPlay.matches(play))
-      new TurnoverPlay(gameUri, eventNumber, period, time, team, play, score)
+      new TurnoverPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
     else {
-      logger.warn(s"Unable to find a specific kind of play that matches description: ${play}")
-      new Event(gameUri, eventNumber, period, time, play)
+      logger.warn(s"Unable to find a specific kind of play that matches description in ${filename}: ${play}")
+      new Event(gameUri, eventNumber, period, time, trimmedPlay)
     }
 
   }

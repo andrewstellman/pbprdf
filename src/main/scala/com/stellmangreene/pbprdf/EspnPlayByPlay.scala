@@ -25,6 +25,9 @@ import org.joda.time.DateTime
  */
 class EspnPlayByPlay(rootElem: Elem, filename: String) extends PlayByPlay with LazyLogging with RdfOperations {
 
+  /** Game source (eg. filename) */
+  override val gameSource = filename
+  
   private val divs = (rootElem \\ "body" \\ "div")
 
   private val awayTeamElems = XmlHelper.getElemByClassAndTag(divs, "team away", "a")

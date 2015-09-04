@@ -42,6 +42,9 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
 
   /** Game time */
   val gameTime: DateTime
+  
+  /** Game source (eg. filename) */
+  val gameSource: String
 
   /**
    * Add the events to an RDF repository
@@ -85,7 +88,7 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
 
     val teams = playerTeamMap.values.toSeq.distinct
     if (teams.size != 2)
-      logger.warn(s"Found entry plays with invalid number of teams ${teams.size} for game <${gameUri}>")
+      logger.warn(s"Found entry plays with invalid number of teams ${teams.size} for game <${gameUri}> in ${gameSource}")
 
     val players = playerTeamMap.keys.toSeq.distinct
     players.foreach(player => {
@@ -98,7 +101,7 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
       } else if (playerTeam == awayTeam) {
         rep.addTriple(awayTeamRosterBnode, Ontology.HAS_PLAYER, playerUri)
       } else {
-        logger.warn(s"Entry plays contain team ${playerTeam} that does match home team ${homeTeam} or away team ${awayTeam}")
+        logger.warn(s"Entry plays contain team ${playerTeam} that does match home team ${homeTeam} or away team ${awayTeam} in ${gameSource}")
       }
     })
   }

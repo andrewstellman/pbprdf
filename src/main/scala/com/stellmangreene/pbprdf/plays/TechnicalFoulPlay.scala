@@ -40,10 +40,15 @@ class TechnicalFoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: Strin
     val triples: Set[(Resource, URI, Value)] =
       play match {
         case TechnicalFoulPlay.playByPlayRegex(committedBy, foulNumber) => {
+          val committedByTriple: Set[(Resource, URI, Value)] =
+            if (committedBy != null && !committedBy.isEmpty)
+              Set((eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy)))
+            else
+              Set()
+
           Set(
             (eventUri, RDF.TYPE, Ontology.TECHNICAL_FOUL),
-            (eventUri, Ontology.TECHNICAL_FOUL_NUMBER, rep.getValueFactory.createLiteral(foulNumber.toInt)),
-            (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy)))
+            (eventUri, Ontology.TECHNICAL_FOUL_NUMBER, rep.getValueFactory.createLiteral(foulNumber.toInt))) ++ committedByTriple
         }
 
         case _ => Set()
@@ -62,6 +67,6 @@ class TechnicalFoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: Strin
  */
 object TechnicalFoulPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*) +technical foul.*\((\d+)\D* technical foul\)""".r
+  val playByPlayRegex = """^(.*) ?technical foul.*\((\d+)\D* technical foul\)""".r
 
 }

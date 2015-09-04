@@ -7,6 +7,7 @@ import org.scalatest.Matchers
 import com.stellmangreene.pbprdf.plays.TechnicalFoulPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.plays.DoubleTechnicalFoulPlay
 
 /**
  * Test the TechnicalFoulPlay class
@@ -58,6 +59,25 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#technicalFoulNumber -> 2",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: technical foul(2nd technical foul)"))
 
+  }
+
+  it should "parse a double technical foul" in {
+    new DoubleTechnicalFoulPlay(TestUri.create("400445797"), 231, 3, "4:22", "Shock", "Double technical foul: Marissa Coleman and Glory Johnson", "47-41").addRdf(rep)
+
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400445797/231> ?p ?o }")
+      .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
+      .toSet should be(
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#TechnicalFoul",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Marissa_Coleman",
+          "http://www.stellman-greene.com/pbprdf#period -> 3",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Shock: Double technical foul: Marissa Coleman and Glory Johnson",
+          "http://www.stellman-greene.com/pbprdf#time -> 4:22",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Glory_Johnson",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1538",
+          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Shock"))
   }
 
 }

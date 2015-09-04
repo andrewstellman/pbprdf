@@ -55,6 +55,9 @@ object PlayFactory extends LazyLogging with RdfOperations {
     else if (ShotPlay.matches(play))
       new ShotPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 
+    else if (DoubleTechnicalFoulPlay.matches(play))
+      new DoubleTechnicalFoulPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
+
     else if (TechnicalFoulPlay.matches(play))
       new TechnicalFoulPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score)
 

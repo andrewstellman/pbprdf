@@ -15,8 +15,6 @@ object EntityUriFactory {
   private val valueFactory = ValueFactoryImpl.getInstance()
 
   val NAMESPACE = "http://www.stellman-greene.com/pbprdf/"
-
-  val contextUri = valueFactory.createURI(NAMESPACE, "run_" + System.currentTimeMillis)
   
   /**
    * Generate the URI for a game entity

@@ -50,7 +50,7 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
    *            Sesame repository to add the events to
    */
   def addRdf(rep: Repository) = {
-    rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME, EntityUriFactory.contextUri)
+    rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME)
     addRosterBnodes(rep)
   }
 
@@ -66,15 +66,15 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
     val homeTeamRosterBnode = rep.getValueFactory.createBNode
     val awayTeamRosterBnode = rep.getValueFactory.createBNode
 
-    rep.addTriple(gameUri, Ontology.HAS_HOME_TEAM_ROSTER, homeTeamRosterBnode, EntityUriFactory.contextUri)
-    rep.addTriple(homeTeamRosterBnode, RDF.TYPE, Ontology.ROSTER, EntityUriFactory.contextUri)
-    rep.addTriple(homeTeamRosterBnode, Ontology.ROSTER_TEAM, EntityUriFactory.getTeamUri(homeTeam), EntityUriFactory.contextUri)
-    rep.addTriple(homeTeamRosterBnode, RDFS.LABEL, rep.getValueFactory.createLiteral(homeTeam), EntityUriFactory.contextUri)
+    rep.addTriple(gameUri, Ontology.HAS_HOME_TEAM_ROSTER, homeTeamRosterBnode)
+    rep.addTriple(homeTeamRosterBnode, RDF.TYPE, Ontology.ROSTER)
+    rep.addTriple(homeTeamRosterBnode, Ontology.ROSTER_TEAM, EntityUriFactory.getTeamUri(homeTeam))
+    rep.addTriple(homeTeamRosterBnode, RDFS.LABEL, rep.getValueFactory.createLiteral(homeTeam))
 
-    rep.addTriple(gameUri, Ontology.HAS_AWAY_TEAM_ROSTER, awayTeamRosterBnode, EntityUriFactory.contextUri)
-    rep.addTriple(awayTeamRosterBnode, RDF.TYPE, Ontology.ROSTER, EntityUriFactory.contextUri)
-    rep.addTriple(awayTeamRosterBnode, Ontology.ROSTER_TEAM, EntityUriFactory.getTeamUri(awayTeam), EntityUriFactory.contextUri)
-    rep.addTriple(awayTeamRosterBnode, RDFS.LABEL, rep.getValueFactory.createLiteral(awayTeam), EntityUriFactory.contextUri)
+    rep.addTriple(gameUri, Ontology.HAS_AWAY_TEAM_ROSTER, awayTeamRosterBnode)
+    rep.addTriple(awayTeamRosterBnode, RDF.TYPE, Ontology.ROSTER)
+    rep.addTriple(awayTeamRosterBnode, Ontology.ROSTER_TEAM, EntityUriFactory.getTeamUri(awayTeam))
+    rep.addTriple(awayTeamRosterBnode, RDFS.LABEL, rep.getValueFactory.createLiteral(awayTeam))
 
     val playerTeamMap: Map[String, String] = events
       .filter(_.isInstanceOf[EnterPlay])
@@ -89,14 +89,14 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
 
     val players = playerTeamMap.keys.toSeq.distinct
     players.foreach(player => {
-      rep.addTriple(EntityUriFactory.getPlayerUri(player), RDFS.LABEL, rep.getValueFactory.createLiteral(player.trim), EntityUriFactory.contextUri)
+      rep.addTriple(EntityUriFactory.getPlayerUri(player), RDFS.LABEL, rep.getValueFactory.createLiteral(player.trim))
       
       val playerTeam = playerTeamMap.get(player).get
       val playerUri = EntityUriFactory.getPlayerUri(player)
       if (playerTeam == homeTeam) {
-        rep.addTriple(homeTeamRosterBnode, Ontology.HAS_PLAYER, playerUri, EntityUriFactory.contextUri)
+        rep.addTriple(homeTeamRosterBnode, Ontology.HAS_PLAYER, playerUri)
       } else if (playerTeam == awayTeam) {
-        rep.addTriple(awayTeamRosterBnode, Ontology.HAS_PLAYER, playerUri, EntityUriFactory.contextUri)
+        rep.addTriple(awayTeamRosterBnode, Ontology.HAS_PLAYER, playerUri)
       } else {
         logger.warn(s"Entry plays contain team ${playerTeam} that does match home team ${homeTeam} or away team ${awayTeam}")
       }

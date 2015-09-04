@@ -45,9 +45,9 @@ case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, desc
    */
   def addRdf(rep: Repository) = {
     val valueFactory = rep.getValueFactory
-    rep.addTriples(eventTriples(valueFactory), EntityUriFactory.contextUri)
-    rep.addTriples(secondsIntoGameTriple(valueFactory), EntityUriFactory.contextUri)
-    rep.addTriples(parseTimeoutTriplesIfPossible(valueFactory), EntityUriFactory.contextUri)
+    rep.addTriples(eventTriples(valueFactory))
+    rep.addTriples(secondsIntoGameTriple(valueFactory))
+    rep.addTriples(parseTimeoutTriplesIfPossible(valueFactory))
   }
 
   /** Generate the type, period, time, and label triples that every event must have */

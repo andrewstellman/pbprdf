@@ -50,7 +50,7 @@ class DelayOfGamePlay(gameUri: URI, eventNumber: Int, period: Int, time: String,
       }
 
     if (!triples.isEmpty)
-      rep.addTriples(triples, EntityUriFactory.contextUri)
+      rep.addTriples(triples)
 
     super.addRdf(rep)
   }

@@ -93,13 +93,13 @@ object PbpRdfApp extends App with LazyLogging {
 
     if (outputFile.isDefined) {
       val outputStream = new FileOutputStream(outputFile.get)
-      logger.info(s"Writing TriG to ${outputFile.get}")
-      Rio.write(model, outputStream, RDFFormat.TRIG)
+      logger.info(s"Writing Turtle to ${outputFile.get}")
+      Rio.write(model, outputStream, RDFFormat.TURTLE)
     } else {
-      logger.info("Writing TriG to standard output")
-      Rio.write(model, System.out, RDFFormat.TRIG)
+      logger.info("Writing Turtle to standard output")
+      Rio.write(model, System.out, RDFFormat.TURTLE)
     }
 
-    logger.info(s"Finished writing TriG")
+    logger.info(s"Finished writing Turtle")
   }
 }

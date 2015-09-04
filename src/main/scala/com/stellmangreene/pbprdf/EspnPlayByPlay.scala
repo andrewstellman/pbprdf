@@ -157,11 +157,11 @@ class EspnPlayByPlay(rootElem: Elem, filename: String) extends PlayByPlay with L
    *            Sesame repository to add the events to
    */
   override def addRdf(rep: Repository) = {
-    rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME, EntityUriFactory.contextUri)
-    rep.addTriple(gameUri, Ontology.GAME_LOCATION, rep.getValueFactory.createLiteral(gameLocation), EntityUriFactory.contextUri)
-    rep.addTriple(gameUri, RDFS.LABEL, rep.getValueFactory.createLiteral(this.toString), EntityUriFactory.contextUri)
+    rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME)
+    rep.addTriple(gameUri, Ontology.GAME_LOCATION, rep.getValueFactory.createLiteral(gameLocation))
+    rep.addTriple(gameUri, RDFS.LABEL, rep.getValueFactory.createLiteral(this.toString))
     val gregorianGameTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(gameTime.toGregorianCalendar())
-    rep.addTriple(gameUri, Ontology.GAME_TIME, rep.getValueFactory.createLiteral(gregorianGameTime), EntityUriFactory.contextUri)
+    rep.addTriple(gameUri, Ontology.GAME_TIME, rep.getValueFactory.createLiteral(gregorianGameTime))
     
     events.foreach(_.addRdf(rep))
     super.addRdf(rep)

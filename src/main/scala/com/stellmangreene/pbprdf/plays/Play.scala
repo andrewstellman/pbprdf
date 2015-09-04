@@ -23,8 +23,8 @@ abstract class Play(gameUri: URI, eventNumber: Int, period: Int, time: String, t
    * Add the type and pbprdf:team triples that every Play event must have
    */
   override def addRdf(rep: Repository) {
-    rep.addTriple(eventUri, RDF.TYPE, Ontology.PLAY, EntityUriFactory.contextUri)
-    rep.addTriple(eventUri, Ontology.TEAM, EntityUriFactory.getTeamUri(team), EntityUriFactory.contextUri)
+    rep.addTriple(eventUri, RDF.TYPE, Ontology.PLAY)
+    rep.addTriple(eventUri, Ontology.TEAM, EntityUriFactory.getTeamUri(team))
     super.addRdf(rep)
   }
   

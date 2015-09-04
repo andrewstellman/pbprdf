@@ -55,7 +55,7 @@ class ThreeSecondViolationPlay(gameUri: URI, eventNumber: Int, period: Int, time
       }
 
     if (!triples.isEmpty)
-      rep.addTriples(triples, EntityUriFactory.contextUri)
+      rep.addTriples(triples)
 
     super.addRdf(rep)
   }

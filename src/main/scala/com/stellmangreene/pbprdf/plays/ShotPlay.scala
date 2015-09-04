@@ -93,7 +93,7 @@ class ShotPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
       }
 
     if (!triples.isEmpty)
-      rep.addTriples(triples, EntityUriFactory.contextUri)
+      rep.addTriples(triples)
 
     super.addRdf(rep)
   }

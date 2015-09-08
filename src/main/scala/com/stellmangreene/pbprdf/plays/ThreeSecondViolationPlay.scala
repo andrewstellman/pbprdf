@@ -62,6 +62,6 @@ class ThreeSecondViolationPlay(gameUri: URI, eventNumber: Int, period: Int, time
  */
 object ThreeSecondViolationPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*) offensive 3-seconds +\(Technical Foul\)$""".r
+  val playByPlayRegex = """^(.*) defensive 3-seconds +\(Technical Foul\)$""".r
 
 }

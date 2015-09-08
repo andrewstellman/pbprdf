@@ -9,13 +9,22 @@ import org.openrdf.model.vocabulary.RDF
 import org.openrdf.model.Resource
 import org.openrdf.model.Value
 import org.openrdf.model.URI
+import org.openrdf.rio.RDFFormat
+import java.io.FileOutputStream
+import org.openrdf.rio.Rio
+import org.openrdf.model.impl.LinkedHashModel
+import info.aduna.iteration.Iterations
+import com.stellmangreene.pbprdf.model.Ontology
+import org.openrdf.model.vocabulary.RDFS
+import org.openrdf.model.vocabulary.XMLSchema
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * Define implicit operations to perform RDF functions on Sesame repositories and collections
  *
  * @author andrewstellman
  */
-trait RdfOperations {
+trait RdfOperations extends LazyLogging {
 
   /**
    * Define implicit Repository operations
@@ -31,6 +40,36 @@ trait RdfOperations {
    * Implicit Repository operations to help execute SPARQL queries
    */
   protected class RepositoryImplicitOperations(repository: Repository) {
+
+    /**
+     * Write all of the statements in the repository to a file or System.out
+     * 
+     * @param outputFile
+     *        The name of the file to write to, or None to write to System.out
+     *        
+     * @param format
+     *        The format to write (defaults to Turtle) 
+     */
+    def writeAllStatements(outputFile: Option[String], rdfFormat: RDFFormat = RDFFormat.TURTLE) = {
+      val conn = repository.getConnection
+      var statements = conn.getStatements(null, null, null, true)
+
+      var model = Iterations.addAll(statements, new LinkedHashModel)
+      model.setNamespace("rdf", RDF.NAMESPACE)
+      model.setNamespace("rdfs", RDFS.NAMESPACE)
+      model.setNamespace("xsd", XMLSchema.NAMESPACE)
+      model.setNamespace("pbprdf", Ontology.NAMESPACE)
+
+      if (outputFile.isDefined) {
+        val outputStream = new FileOutputStream(outputFile.get)
+        logger.info(s"Writing Turtle to ${outputFile.get}")
+        Rio.write(model, outputStream, rdfFormat)
+      } else {
+        logger.info("Writing Turtle to standard output")
+        Rio.write(model, System.out, rdfFormat)
+      }
+    }
+
     /**
      * Execute a SPARQL query and return a result
      *

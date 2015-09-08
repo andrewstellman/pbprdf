@@ -3,14 +3,6 @@ package com.stellmangreene.pbprdf
 import org.openrdf.repository.Repository
 import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
-import org.openrdf.model.vocabulary.FOAF
-import org.openrdf.model.vocabulary.RDFS
-import org.openrdf.model.vocabulary.RDF
-import org.openrdf.model.vocabulary.XMLSchema
-import org.openrdf.model.impl.LinkedHashModel
-import info.aduna.iteration.Iterations
-import org.openrdf.rio.RDFFormat
-import org.openrdf.rio.Rio
 import com.typesafe.scalalogging.LazyLogging
 import java.io.FileInputStream
 import java.io.File
@@ -20,8 +12,9 @@ import com.stellmangreene.pbprdf.util.XmlHelper
 import scala.util.Try
 import scala.util.Success
 import java.io.FileOutputStream
+import com.stellmangreene.pbprdf.util.RdfOperations
 
-object PbpRdfApp extends App with LazyLogging {
+object PbpRdfApp extends App with LazyLogging with RdfOperations {
 
   def printUsageAndExit(message: Option[String] = None) = {
     if (message.isDefined)
@@ -81,25 +74,12 @@ object PbpRdfApp extends App with LazyLogging {
         }
       }
     })
-
-    val conn = rep.getConnection
-    var statements = conn.getStatements(null, null, null, true)
-
-    var model = Iterations.addAll(statements, new LinkedHashModel)
-    model.setNamespace("rdf", RDF.NAMESPACE)
-    model.setNamespace("rdfs", RDFS.NAMESPACE)
-    model.setNamespace("xsd", XMLSchema.NAMESPACE)
-    model.setNamespace("pbprdf", Ontology.NAMESPACE)
-
-    if (outputFile.isDefined) {
-      val outputStream = new FileOutputStream(outputFile.get)
-      logger.info(s"Writing Turtle to ${outputFile.get}")
-      Rio.write(model, outputStream, RDFFormat.TURTLE)
-    } else {
-      logger.info("Writing Turtle to standard output")
-      Rio.write(model, System.out, RDFFormat.TURTLE)
-    }
+    
+    logger.info("Finished reading files")
+    
+    rep.writeAllStatements(outputFile)
 
     logger.info(s"Finished writing Turtle")
   }
+
 }

@@ -21,9 +21,7 @@ Generate an Eclipse project:
 $ sbt eclipse
 ```
 
-
-Example: Generate Turtle from the unit test data
-------------------------------------------------
+Generate sample Turtle from the unit test data and print it to the console
 ```
 $ sbt "run src/test/resources/com/stellmangreene/pbprdf/test/htmldata/"
 ```
@@ -39,23 +37,19 @@ $ cd pbprdf
 
 Step 2: Download a set of play-by-play HTML files
 ```
-$ mkdir wnba-games
-$ for ((i=400610636;i<=400610811;i++))
-> do
-> curl http://scores.espn.go.com/wnba/playbyplay?gameId=$i > wnba-games/$i.html
-> done
+$ ./fetch-wnba-play-by-plays.sh
 ```
 
 Step 3: Run pbprdf and generate the Turtle file
 ```
-$ sbt "run wnba-games wnba-rdf.ttl"
+$ sbt "run wnba-2014-playoffs wnba-2014-playoffs.ttl"
 ```
 
 Step 4: Import the Turtle file into Sesame
 ```
 $ console -s http://localhost:8080/openrdf-sesame MyRdfDatabase
 Type 'help' for help.
-MyRdfDatabase> load wnba-rdf.ttl
+MyRdfDatabase> load wnba-2014-playoffs.ttl into http://www.stellman-greene.com/pbprdf/wnba-2014-playoffs
 Loading data...
 Data has been added to the repository (20410 ms)
 ```
@@ -93,4 +87,57 @@ Evaluating SPARQL query...
 | "Sky"                               | "14909"^^<http://www.w3.org/2001/XMLSchema#integer>|
 +-------------------------------------+-------------------------------------+
 12 result(s) (1033 ms)
+```
+
+Example: Load the ontology into Sesame
+--------------------------------------
+
+Step 1: Generate the ontology
+```
+$ sbt "run --ontology ontology.ttl"
+```
+
+Step 2: Load the ontology into its own context
+```
+MyRdfDatabase> load ontology.ttl into http://www.stellman-greene.com/pbprdf/ontology
+Loading data...
+Data has been added to the repository (18 ms)
+```
+
+Step 3: Execute a query that retrieves only the data in the ontology
+```
+MyRdfDatabase> SPARQL
+enter multi-line SPARQL query (terminate with line containing single '.')
+BASE <http://www.stellman-greene.com/>
+PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+SELECT *
+FROM NAMED <http://www.stellman-greene.com/pbprdf/ontology>
+WHERE {
+  GRAPH ?graph {
+    ?class a owl:Class
+  }
+}
+.
+Evaluating SPARQL query...
++-------------------------------------+-------------------------------------+
+| graph                               | class                               |
++-------------------------------------+-------------------------------------+
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Block                        |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Enters                       |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Event                        |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Foul                         |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Game                         |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:JumpBall                     |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Play                         |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Player                       |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Rebound                      |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Roster                       |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Shot                         |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Team                         |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:TechnicalFoul                |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Timeout                      |
+| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Turnover                     |
++-------------------------------------+-------------------------------------+
+15 result(s) (60 ms)
 ```

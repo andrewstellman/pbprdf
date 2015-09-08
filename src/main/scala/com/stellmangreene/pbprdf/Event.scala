@@ -59,7 +59,7 @@ case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, desc
       (eventUri, RDFS.LABEL, valueFactory.createLiteral(description)))
   }
 
-  /** Generate the pbprdf:secondsIntoGame triple */
+  /** Generate the pbprdf:secondsIntoGame and pbprdf:secondsLeftInPeriod triples */
   private def secondsIntoGameTriple(valueFactory: ValueFactory): Set[(Resource, URI, Value)] = {
     val timeRegex = """^(\d+):(\d+)$""".r
 
@@ -83,7 +83,11 @@ case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, desc
               (4 - minutes.toInt) * 60 +
               (60 - seconds.toInt)
 
-        Set((eventUri, Ontology.SECONDS_INTO_GAME, valueFactory.createLiteral(secondsIntoGame)))
+        val secondsLeftInPeriod: Int = minutes.toInt * 60 + seconds.toInt 
+              
+        Set(
+            (eventUri, Ontology.SECONDS_INTO_GAME, valueFactory.createLiteral(secondsIntoGame)),
+            (eventUri, Ontology.SECONDS_LEFT_IN_PERIOD, valueFactory.createLiteral(secondsLeftInPeriod)))
       }
       case _ => {
         logger.warn(s"Unable to calculate seconds into game from time ${time}")

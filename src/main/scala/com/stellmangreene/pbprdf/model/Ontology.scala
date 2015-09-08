@@ -109,6 +109,11 @@ object Ontology {
     range = "http://www.w3.org/2001/XMLSchema#int")
   val SECONDS_INTO_GAME = valueFactory.createURI(NAMESPACE, "secondsIntoGame")
 
+  @OntologyProperty(label = "The number of seconds left in the period when an event occurred",
+    domain = "http://www.stellman-greene.com/pbprdf#Event",
+    range = "http://www.w3.org/2001/XMLSchema#int")
+  val SECONDS_LEFT_IN_PERIOD = valueFactory.createURI(NAMESPACE, "secondsLeftInPeriod")
+
   // Types and properties for timeouts
 
   @OntologyClass(label = "A timeout")

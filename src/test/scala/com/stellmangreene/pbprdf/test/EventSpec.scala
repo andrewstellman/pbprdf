@@ -48,9 +48,10 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
       .toSet should be(
         Set(
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+          "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 4:56",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 304",
-          "http://www.stellman-greene.com/pbprdf#period -> 1",
+          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 296",
           "http://www.w3.org/2000/01/rdf-schema#label -> Official timeout"))
 
     rep
@@ -63,6 +64,7 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 775",
+          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 425",
           "http://www.stellman-greene.com/pbprdf#timeoutTeam -> Connecticut",
           "http://www.stellman-greene.com/pbprdf#timeoutDuration -> Full",
           "http://www.w3.org/2000/01/rdf-schema#label -> Connecticut Full timeout"))

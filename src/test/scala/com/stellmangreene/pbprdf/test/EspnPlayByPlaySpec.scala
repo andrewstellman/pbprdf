@@ -150,6 +150,7 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 10:00",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 0",
+          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 600",
           "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#jumpBallHomePlayer -> http://www.stellman-greene.com/pbprdf/players/Kelsey_Bone",
           "http://www.stellman-greene.com/pbprdf#jumpBallAwayPlayer -> http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson",
@@ -166,6 +167,7 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 1:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1135",
+          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 65",
           "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
           "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Kayla_Thornton",
           "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
@@ -181,6 +183,7 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 775",
+          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 425",
           "http://www.stellman-greene.com/pbprdf#timeoutDuration -> Full",
           "http://www.stellman-greene.com/pbprdf#timeoutTeam -> Connecticut",
           "http://www.w3.org/2000/01/rdf-schema#label -> Connecticut Full timeout"))

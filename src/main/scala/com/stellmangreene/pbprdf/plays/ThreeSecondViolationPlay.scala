@@ -39,16 +39,11 @@ class ThreeSecondViolationPlay(gameUri: URI, eventNumber: Int, period: Int, time
   override def addRdf(rep: Repository) = {
     val triples: Set[(Resource, URI, Value)] =
       play match {
-        case ThreeSecondViolationPlay.playByPlayRegex(committedBy, offensiveDefensive) => {
-          val offensiveTriples: Set[(Resource, URI, Value)] =
-            if (offensiveDefensive.trim == "offensive")
-              Set((eventUri, Ontology.IS_OFFENSIVE, rep.getValueFactory.createLiteral(true)))
-            else
-              Set()
+        case ThreeSecondViolationPlay.playByPlayRegex(committedBy) => {
           Set(
             (eventUri, Ontology.IS_THREE_SECOND, rep.getValueFactory.createLiteral(true)),
             (eventUri, RDF.TYPE, Ontology.TECHNICAL_FOUL),
-            (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy))) ++ offensiveTriples
+            (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy)))
         }
 
         case _ => Set()
@@ -67,6 +62,6 @@ class ThreeSecondViolationPlay(gameUri: URI, eventNumber: Int, period: Int, time
  */
 object ThreeSecondViolationPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*) (.*) 3-seconds +\(Technical Foul\)$""".r
+  val playByPlayRegex = """^(.*) offensive 3-seconds +\(Technical Foul\)$""".r
 
 }

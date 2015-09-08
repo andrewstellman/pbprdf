@@ -34,7 +34,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 1:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 535",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
           "http://www.stellman-greene.com/pbprdf#turnoverType -> turnover",
           "http://www.stellman-greene.com/pbprdf#turnedOverBy -> http://www.stellman-greene.com/pbprdf/players/Kayla_Thornton",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Kayla Thornton turnover"))
@@ -53,7 +53,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 8:00",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 120",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#turnoverType -> lost ball turnover",
           "http://www.stellman-greene.com/pbprdf#turnedOverBy -> http://www.stellman-greene.com/pbprdf/players/Tierra_Ruffin-Pratt",
           "http://www.stellman-greene.com/pbprdf#stolenBy -> http://www.stellman-greene.com/pbprdf/players/Alex_Bentley",
@@ -73,7 +73,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 9:36",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 24",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#turnoverType -> shot clock",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: shot clock turnover"))
   }
@@ -91,7 +91,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 6:54",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 786",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#turnoverType -> bad pass",
           "http://www.stellman-greene.com/pbprdf#turnedOverBy -> http://www.stellman-greene.com/pbprdf/players/Alex_Bentley",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Alex Bentley bad pass"))
@@ -110,7 +110,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 4",
           "http://www.stellman-greene.com/pbprdf#time -> 8:04",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1916",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
           "http://www.stellman-greene.com/pbprdf#turnoverType -> bad pass",
           "http://www.stellman-greene.com/pbprdf#turnedOverBy -> http://www.stellman-greene.com/pbprdf/players/Ivory_Latta",
           "http://www.stellman-greene.com/pbprdf#stolenBy -> http://www.stellman-greene.com/pbprdf/players/Kelsey_Bone",
@@ -127,7 +127,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Turnover",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1131",
           "http://www.stellman-greene.com/pbprdf#time -> 1:09",
@@ -149,7 +149,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 3",
           "http://www.stellman-greene.com/pbprdf#time -> 4:16",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1544",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#turnoverType -> kicked ball violation",
           "http://www.stellman-greene.com/pbprdf#turnedOverBy -> http://www.stellman-greene.com/pbprdf/players/Kara_Lawson",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Kara Lawson kicked ball violation"))

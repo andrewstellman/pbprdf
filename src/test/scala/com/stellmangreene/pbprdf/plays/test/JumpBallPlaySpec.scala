@@ -38,7 +38,7 @@ class JumpBallPlaySpec extends FlatSpec with Matchers with RdfOperations {
         "http://www.stellman-greene.com/pbprdf#period -> 5",
         "http://www.stellman-greene.com/pbprdf#time -> 4:58",
         "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 2402",
-        "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
+        "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
         "http://www.stellman-greene.com/pbprdf#jumpBallHomePlayer -> http://www.stellman-greene.com/pbprdf/players/Brittney_Griner",
         "http://www.stellman-greene.com/pbprdf#jumpBallAwayPlayer -> http://www.stellman-greene.com/pbprdf/players/Elena_Delle_Donne",
         "http://www.stellman-greene.com/pbprdf#jumpBallGainedPossession -> http://www.stellman-greene.com/pbprdf/players/DeWanna_Bonner",
@@ -60,7 +60,7 @@ class JumpBallPlaySpec extends FlatSpec with Matchers with RdfOperations {
         "http://www.stellman-greene.com/pbprdf#period -> 1",
         "http://www.stellman-greene.com/pbprdf#time -> 10:00",
         "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 0",
-        "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+        "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
         "http://www.stellman-greene.com/pbprdf#jumpBallHomePlayer -> http://www.stellman-greene.com/pbprdf/players/Kelsey_Bone",
         "http://www.stellman-greene.com/pbprdf#jumpBallAwayPlayer -> http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson",
         "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Stefanie Dolson vs. Kelsey Bone"))

@@ -34,9 +34,8 @@ class ThreeSecondViolationPlaySpec extends FlatSpec with Matchers with RdfOperat
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 4:07",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 353",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Kara_Lawson",
-          "http://www.stellman-greene.com/pbprdf#isOffensive -> true",
           "http://www.stellman-greene.com/pbprdf#isThreeSecond -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Kara Lawson offensive 3-seconds (Technical Foul)"))
 

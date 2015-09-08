@@ -71,15 +71,15 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
     playByPlay.addRdf(rep)
 
-    rep.executeQuery("SELECT * { ?s ?p ?o }").toIterator().size should be(4165)
-
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .filter(!_.contains("node"))
       .toSet should be(
         Set(
-          "http://www.stellman-greene.com/pbprdf#gameTime -> 2015-06-05T19:00:00.000-05:00",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Game",
+          "http://www.stellman-greene.com/pbprdf#gameTime -> 2015-06-05T19:00:00.000-05:00",
+          "http://www.stellman-greene.com/pbprdf#homeTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#awayTeam -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
           "http://www.stellman-greene.com/pbprdf#gameLocation -> Mohegan Sun Arena, Uncasville, CT",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics (73) at Sun (68) on 2015-06-05: 391 events"))
 
@@ -150,7 +150,7 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 10:00",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 0",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#jumpBallHomePlayer -> http://www.stellman-greene.com/pbprdf/players/Kelsey_Bone",
           "http://www.stellman-greene.com/pbprdf#jumpBallAwayPlayer -> http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson",
           "http://www.stellman-greene.com/pbprdf#jumpBallGainedPossession -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
@@ -166,7 +166,7 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 1:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1135",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
           "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Kayla_Thornton",
           "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
           "http://www.stellman-greene.com/pbprdf#isCharge -> true",

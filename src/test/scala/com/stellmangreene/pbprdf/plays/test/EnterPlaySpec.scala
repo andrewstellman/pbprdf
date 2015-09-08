@@ -38,7 +38,7 @@ class EnterPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 8:00",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 120",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#playerEntering -> http://www.stellman-greene.com/pbprdf/players/Kelly_Faris",
           "http://www.stellman-greene.com/pbprdf#playerExiting -> http://www.stellman-greene.com/pbprdf/players/Alyssa_Thomas",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Kelly Faris enters the game for Alyssa Thomas"))

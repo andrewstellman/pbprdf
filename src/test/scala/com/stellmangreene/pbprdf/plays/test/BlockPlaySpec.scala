@@ -35,7 +35,7 @@ class BlockPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:48",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 732",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
           "http://www.stellman-greene.com/pbprdf#shotBy -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
           "http://www.stellman-greene.com/pbprdf#shotBlockedBy -> http://www.stellman-greene.com/pbprdf/players/Tayler_Hill",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Tayler Hill blocks Jasmine Thomas's layup"))
@@ -53,7 +53,7 @@ class BlockPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 2:37",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 443",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
           "http://www.stellman-greene.com/pbprdf#shotBy -> http://www.stellman-greene.com/pbprdf/players/Erin_Phillips",
           "http://www.stellman-greene.com/pbprdf#shotBlockedBy -> http://www.stellman-greene.com/pbprdf/players/Krystal_Thomas",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: Krystal Thomas blocks Erin Phillips' 3-foot  layup"))

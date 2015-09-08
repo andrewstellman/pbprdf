@@ -35,7 +35,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:37",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 743",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
           "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Diana_Taurasi",
           "http://www.stellman-greene.com/pbprdf#technicalFoulNumber -> 1",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: Diana Taurasi technical foul(1st technical foul)"))
@@ -55,7 +55,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 1:03",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1137",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
           "http://www.stellman-greene.com/pbprdf#technicalFoulNumber -> 2",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: technical foul(2nd technical foul)"))
 
@@ -77,7 +77,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Glory_Johnson",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1538",
-          "http://www.stellman-greene.com/pbprdf#team -> http://www.stellman-greene.com/pbprdf/teams/Shock"))
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Shock"))
   }
 
 }

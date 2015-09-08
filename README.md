@@ -99,7 +99,7 @@ $ sbt "run --ontology ontology.ttl"
 
 Step 2: Load the ontology into its own context
 ```
-MyRdfDatabase> load ontology.ttl into http://www.stellman-greene.com/pbprdf/ontology
+MyRdfDatabase> load ontology.ttl into http://www.stellman-greene.com/pbprdf/Ontology
 Loading data...
 Data has been added to the repository (18 ms)
 ```
@@ -112,7 +112,7 @@ BASE <http://www.stellman-greene.com/>
 PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 SELECT *
-FROM NAMED <http://www.stellman-greene.com/pbprdf/ontology>
+FROM NAMED <http://www.stellman-greene.com/pbprdf/Ontology>
 WHERE {
   GRAPH ?graph {
     ?class a owl:Class
@@ -123,21 +123,21 @@ Evaluating SPARQL query...
 +-------------------------------------+-------------------------------------+
 | graph                               | class                               |
 +-------------------------------------+-------------------------------------+
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Block                        |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Enters                       |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Event                        |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Foul                         |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Game                         |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:JumpBall                     |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Play                         |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Player                       |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Rebound                      |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Roster                       |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Shot                         |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Team                         |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:TechnicalFoul                |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Timeout                      |
-| <http://www.stellman-greene.com/pbprdf/ontology>| pbprdf:Turnover                     |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Block                        |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Enters                       |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Event                        |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Foul                         |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Game                         |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:JumpBall                     |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Play                         |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Player                       |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Rebound                      |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Roster                       |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Shot                         |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Team                         |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:TechnicalFoul                |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Timeout                      |
+| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Turnover                     |
 +-------------------------------------+-------------------------------------+
 15 result(s) (60 ms)
 ```

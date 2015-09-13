@@ -165,11 +165,11 @@ trait RdfOperations extends LazyLogging {
     private val iterator = for (statement <- new IterationWrapper[T, X](iteration)) yield statement
 
     /**
-     * Converts this Iteration to an Iterator. As with toIterable, it's lazy in this default implementation, as this TraversableOnce may be lazy and unevaluated.
+     * Converts this Iteration to an Iterator. May be lazy and unevaluated, and can be traversed only once.
      *
      * @returns an Iterator that returns all elements of this Iteration.
      */
-    def toIterator(): Iterator[T] = {
+    def asIterator(): Iterator[T] = {
       iterator
     }
 

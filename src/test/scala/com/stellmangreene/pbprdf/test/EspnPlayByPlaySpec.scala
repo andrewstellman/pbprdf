@@ -138,7 +138,9 @@ SELECT * {
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
-        Set("http://www.w3.org/2000/01/rdf-schema#label -> Stefanie Dolson"))
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Player",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Stefanie Dolson"))
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/1> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

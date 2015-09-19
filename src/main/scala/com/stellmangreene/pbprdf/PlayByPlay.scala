@@ -100,6 +100,7 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
       
       val playerTeam = playerTeamMap.get(player).get
       val playerUri = EntityUriFactory.getPlayerUri(player)
+      rep.addTriple(playerUri, RDF.TYPE, Ontology.PLAYER)
       if (playerTeam == homeTeam) {
         rep.addTriple(homeTeamRosterBnode, Ontology.HAS_PLAYER, playerUri)
       } else if (playerTeam == awayTeam) {

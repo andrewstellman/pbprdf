@@ -1,5 +1,12 @@
 $!/bin/bash
 
+# fetch 2015 regular season
+mkdir wnba-2015-season
+for ((i=400610636;i<=400610839;i++))
+do
+   curl http://scores.espn.go.com/wnba/playbyplay?gameId=$i > wnba-2015-season/$i.html
+done
+
 # fetch 2014 regular season
 mkdir wnba-2014-season
 for ((i=400539461;i<=400539662;i++))

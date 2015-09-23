@@ -10,6 +10,8 @@ Download or clone the source, use [sbt-assembly](https://github.com/sbt/sbt-asse
 
 Unix: (make sure you install sbt ([Unix](http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Linux.html), [Mac](http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Mac.html))
 ```
+$ git clone https://github.com/andrewstellman/pbprdf.git
+$ cd pbprdf
 $ sbt assembly
 $ ./pbprdf
 ```

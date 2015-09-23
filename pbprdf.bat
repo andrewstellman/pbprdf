@@ -32,7 +32,7 @@ set JAVA=%JAVA_HOME%\bin\java
 
 :checkJdk18
 "%JAVA%" -version 2>&1 | findstr "1.8" >NUL
-IF ERRORLEVEL 1 goto checkJdk15
+IF ERRORLEVEL 0 goto java8
 echo Java 8 or newer required to run pbprdf
 goto end
 

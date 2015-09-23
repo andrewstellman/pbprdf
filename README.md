@@ -38,7 +38,9 @@ $ sbt eclipse
 Generatesample Turtle from the unit test data and print it to the console
 
 using the script:
+```
 $ ./pbprdf src/test/resources/com/stellmangreene/pbprdf/test/htmldata/
+```
 
 via SBT:
 ```
@@ -64,7 +66,7 @@ $ ./fetch-wnba-play-by-plays.sh
 
 Step 3: Run pbprdf and generate the Turtle file
 ```
-$ sbt "run wnba-2014-playoffs wnba-2014-playoffs.ttl"
+$ ./pbprdf wnba-2014-playoffs wnba-2014-playoffs.ttl
 ```
 
 Step 4: Import the Turtle file into Sesame
@@ -116,7 +118,7 @@ Example: Load the ontology into Sesame
 
 Step 1: Generate the ontology
 ```
-$ sbt "run --ontology ontology.ttl"
+$ ./pbprdf --ontology ontology.ttl
 ```
 
 Step 2: Load the ontology into its own context

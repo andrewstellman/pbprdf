@@ -6,10 +6,24 @@ Install and run
 
 __Prerequisite: must have [sbt](http://www.scala-sbt.org/) in your path.__
 
-Download or clone the source, then run:
+Download or clone the source, use [sbt-assembly](https://github.com/sbt/sbt-assembly) to assemble the program (into the target/scala-2.11 folder), and run the script:
+
+Unix:
 ```
-$ sbt run 
+$ sbt assembly
+$ ./pbprdf
 ```
+
+Windows: (make sure you [install SBT 0.13.x or later on Windows](http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Windows.html))
+```
+C:\Users\Public\src>git clone https://github.com/andrewstellman/pbprdf.git
+C:\Users\Public\src>cd pbprdf
+C:\Users\Public\src\pbprdf>sbt assembly
+C:\Users\Public\src\pbprdf>pbprdf
+```
+
+Other useful build commands
+---------------------------
 
 Run the unit tests:
 ```
@@ -21,10 +35,18 @@ Generate an Eclipse project:
 $ sbt eclipse
 ```
 
-Generate sample Turtle from the unit test data and print it to the console
+Generatesample Turtle from the unit test data and print it to the console
+
+using the script:
+$ ./pbprdf src/test/resources/com/stellmangreene/pbprdf/test/htmldata/
+
+via SBT:
 ```
 $ sbt "run src/test/resources/com/stellmangreene/pbprdf/test/htmldata/"
 ```
+
+Examples
+========
 
 Example: Analyze a set of games
 -------------------------------

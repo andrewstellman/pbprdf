@@ -7,6 +7,14 @@ do
    curl http://scores.espn.go.com/wnba/playbyplay?gameId=$i > wnba-2015-season/$i.html
 done
 
+# fetch 2015 playoffs
+mkdir wnba-2015-playoffs
+for i in 400839633 400839118 400839630 400838810 400839634 400839119 400839631 400838811 400839635 400839632 400844305 400844348 400844306 400844349 400844307 400847195 400847196 400847197 400847198 400847199
+do
+   curl http://scores.espn.go.com/wnba/playbyplay?gameId=$i > wnba-2015-playoffs/$i.html
+done
+
+
 # fetch 2014 regular season
 mkdir wnba-2014-season
 for ((i=400539461;i<=400539662;i++))

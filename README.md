@@ -167,3 +167,55 @@ Evaluating SPARQL query...
 +-------------------------------------+-------------------------------------+
 15 result(s) (60 ms)
 ```
+
+Other Useful Queries
+====================
+
+Clutch Shots
+------------
+```
+BASE <http://www.stellman-greene.com/>
+PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?playerName ?shotsTaken ?shotsMade ?shotPercentage
+WHERE 
+{ 
+  ?player a pbprdf:Player .
+  ?player rdfs:label ?playerName .
+  
+  # Find the number of shots taken
+  {
+    SELECT ?player (COUNT(?shot) AS ?shotsTaken)
+    WHERE 
+    {
+      ?shot a pbprdf:Shot .
+      ?shot pbprdf:shotBy ?player .
+      ?shot pbprdf:secondsLeftInPeriod ?secondsLeftInPeriod .
+      FILTER (?secondsLeftInPeriod < 5)
+    }
+    GROUP BY ?player 
+  }
+
+  # Find the number of shots made
+  {
+    SELECT ?player (COUNT(?shot) AS ?shotsMade)
+    WHERE 
+    {
+      ?shot a pbprdf:Shot .
+      ?shot pbprdf:shotBy ?player .
+      ?shot pbprdf:shotMade "true"^^xsd:boolean .
+      ?shot pbprdf:secondsLeftInPeriod ?secondsLeftInPeriod .
+      FILTER (?secondsLeftInPeriod < 5)
+    }
+    GROUP BY ?player 
+  }
+  
+  # Calculate the shot percentage
+  BIND ( (round((?shotsMade / ?shotsTaken) * 10000)) / 100 AS ?shotPercentage ) .
+  
+  # Only match players who took more than 10 shots just before the end of the period
+  FILTER (?shotsTaken >= 15) .
+}
+ORDER BY DESC(?shotPercentage)
+```
+

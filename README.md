@@ -219,3 +219,49 @@ WHERE
 ORDER BY DESC(?shotPercentage)
 ```
 
+Shots made and missed at Target Center in the first five minutes
+----------------------------------------------------------------
+```
+BASE <http://www.stellman-greene.com/>
+PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?game ?gameTime ?shotsTaken ?shotsMade ?shotsMadePercentage ?shotsMissed ?shotsMissedPercentage
+WHERE 
+{ 
+  ?game a pbprdf:Game .
+  ?game pbprdf:gameTime ?gameTime .
+  ?game pbprdf:gameLocation "Target Center, Minneapolis, MN" .
+
+  # Find the number of shots made per game
+  {
+    SELECT ?game (COUNT(?madeShot) AS ?shotsMade) {
+      ?madeShot a pbprdf:Shot .
+      ?madeShot pbprdf:inGame ?game .
+      ?madeShot pbprdf:shotMade ?made .
+      ?madeShot pbprdf:shotMade "true"^^xsd:boolean .
+      ?madeShot pbprdf:secondsIntoGame ?secondsIntoGame .
+      FILTER (?secondsIntoGame < 300)
+    }
+    GROUP BY ?game
+  }
+  
+  # Find the number of shots missed per game
+  {
+    SELECT ?game (COUNT(?missedShot) AS ?shotsMissed) {
+      ?missedShot a pbprdf:Shot .
+      ?missedShot pbprdf:inGame ?game .
+      ?missedShot pbprdf:shotMade ?made .
+      ?missedShot pbprdf:shotMade "false"^^xsd:boolean .
+      ?missedShot pbprdf:secondsIntoGame ?secondsIntoGame .
+      FILTER (?secondsIntoGame < 300)
+    }
+    GROUP BY ?game
+  }
+  
+  BIND ((?shotsMade + ?shotsMissed) AS ?shotsTaken) .
+  BIND ( (round((?shotsMade / ?shotsTaken) * 10000)) / 100 AS ?shotsMadePercentage ) .
+  BIND ( (round((?shotsMissed / ?shotsTaken) * 10000)) / 100 AS ?shotsMissedPercentage ) .
+}
+LIMIT 100
+```
+

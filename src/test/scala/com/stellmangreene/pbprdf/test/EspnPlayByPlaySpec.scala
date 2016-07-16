@@ -149,6 +149,7 @@ SELECT * {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#JumpBall",
+          "http://www.stellman-greene.com/pbprdf#inGame -> http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun",
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 10:00",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 0",
@@ -166,6 +167,7 @@ SELECT * {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Foul",
+          "http://www.stellman-greene.com/pbprdf#inGame -> http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 1:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1135",
@@ -182,6 +184,7 @@ SELECT * {
         Set(
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Timeout",
+          "http://www.stellman-greene.com/pbprdf#inGame -> http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 775",

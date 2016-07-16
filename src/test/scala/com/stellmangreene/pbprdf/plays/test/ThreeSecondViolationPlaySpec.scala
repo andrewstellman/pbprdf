@@ -22,7 +22,8 @@ class ThreeSecondViolationPlaySpec extends FlatSpec with Matchers with RdfOperat
   rep.initialize
 
   it should "parse a three-second violation" in {
-    new ThreeSecondViolationPlay(TestUri.create("400610636"), 146, 1, "4:07", "Sun", "Kara Lawson defensive 3-seconds (Technical Foul)", "33-31").addRdf(rep)
+    val testUri = TestUri.create("400610636")
+    new ThreeSecondViolationPlay(testUri, 146, 1, "4:07", "Sun", "Kara Lawson defensive 3-seconds (Technical Foul)", "33-31").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/146> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -31,6 +32,7 @@ class ThreeSecondViolationPlaySpec extends FlatSpec with Matchers with RdfOperat
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#TechnicalFoul",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 4:07",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 353",

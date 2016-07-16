@@ -26,7 +26,8 @@ class EnterPlaySpec extends FlatSpec with Matchers with RdfOperations {
     var rep = new SailRepository(new MemoryStore)
     rep.initialize
 
-    new EnterPlay(TestUri.create("400610636"), 101, 1, "8:00", "Sun", "Kelly Faris enters the game for Alyssa Thomas", "21-26").addRdf(rep)
+    var testUri = TestUri.create("400610636")
+    new EnterPlay(testUri, 101, 1, "8:00", "Sun", "Kelly Faris enters the game for Alyssa Thomas", "21-26").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/101> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -35,6 +36,7 @@ class EnterPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Enters",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 8:00",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 120",

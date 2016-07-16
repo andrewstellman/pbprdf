@@ -22,7 +22,8 @@ class JumpBallPlaySpec extends FlatSpec with Matchers with RdfOperations {
   rep.initialize
 
   it should "parse jump ball triples" in {
-    val play = new JumpBallPlay(TestUri.create("400610736"), 426, 5, "4:58", "Mercury", "Elena Delle Donne vs. Brittney Griner (DeWanna Bonner gains possession)", "78-78")
+    val testUri = TestUri.create("400610736")    
+    val play = new JumpBallPlay(testUri, 426, 5, "4:58", "Mercury", "Elena Delle Donne vs. Brittney Griner (DeWanna Bonner gains possession)", "78-78")
     play.addRdf(rep)
 
     val statements = rep
@@ -35,6 +36,7 @@ class JumpBallPlaySpec extends FlatSpec with Matchers with RdfOperations {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#JumpBall",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
         "http://www.stellman-greene.com/pbprdf#period -> 5",
         "http://www.stellman-greene.com/pbprdf#time -> 4:58",
         "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 2402",
@@ -45,7 +47,8 @@ class JumpBallPlaySpec extends FlatSpec with Matchers with RdfOperations {
         "http://www.stellman-greene.com/pbprdf#jumpBallGainedPossession -> http://www.stellman-greene.com/pbprdf/players/DeWanna_Bonner",
         "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: Elena Delle Donne vs. Brittney Griner (DeWanna Bonner gains possession)"))
 
-    val play2 = new JumpBallPlay(TestUri.create("400610636"), 1, 1, "10:00", "Sun", "Stefanie Dolson vs. Kelsey Bone", "0-0")
+    val testUri2 = TestUri.create("400610636")    
+    val play2 = new JumpBallPlay(testUri2, 1, 1, "10:00", "Sun", "Stefanie Dolson vs. Kelsey Bone", "0-0")
     play2.addRdf(rep)
 
     val statements2 = rep
@@ -58,6 +61,7 @@ class JumpBallPlaySpec extends FlatSpec with Matchers with RdfOperations {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#JumpBall",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri2.stringValue}",
         "http://www.stellman-greene.com/pbprdf#period -> 1",
         "http://www.stellman-greene.com/pbprdf#time -> 10:00",
         "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 0",

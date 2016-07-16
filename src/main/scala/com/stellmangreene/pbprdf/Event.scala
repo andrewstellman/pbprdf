@@ -54,6 +54,7 @@ case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, desc
   private def eventTriples(valueFactory: ValueFactory): Set[(Resource, URI, Value)] = {
     Set(
       (eventUri, RDF.TYPE, Ontology.EVENT),
+      (eventUri, Ontology.IN_GAME, gameUri),
       (eventUri, Ontology.PERIOD, valueFactory.createLiteral(period)),
       (eventUri, Ontology.TIME, valueFactory.createLiteral(time)),
       (eventUri, RDFS.LABEL, valueFactory.createLiteral(description)))

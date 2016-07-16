@@ -22,7 +22,8 @@ class BlockPlaySpec extends FlatSpec with Matchers with RdfOperations {
   rep.initialize
 
   it should "parse block triples" in {
-    new BlockPlay(TestUri.create("400610636"), 108, 2, "7:48", "Mystics", "Tayler Hill blocks Jasmine Thomas's layup", "23-26").addRdf(rep)
+    var testUri = TestUri.create("400610636")
+    new BlockPlay(testUri, 108, 2, "7:48", "Mystics", "Tayler Hill blocks Jasmine Thomas's layup", "23-26").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/108> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -32,6 +33,7 @@ class BlockPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Shot",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Block",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:48",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 732",
@@ -41,9 +43,10 @@ class BlockPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#shotBlockedBy -> http://www.stellman-greene.com/pbprdf/players/Tayler_Hill",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Tayler Hill blocks Jasmine Thomas's layup"))
 
-    new BlockPlay(TestUri.create("400539625"), 53, 1, "2:37", "Mercury", "Krystal Thomas blocks Erin Phillips' 3-foot  layup", "19-23").addRdf(rep)
+    var testUri2 = TestUri.create("400610636")
+    new BlockPlay(testUri, 53, 1, "2:37", "Mercury", "Krystal Thomas blocks Erin Phillips' 3-foot  layup", "19-23").addRdf(rep)
 
-    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400539625/53> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/53> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
@@ -51,6 +54,7 @@ class BlockPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Shot",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Block",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri2.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 2:37",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 443",

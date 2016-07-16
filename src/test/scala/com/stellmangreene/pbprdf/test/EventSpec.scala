@@ -39,8 +39,9 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
     var rep = new SailRepository(new MemoryStore)
     rep.initialize
 
-    new Event(TestUri.create("400610636"), 38, 1, "4:56", "Official timeout").addRdf(rep)
-    new Event(TestUri.create("400610636"), 119, 2, "7:05", "Connecticut Full timeout").addRdf(rep)
+    val testUri = TestUri.create("400610636")
+    new Event(testUri, 38, 1, "4:56", "Official timeout").addRdf(rep)
+    new Event(testUri, 119, 2, "7:05", "Connecticut Full timeout").addRdf(rep)
 
     rep
       .executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/38> ?p ?o }")
@@ -48,6 +49,7 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
       .toSet should be(
         Set(
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 4:56",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 304",
@@ -61,6 +63,7 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
         Set(
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Timeout",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 775",

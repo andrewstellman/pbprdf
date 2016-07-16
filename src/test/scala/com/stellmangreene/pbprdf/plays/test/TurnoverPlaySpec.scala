@@ -20,9 +20,11 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
   // As long as each event has unique game and event IDs, they can all go into the same repository
   val rep = new SailRepository(new MemoryStore)
   rep.initialize
+  
+  val testUri = TestUri.create("400610636")
 
   it should "parse a turnover" in {
-    new TurnoverPlay(TestUri.create("400610636"), 167, 1, "1:05", "Mystics", "Kayla Thornton turnover", "40-38").addRdf(rep)
+    new TurnoverPlay(testUri, 167, 1, "1:05", "Mystics", "Kayla Thornton turnover", "40-38").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/167> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -31,6 +33,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Turnover",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 1:05",
           "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 65",
@@ -42,7 +45,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse a lost ball turnover" in {
-    new TurnoverPlay(TestUri.create("400610636"), 17, 1, "8:00", "Sun", "Tierra Ruffin-Pratt lost ball turnover (Alex Bentley steals)", "5-0").addRdf(rep)
+    new TurnoverPlay(testUri, 17, 1, "8:00", "Sun", "Tierra Ruffin-Pratt lost ball turnover (Alex Bentley steals)", "5-0").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/17> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -51,6 +54,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Turnover",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 8:00",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 120",
@@ -63,7 +67,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse a shot clock violation" in {
-    new TurnoverPlay(TestUri.create("400610636"), 84, 1, "9:36", "Sun", "shot clock turnover", "18-24").addRdf(rep)
+    new TurnoverPlay(testUri, 84, 1, "9:36", "Sun", "shot clock turnover", "18-24").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/84> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -72,6 +76,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Turnover",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 1",
           "http://www.stellman-greene.com/pbprdf#time -> 9:36",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 24",
@@ -82,7 +87,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse a bad pass" in {
-    new TurnoverPlay(TestUri.create("400610636"), 195, 2, "6:54", "Sun", "Alex Bentley bad pass", "52-40").addRdf(rep)
+    new TurnoverPlay(testUri, 195, 2, "6:54", "Sun", "Alex Bentley bad pass", "52-40").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/195> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -91,6 +96,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Turnover",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 6:54",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 786",
@@ -102,7 +108,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse a bad pass and steal" in {
-    new TurnoverPlay(TestUri.create("400610636"), 366, 4, "8:04", "Mystics", "Ivory Latta bad pass (Kelsey Bone steals)", "69-66").addRdf(rep)
+    new TurnoverPlay(testUri, 366, 4, "8:04", "Mystics", "Ivory Latta bad pass (Kelsey Bone steals)", "69-66").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/366> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -111,6 +117,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Turnover",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 4",
           "http://www.stellman-greene.com/pbprdf#time -> 8:04",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1916",
@@ -123,7 +130,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse a traveling violation" in {
-    new TurnoverPlay(TestUri.create("400610636"), 204, 2, "1:09", "Sun", "Kelsey Bone traveling", "52-42").addRdf(rep)
+    new TurnoverPlay(testUri, 204, 2, "1:09", "Sun", "Kelsey Bone traveling", "52-42").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/204> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -132,18 +139,19 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Turnover",
-          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1131",
           "http://www.stellman-greene.com/pbprdf#time -> 1:09",
           "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 69",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#turnedOverBy -> http://www.stellman-greene.com/pbprdf/players/Kelsey_Bone",
           "http://www.stellman-greene.com/pbprdf#turnoverType -> traveling",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Kelsey Bone traveling"))
   }
 
   it should "parse a kicked ball violation" in {
-    new TurnoverPlay(TestUri.create("400610636"), 337, 3, "4:16", "Sun", "Kara Lawson kicked ball violation", "63-61").addRdf(rep)
+    new TurnoverPlay(testUri, 337, 3, "4:16", "Sun", "Kara Lawson kicked ball violation", "63-61").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/337> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -152,6 +160,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Turnover",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 3",
           "http://www.stellman-greene.com/pbprdf#time -> 4:16",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1544",

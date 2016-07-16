@@ -87,6 +87,11 @@ object Ontology {
 
   // Types and properties for events in a play-by-play
 
+  @OntologyProperty(label = "The game the event occurred in",
+    domain = "http://www.stellman-greene.com/pbprdf#Event",
+    range = "http://www.stellman-greene.com/pbprdf#Game")
+  val IN_GAME = valueFactory.createURI(NAMESPACE, "inGame")
+
   @OntologyProperty(label = "The team that an event is for",
     domain = "http://www.stellman-greene.com/pbprdf#Event",
     range = "http://www.stellman-greene.com/pbprdf#Team")

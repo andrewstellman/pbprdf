@@ -23,7 +23,8 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   rep.initialize
 
   it should "parse a technical foul" in {
-    new TechnicalFoulPlay(TestUri.create("400496779"), 93, 2, "7:37", "Mercury", "Diana Taurasi technical foul(1st technical foul)", "21-28").addRdf(rep)
+    val testUri = TestUri.create("400496779")
+    new TechnicalFoulPlay(testUri, 93, 2, "7:37", "Mercury", "Diana Taurasi technical foul(1st technical foul)", "21-28").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400496779/93> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -32,6 +33,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#TechnicalFoul",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:37",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 743",
@@ -44,7 +46,8 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse a technical foul with no player specified" in {
-    new TechnicalFoulPlay(TestUri.create("400496779"), 152, 2, "1:03", "Mercury", "technical foul(2nd technical foul)", "37-32").addRdf(rep)
+    val testUri = TestUri.create("400496779")
+    new TechnicalFoulPlay(testUri, 152, 2, "1:03", "Mercury", "technical foul(2nd technical foul)", "37-32").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400496779/152> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -53,6 +56,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#TechnicalFoul",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 1:03",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1137",
@@ -64,7 +68,8 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse a double technical foul" in {
-    new DoubleTechnicalFoulPlay(TestUri.create("400445797"), 231, 3, "4:22", "Shock", "Double technical foul: Marissa Coleman and Glory Johnson", "47-41").addRdf(rep)
+    val testUri = TestUri.create("400445797")
+    new DoubleTechnicalFoulPlay(testUri, 231, 3, "4:22", "Shock", "Double technical foul: Marissa Coleman and Glory Johnson", "47-41").addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400445797/231> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -73,6 +78,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#TechnicalFoul",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 3",
           "http://www.stellman-greene.com/pbprdf#time -> 4:22",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1538",

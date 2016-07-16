@@ -22,7 +22,8 @@ class ReboundPlaySpec extends FlatSpec with Matchers with RdfOperations {
   rep.initialize
 
   it should "parse rebound triples" in {
-    val play = new ReboundPlay(TestUri.create("400610636"), 125, 2, "4:02", "Mystics", "Emma Meesseman offensive rebound", "31-30")
+    val testUri = TestUri.create("400610636")
+    val play = new ReboundPlay(testUri, 125, 2, "4:02", "Mystics", "Emma Meesseman offensive rebound", "31-30")
     play.addRdf(rep)
 
     val statements = rep
@@ -35,6 +36,7 @@ class ReboundPlaySpec extends FlatSpec with Matchers with RdfOperations {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Rebound",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+        s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
         "http://www.stellman-greene.com/pbprdf#period -> 2",
         "http://www.stellman-greene.com/pbprdf#time -> 4:02",
         "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 958",

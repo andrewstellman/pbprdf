@@ -1,0 +1,274 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix pbprdf: <http://www.stellman-greene.com/pbprdf#> .
+
+pbprdf:Game a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A game" .
+
+pbprdf:Event a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "An event in a play-by-play" .
+
+pbprdf:Play a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A play in a play-by-play" ;
+	rdfs:subClassOf pbprdf:Event .
+
+pbprdf:Team a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A team" .
+
+pbprdf:Player a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A player" .
+
+pbprdf:Roster a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A game roster" .
+
+pbprdf:Timeout a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A timeout" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:JumpBall a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A jump ball" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:Rebound a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A rebound" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:Shot a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A shot" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:Block a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A block" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play , pbprdf:Shot .
+
+pbprdf:Foul a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A foul" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:TechnicalFoul a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A technical foul" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:Enters a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A player entering the game" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:Turnover a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A turnover" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:gameTime rdfs:label "The game time" ;
+	rdfs:range xsd:dateTime ;
+	rdfs:domain pbprdf:Game ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:gameLocation rdfs:label "The game location" ;
+	rdfs:range xsd:string ;
+	rdfs:domain pbprdf:Game ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:homeTeam rdfs:label "The home team for a game" ;
+	rdfs:range pbprdf:Team ;
+	rdfs:domain pbprdf:Game ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:awayTeam rdfs:label "The away team for a game" ;
+	rdfs:range pbprdf:Team ;
+	rdfs:domain pbprdf:Game ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:hasHomeTeamRoster rdfs:label "The home team roster for a game" ;
+	rdfs:range pbprdf:Roster ;
+	rdfs:domain pbprdf:Game ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+	rdfs:comment "The home team roster is typically represented by a bnode in the Game entity" .
+
+pbprdf:hasAwayTeamRoster rdfs:label "The away team roster for a game" ;
+	rdfs:range pbprdf:Roster ;
+	rdfs:domain pbprdf:Game ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> ;
+	rdfs:comment "The away team roster is typically represented by a bnode in the Game entity" .
+
+pbprdf:rosterTeam rdfs:label "The team for a home or away roster" ;
+	rdfs:range pbprdf:Team ;
+	rdfs:domain pbprdf:Roster ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:hasPlayer rdfs:label "A player on a roster" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Roster ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:inGame rdfs:label "The game the event occurred in" ;
+	rdfs:range pbprdf:Game ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:forTeam rdfs:label "The team that an event is for" ;
+	rdfs:range pbprdf:Team ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:time rdfs:label "The game time of an event (eg. 9:37)" ;
+	rdfs:range xsd:string ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:period rdfs:label "The period the event occurred in" ;
+	rdfs:range xsd:int ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Regulation periods are 1 through 4, overtime periods start at 5" .
+
+pbprdf:secondsIntoGame rdfs:label "The number of seconds into a game that an event occurred" ;
+	rdfs:range xsd:int ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:secondsLeftInPeriod rdfs:label "The number of seconds left in the period when an event occurred" ;
+	rdfs:range xsd:int ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:timeoutTeam rdfs:label "The team that called the timeout" ;
+	rdfs:range pbprdf:Team ;
+	rdfs:domain pbprdf:Timeout ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:timeoutDuration rdfs:label "The duration of a timeout" ;
+	rdfs:range xsd:string ;
+	rdfs:domain pbprdf:Timeout ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "A string description (eg. Full timeout, 20 Sec." .
+
+pbprdf:jumpBallHomePlayer rdfs:label "The home player contesting the jump ball" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:JumpBall ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:jumpBallAwayPlayer rdfs:label "The away player contesting the jump ball" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:JumpBall ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:jumpBallGainedPossession rdfs:label "The player who gained possession of the jump ball" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:JumpBall ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:reboundedBy rdfs:label "The player who rebounded the ball" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Rebound ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:isOffensive rdfs:label "Determines if a foul or rebound is offensive" ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain pbprdf:Foul , pbprdf:Rebound ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Only ever has the value xsd:true, no value exists if the play was defensive" .
+
+pbprdf:shotMade rdfs:label "True if a shot was made" ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain pbprdf:Shot ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Can have the value xsd:true for made shots or xsd:false for missed shots, will always be present for a shot" .
+
+pbprdf:shotBy rdfs:label "The player that attempted the shot" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Shot ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:shotType rdfs:label "The type of shot" ;
+	rdfs:range xsd:string ;
+	rdfs:domain pbprdf:Shot ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Will be a description such as layup or 21-foot jumper" .
+
+pbprdf:shotAssistedBy rdfs:label "The player that assisted the shot" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Shot ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:shotPoints rdfs:label "The number of points scored by the shot" ;
+	rdfs:range xsd:int ;
+	rdfs:domain pbprdf:Shot ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Will only be present for made shots, will contain 1 for free throws, 2 for field goals, etc." .
+
+pbprdf:shotBlockedBy rdfs:label "The player that blocked the shot" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Shot ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:foulCommittedBy rdfs:label "The player who committed the foul" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Foul ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:foulDrawnBy rdfs:label "The player who drew the foul" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Foul ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:isShootingFoul rdfs:label "Determines if a foul is a shooting foul" ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain pbprdf:Foul ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Only ever has the value xsd:true, no value exists if the play was not a shooting foul" .
+
+pbprdf:isLooseBallFoul rdfs:label "Determines if a foul is a loose ball foul" ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain pbprdf:Foul ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Only ever has the value xsd:true, no value exists if the play was not a loose ball foul" .
+
+pbprdf:isCharge rdfs:label "Determines if a foul is a charge" ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain pbprdf:Foul ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Only ever has the value xsd:true, no value exists if the play was not a charge" .
+
+pbprdf:isThreeSecond rdfs:label "Determines if a technical foul is a three second violation" ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain pbprdf:TechnicalFoul ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Only ever has the value xsd:true, no value exists if the play was not a three second violation" .
+
+pbprdf:isDelayOfGame rdfs:label "Determines if a technical foul is a delay of game violation" ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain pbprdf:TechnicalFoul ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Only ever has the value xsd:true, no value exists if the play was not a delay of game violation" .
+
+pbprdf:technicalFoulNumber rdfs:label "The technical foul number for a player" ;
+	rdfs:range xsd:int ;
+	rdfs:domain pbprdf:TechnicalFoul ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Will be 1 for first technical foul, 2 for 2nd" .
+
+pbprdf:playerEntering rdfs:label "The player entering the game" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Enters ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:playerExiting rdfs:label "The player exiting the game" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Enters ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:turnoverType rdfs:label "The type of turnover" ;
+	rdfs:range xsd:string ;
+	rdfs:domain pbprdf:Turnover ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Contains text that describs the turnover (eg. traveling, kicked ball violation, etc." .
+
+pbprdf:stolenBy rdfs:label "The player who stole the ball" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Turnover ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:turnedOverBy rdfs:label "The player who turned the ball over" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Turnover ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .

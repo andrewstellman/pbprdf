@@ -9,6 +9,7 @@ import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.typesafe.scalalogging.LazyLogging
+import com.stellmangreene.pbprdf.GamePeriodInfo
 
 /**
  * A play that represents a turnover
@@ -38,8 +39,8 @@ import com.typesafe.scalalogging.LazyLogging
  *
  * @author andrewstellman
  */
-class TurnoverPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
-    extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
+class TurnoverPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+    extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
     with RdfOperations with LazyLogging {
 
   override def addRdf(rep: Repository) = {

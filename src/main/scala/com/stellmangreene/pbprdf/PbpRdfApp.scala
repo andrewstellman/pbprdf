@@ -4,7 +4,6 @@ import org.openrdf.repository.Repository
 import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import com.typesafe.scalalogging.LazyLogging
-import java.io.FileInputStream
 import java.io.File
 import org.xml.sax.InputSource
 import com.stellmangreene.pbprdf.model._
@@ -13,6 +12,7 @@ import scala.util.Try
 import scala.util.Success
 import java.io.FileOutputStream
 import com.stellmangreene.pbprdf.util.RdfOperations
+import better.files._
 
 object PbpRdfApp extends App with LazyLogging with RdfOperations {
 
@@ -47,43 +47,45 @@ pbprdf --ontology [filename.ttl]
 
       logger.info("Writing ontology statements")
       OntologyRdfRepository.rep.writeAllStatements(outputFile)
-      
+
     } else {
 
-      var folder: File = null
-      val inputFolderPath = args(0)
-      Try(new File(inputFolderPath)) match {
-        case Success(f) => { folder = f }
-        case _          => printUsageAndExit(Some(s"Unable to open folder: ${inputFolderPath}"))
-      }
+      val inputFolder = args(0).toFile
+      if (!inputFolder.exists || !inputFolder.isDirectory)
+        printUsageAndExit(Some(s"Invalid folder: ${inputFolder}"))
 
-      if (!folder.exists || !folder.isDirectory)
-        printUsageAndExit(Some(s"Invalid folder: ${inputFolderPath}"))
+      if (inputFolder.isEmpty)
+        printUsageAndExit(Some(s"No files found in folder: ${inputFolder}"))
 
-      val files = folder.listFiles
-      if (files.isEmpty)
-        printUsageAndExit(Some(s"No files found in folder: ${inputFolderPath}"))
+      val playByPlayRegex = """^\d+\.html$"""
 
-      logger.info(s"Reading ${files.size} files from folder ${inputFolderPath}")
+      val filenames = inputFolder.list.map(_.name).toSeq
+      val inputFiles = filenames.map(f => {
+        val base = f.name.split(".").head
+        (s"$base.html", s"$base-gameinfo.html")
+      })
+        .filter(e => filenames.contains(e._1) && filenames.contains(e._2))
+
+      logger.info(s"Reading ${inputFiles.size} sets of play-by-play files from folder ${inputFolder}")
 
       var rep = new SailRepository(new MemoryStore)
       rep.initialize
 
       var i = 0
-      files.foreach(file => {
-        i += 1
-        logger.debug(s"Reading plays from ${file.getCanonicalPath} (file ${i} of ${files.size})")
-        val xmlStream = new FileInputStream(file)
-        val rootElem = XmlHelper.parseXml(xmlStream)
-        try {
-          val playByPlay: PlayByPlay = new EspnPlayByPlay(rootElem, file.getCanonicalPath)
-          playByPlay.addRdf(rep)
-        } catch {
-          case e: InvalidPlayByPlayException => {
-            logger.error(s"Error reading play-by-play: ${e.getMessage}")
+      inputFiles
+        .zipWithIndex
+        .foreach(e => {
+          val ((playByPlayFile, gameInfoFile), index) = e
+          logger.debug(s"Reading plays from ${filenames} (file ${index} of ${filenames.size})")
+          try {
+            val playByPlay: PlayByPlay = new EspnPlayByPlay(inputFolder.pathAsString, playByPlayFile, gameInfoFile)
+            playByPlay.addRdf(rep)
+          } catch {
+            case e: InvalidPlayByPlayException => {
+              logger.error(s"Error reading play-by-play: ${e.getMessage}")
+            }
           }
-        }
-      })
+        })
 
       logger.info("Finished reading files")
 
@@ -92,5 +94,4 @@ pbprdf --ontology [filename.ttl]
       logger.info(s"Finished writing Turtle")
     }
   }
-
 }

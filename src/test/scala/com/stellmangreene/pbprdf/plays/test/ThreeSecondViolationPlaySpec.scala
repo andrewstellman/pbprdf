@@ -7,6 +7,7 @@ import org.scalatest.Matchers
 import com.stellmangreene.pbprdf.plays.ThreeSecondViolationPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.GamePeriodInfo
 
 /**
  * Test the ThreeSecondViolationPlay class
@@ -23,7 +24,7 @@ class ThreeSecondViolationPlaySpec extends FlatSpec with Matchers with RdfOperat
 
   it should "parse a three-second violation" in {
     val testUri = TestUri.create("400610636")
-    new ThreeSecondViolationPlay(testUri, 146, 1, "4:07", "Sun", "Kara Lawson defensive 3-seconds (Technical Foul)", "33-31").addRdf(rep)
+    new ThreeSecondViolationPlay(testUri, 146, 1, "4:07", "Sun", "Kara Lawson defensive 3-seconds (Technical Foul)", "33-31", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/146> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

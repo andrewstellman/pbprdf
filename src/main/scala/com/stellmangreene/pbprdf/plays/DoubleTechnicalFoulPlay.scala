@@ -5,6 +5,8 @@ import org.openrdf.model.URI
 import org.openrdf.model.Value
 import org.openrdf.model.vocabulary.RDF
 import org.openrdf.repository.Repository
+
+import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.stellmangreene.pbprdf.util.RdfOperations
@@ -31,8 +33,8 @@ import com.typesafe.scalalogging.LazyLogging
  *
  * @author andrewstellman
  */
-class DoubleTechnicalFoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
-    extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
+class DoubleTechnicalFoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+    extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
     with RdfOperations
     with LazyLogging {
 

@@ -7,6 +7,7 @@ import org.scalatest.Matchers
 import com.stellmangreene.pbprdf.plays.ReboundPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.GamePeriodInfo
 
 /**
  * Test the ReboundPlay class
@@ -23,7 +24,7 @@ class ReboundPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
   it should "parse rebound triples" in {
     val testUri = TestUri.create("400610636")
-    val play = new ReboundPlay(testUri, 125, 2, "4:02", "Mystics", "Emma Meesseman offensive rebound", "31-30")
+    val play = new ReboundPlay(testUri, 125, 2, "4:02", "Mystics", "Emma Meesseman offensive rebound", "31-30", GamePeriodInfo.WNBAPeriodInfo)
     play.addRdf(rep)
 
     val statements = rep

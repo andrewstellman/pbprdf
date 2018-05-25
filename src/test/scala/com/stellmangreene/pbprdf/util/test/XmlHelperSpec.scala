@@ -4,6 +4,7 @@ import java.io.FileInputStream
 import org.scalatest._
 import com.stellmangreene.pbprdf.util.XmlHelper
 import scala.language.postfixOps
+import better.files._
 
 /**
  * @author andrewstellman
@@ -12,8 +13,8 @@ class XmlHelperSpec extends FlatSpec with Matchers {
 
   behavior of "XmlHelper"
 
-  val htmlStream = new FileInputStream("src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636.html")
-  val rootElem = XmlHelper.parseXml(htmlStream)
+  val xml = "src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636.html".toFile.newInputStream
+  val rootElem = XmlHelper.parseXml(xml)
 
   it should "return the root element with valid XML" in {
     ((rootElem \\ "title") text) should be("Washington Mystics vs. Connecticut Sun - Play By Play - June 05, 2015 - ESPN")

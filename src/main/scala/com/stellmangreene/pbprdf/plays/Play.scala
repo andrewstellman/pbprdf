@@ -8,6 +8,7 @@ import org.openrdf.model.URI
 import com.stellmangreene.pbprdf.model.Ontology
 import org.openrdf.model.vocabulary.RDF
 import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.GamePeriodInfo
 
 /**
  * A Play is an event that matches a play-by-play regex, and can be checked to see if it
@@ -15,8 +16,8 @@ import com.stellmangreene.pbprdf.model.EntityUriFactory
  *
  * @author andrewstellman
  */
-abstract class Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String)
-    extends Event(gameUri: URI, eventNumber, period, time, s"${team}: ${play}")
+abstract class Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+    extends Event(gameUri: URI, eventNumber, period, time, s"${team}: ${play}")(gamePeriodInfo)
     with RdfOperations {
 
   /**

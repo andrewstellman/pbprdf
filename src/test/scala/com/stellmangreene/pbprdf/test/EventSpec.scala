@@ -13,6 +13,7 @@ import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.Event
 import org.openrdf.model.Statement
 import org.openrdf.query.BindingSet
+import com.stellmangreene.pbprdf.GamePeriodInfo
 
 /**
  * Test the Event class
@@ -24,12 +25,12 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
   behavior of "an instance of Event"
 
   it should "generate the event URI" in {
-    val event = new Event(TestUri.create("400610636"), 38, 1, "4:56", "Official timeout")
+    val event = new Event(TestUri.create("400610636"), 38, 1, "4:56", "Official timeout")(GamePeriodInfo.WNBAPeriodInfo)
     event.eventUri.stringValue should be("http://www.stellman-greene.com/pbprdf/400610636/38")
   }
 
   it should "populate the event fields" in {
-    val event = new Event(TestUri.create("400610636"), 38, 1, "4:56", "Official timeout")
+    val event = new Event(TestUri.create("400610636"), 38, 1, "4:56", "Official timeout")(GamePeriodInfo.WNBAPeriodInfo)
     event.eventNumber should be(38)
     event.period should be(1)
     event.time should be("4:56")
@@ -40,8 +41,8 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
     rep.initialize
 
     val testUri = TestUri.create("400610636")
-    new Event(testUri, 38, 1, "4:56", "Official timeout").addRdf(rep)
-    new Event(testUri, 119, 2, "7:05", "Connecticut Full timeout").addRdf(rep)
+    new Event(testUri, 38, 1, "4:56", "Official timeout")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(testUri, 119, 2, "7:05", "Connecticut Full timeout")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep
       .executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/38> ?p ?o }")
@@ -77,19 +78,19 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
     var rep = new SailRepository(new MemoryStore)
     rep.initialize
 
-    new Event(TestUri.create("X"), 1, 1, "10:00", "1st quarter").addRdf(rep)
-    new Event(TestUri.create("X"), 25, 1, "0:00", "end of 1st quarter").addRdf(rep)
-    new Event(TestUri.create("X"), 50, 2, "10:00", "2nd quarter").addRdf(rep)
-    new Event(TestUri.create("X"), 75, 2, "5:00", "halfway through 2nd quarter").addRdf(rep)
-    new Event(TestUri.create("X"), 100, 3, "10:00", "3rd quarter").addRdf(rep)
-    new Event(TestUri.create("X"), 150, 4, "10:00", "4th quarter").addRdf(rep)
-    new Event(TestUri.create("X"), 175, 4, "0:00", "end of 4th quarter").addRdf(rep)
-    new Event(TestUri.create("X"), 200, 5, "5:00", "first overtime").addRdf(rep)
-    new Event(TestUri.create("X"), 225, 5, "0:00", "end of first overtime").addRdf(rep)
-    new Event(TestUri.create("X"), 250, 6, "5:00", "second overtime").addRdf(rep)
-    new Event(TestUri.create("X"), 275, 6, "2:30", "halfway through second overtime").addRdf(rep)
-    new Event(TestUri.create("X"), 300, 7, "5:00", "third overtime").addRdf(rep)
-    new Event(TestUri.create("X"), 350, 7, "0:00", "end of third overtime").addRdf(rep)
+    new Event(TestUri.create("X"), 1, 1, "10:00", "1st quarter")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 25, 1, "0:00", "end of 1st quarter")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 50, 2, "10:00", "2nd quarter")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 75, 2, "5:00", "halfway through 2nd quarter")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 100, 3, "10:00", "3rd quarter")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 150, 4, "10:00", "4th quarter")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 175, 4, "0:00", "end of 4th quarter")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 200, 5, "5:00", "first overtime")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 225, 5, "0:00", "end of first overtime")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 250, 6, "5:00", "second overtime")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 275, 6, "2:30", "halfway through second overtime")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 300, 7, "5:00", "third overtime")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(TestUri.create("X"), 350, 7, "0:00", "end of third overtime")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep
       .executeQuery("""

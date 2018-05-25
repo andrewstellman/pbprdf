@@ -29,8 +29,8 @@ import com.typesafe.scalalogging.LazyLogging
  *
  * @author andrewstellman
  */
-case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, description: String)
-    extends RdfOperations with LazyLogging {
+case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, description: String)(gamePeriodInfo: GamePeriodInfo)
+  extends RdfOperations with LazyLogging {
 
   override def toString = "Period " + period + " " + time + " - " + description
 
@@ -62,39 +62,14 @@ case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, desc
 
   /** Generate the pbprdf:secondsIntoGame and pbprdf:secondsLeftInPeriod triples */
   private def secondsIntoGameTriple(valueFactory: ValueFactory): Set[(Resource, URI, Value)] = {
-    val timeRegex = """^(\d+):(\d+)$""".r
+    val secondsLeft = gamePeriodInfo.clockToSecondsLeft(period, time)
+    secondsLeft.map(eventTimes => {
+      Set[(Resource, URI, Value)](
+        (eventUri, Ontology.SECONDS_INTO_GAME, valueFactory.createLiteral(eventTimes.secondsIntoGame)),
+        (eventUri, Ontology.SECONDS_LEFT_IN_PERIOD, valueFactory.createLiteral(eventTimes.secondsLeftInPeriod)))
 
-    time match {
-      case timeRegex(minutes, seconds) => {
-        val secondsIntoGame: Int =
-          if (period <= 4)
-            if (time == "10:00")
-              (period - 1) * 10 * 60
-            else
-              (period - 1) * 10 * 60 +
-                (9 - minutes.toInt) * 60 +
-                (60 - seconds.toInt)
-
-          // Overtime
-          else if (time == "5:00")
-            40 * 60 + (period - 5) * 5 * 60
-          else
-            40 * 60 +
-              (period - 5) * 5 * 60 +
-              (4 - minutes.toInt) * 60 +
-              (60 - seconds.toInt)
-
-        val secondsLeftInPeriod: Int = minutes.toInt * 60 + seconds.toInt 
-              
-        Set(
-            (eventUri, Ontology.SECONDS_INTO_GAME, valueFactory.createLiteral(secondsIntoGame)),
-            (eventUri, Ontology.SECONDS_LEFT_IN_PERIOD, valueFactory.createLiteral(secondsLeftInPeriod)))
-      }
-      case _ => {
-        logger.warn(s"Unable to calculate seconds into game from time ${time}")
-        Set()
-      }
-    }
+    })
+      .getOrElse(Set[(Resource, URI, Value)]())
   }
 
   /**

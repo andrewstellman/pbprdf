@@ -22,6 +22,7 @@ libraryDependencies ++= Seq(
    "joda-time" % "joda-time" % "2.8.2",
    "org.joda" % "joda-convert" % "1.7",
    "org.eclipse.rdf4j" % "rdf4j-runtime" % "2.2.2",
+   "com.github.pathikrit" %% "better-files" % "3.4.0",
 
    // Test dependencies
    "org.scalatest" %% "scalatest" % "3.0.1" % "test"

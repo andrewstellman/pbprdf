@@ -8,6 +8,7 @@ import com.stellmangreene.pbprdf.plays.TechnicalFoulPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.test.TestUri
 import com.stellmangreene.pbprdf.plays.DoubleTechnicalFoulPlay
+import com.stellmangreene.pbprdf.GamePeriodInfo
 
 /**
  * Test the TechnicalFoulPlay class
@@ -24,7 +25,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
   it should "parse a technical foul" in {
     val testUri = TestUri.create("400496779")
-    new TechnicalFoulPlay(testUri, 93, 2, "7:37", "Mercury", "Diana Taurasi technical foul(1st technical foul)", "21-28").addRdf(rep)
+    new TechnicalFoulPlay(testUri, 93, 2, "7:37", "Mercury", "Diana Taurasi technical foul(1st technical foul)", "21-28", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400496779/93> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -47,7 +48,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
   it should "parse a technical foul with no player specified" in {
     val testUri = TestUri.create("400496779")
-    new TechnicalFoulPlay(testUri, 152, 2, "1:03", "Mercury", "technical foul(2nd technical foul)", "37-32").addRdf(rep)
+    new TechnicalFoulPlay(testUri, 152, 2, "1:03", "Mercury", "technical foul(2nd technical foul)", "37-32", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400496779/152> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -69,7 +70,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
   it should "parse a double technical foul" in {
     val testUri = TestUri.create("400445797")
-    new DoubleTechnicalFoulPlay(testUri, 231, 3, "4:22", "Shock", "Double technical foul: Marissa Coleman and Glory Johnson", "47-41").addRdf(rep)
+    new DoubleTechnicalFoulPlay(testUri, 231, 3, "4:22", "Shock", "Double technical foul: Marissa Coleman and Glory Johnson", "47-41", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400445797/231> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

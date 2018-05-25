@@ -4,9 +4,11 @@ import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
+
+import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.plays.JumpBallPlay
-import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.util.RdfOperations
 
 /**
  * Test the JumpBallPlay class
@@ -23,7 +25,7 @@ class JumpBallPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
   it should "parse jump ball triples" in {
     val testUri = TestUri.create("400610736")    
-    val play = new JumpBallPlay(testUri, 426, 5, "4:58", "Mercury", "Elena Delle Donne vs. Brittney Griner (DeWanna Bonner gains possession)", "78-78")
+    val play = new JumpBallPlay(testUri, 426, 5, "4:58", "Mercury", "Elena Delle Donne vs. Brittney Griner (DeWanna Bonner gains possession)", "78-78", GamePeriodInfo.WNBAPeriodInfo)
     play.addRdf(rep)
 
     val statements = rep
@@ -48,7 +50,7 @@ class JumpBallPlaySpec extends FlatSpec with Matchers with RdfOperations {
         "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: Elena Delle Donne vs. Brittney Griner (DeWanna Bonner gains possession)"))
 
     val testUri2 = TestUri.create("400610636")    
-    val play2 = new JumpBallPlay(testUri2, 1, 1, "10:00", "Sun", "Stefanie Dolson vs. Kelsey Bone", "0-0")
+    val play2 = new JumpBallPlay(testUri2, 1, 1, "10:00", "Sun", "Stefanie Dolson vs. Kelsey Bone", "0-0", GamePeriodInfo.WNBAPeriodInfo)
     play2.addRdf(rep)
 
     val statements2 = rep

@@ -7,6 +7,7 @@ import org.scalatest.Matchers
 import com.stellmangreene.pbprdf.plays.BlockPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.GamePeriodInfo
 
 /**
  * Test the BlockPlay class
@@ -23,7 +24,7 @@ class BlockPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
   it should "parse block triples" in {
     var testUri = TestUri.create("400610636")
-    new BlockPlay(testUri, 108, 2, "7:48", "Mystics", "Tayler Hill blocks Jasmine Thomas's layup", "23-26").addRdf(rep)
+    new BlockPlay(testUri, 108, 2, "7:48", "Mystics", "Tayler Hill blocks Jasmine Thomas's layup", "23-26", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/108> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -44,7 +45,7 @@ class BlockPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Tayler Hill blocks Jasmine Thomas's layup"))
 
     var testUri2 = TestUri.create("400610636")
-    new BlockPlay(testUri, 53, 1, "2:37", "Mercury", "Krystal Thomas blocks Erin Phillips' 3-foot  layup", "19-23").addRdf(rep)
+    new BlockPlay(testUri, 53, 1, "2:37", "Mercury", "Krystal Thomas blocks Erin Phillips' 3-foot  layup", "19-23", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/53> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

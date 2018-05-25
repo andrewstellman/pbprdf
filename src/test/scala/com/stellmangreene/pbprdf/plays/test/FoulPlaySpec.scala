@@ -7,6 +7,7 @@ import org.scalatest.Matchers
 import com.stellmangreene.pbprdf.plays.FoulPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.GamePeriodInfo
 
 /**
  * Test the FoulPlay class
@@ -24,7 +25,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   val testUri = TestUri.create("400610636")
   
   it should "parse fouls" in {
-    new FoulPlay(testUri, 37, 1, "4:56", "Sun", "Camille Little personal foul  (Stefanie Dolson draws the foul)", "10-9").addRdf(rep)
+    new FoulPlay(testUri, 37, 1, "4:56", "Sun", "Camille Little personal foul  (Stefanie Dolson draws the foul)", "10-9", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/37> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -45,7 +46,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse offensive fouls" in {
-    new FoulPlay(testUri, 46, 1, "3:51", "Sun", "Kelsey Bone offensive foul  (Stefanie Dolson draws the foul)", "12-11").addRdf(rep)
+    new FoulPlay(testUri, 46, 1, "3:51", "Sun", "Kelsey Bone offensive foul  (Stefanie Dolson draws the foul)", "12-11", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/46> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -67,7 +68,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse shooting fouls" in {
-    new FoulPlay(testUri, 85, 2, "9:15", "Mystics", "Kayla Thornton shooting foul  (Alyssa Thomas draws the foul)", "18-26").addRdf(rep)
+    new FoulPlay(testUri, 85, 2, "9:15", "Mystics", "Kayla Thornton shooting foul  (Alyssa Thomas draws the foul)", "18-26", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/85> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -89,7 +90,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse offensive charges" in {
-    new FoulPlay(testUri, 166, 2, "1:05", "Mystics", "Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)", "40-38").addRdf(rep)
+    new FoulPlay(testUri, 166, 2, "1:05", "Mystics", "Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)", "40-38", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/166> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -112,7 +113,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
   it should "parse loose ball fouls" in {
     val testUri2 = TestUri.create("400610739")
-    new FoulPlay(testUri2, 275, 3, "1:05", "Sparks", "Jantel Lavender loose ball foul (Sylvia Fowles draws the foul)", "54-59").addRdf(rep)
+    new FoulPlay(testUri2, 275, 3, "1:05", "Sparks", "Jantel Lavender loose ball foul (Sylvia Fowles draws the foul)", "54-59", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610739/275> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -135,7 +136,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   
   it should "parse fouls when no player draws the foul" in {
     val testUri3 = TestUri.create("400539523")
-    new FoulPlay(testUri3, 13, 1, "8:12", "Sparks", "Jenna O'Hea offensive foul", "8-8").addRdf(rep)
+    new FoulPlay(testUri3, 13, 1, "8:12", "Sparks", "Jenna O'Hea offensive foul", "8-8", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400539523/13> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

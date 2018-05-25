@@ -38,7 +38,7 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
   val awayScore: String
 
   /** Game location */
-  val gameLocation: String
+  val gameLocation: Option[String]
 
   /** Game time */
   val gameTime: DateTime

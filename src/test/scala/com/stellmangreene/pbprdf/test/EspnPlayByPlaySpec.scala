@@ -1,9 +1,7 @@
 package com.stellmangreene.pbprdf.test
 
-import java.io.FileInputStream
 import org.scalatest._
 import com.stellmangreene.pbprdf.EspnPlayByPlay
-import com.stellmangreene.pbprdf.util.XmlHelper
 import com.stellmangreene.pbprdf.plays.Play
 import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
@@ -13,6 +11,7 @@ import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.plays.test.EnterPlaySpec
 import org.joda.time.DateTime
 import com.stellmangreene.pbprdf.InvalidPlayByPlayException
+import better.files._
 
 /**
  * Test the EspnPlayByPlay class
@@ -20,19 +19,19 @@ import com.stellmangreene.pbprdf.InvalidPlayByPlayException
  */
 class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
+  val path = "src/test/resources/com/stellmangreene/pbprdf/test/htmldata/"
+
   behavior of "EspnPlayByPlay"
 
-  val xmlStream = new FileInputStream("src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636.html")
-  val rootElem = XmlHelper.parseXml(xmlStream)
-  var playByPlay = new EspnPlayByPlay(rootElem, "400610636.html")
+  var playByPlay = new EspnPlayByPlay(path, "400610636.html", "400610636-gameinfo.html")
 
   it should "read information about the game" in {
     playByPlay.homeTeam should be("Sun")
     playByPlay.homeScore should be("68")
     playByPlay.awayTeam should be("Mystics")
     playByPlay.awayScore should be("73")
-    playByPlay.gameLocation should be("Mohegan Sun Arena, Uncasville, CT")
-    playByPlay.gameTime should equal(new DateTime("2015-06-05T19:00:00.000-05:00"))
+    playByPlay.gameLocation should be(Some("Mohegan Sun Arena"))
+    playByPlay.gameTime should equal(new DateTime("2015-06-05T19:00:00.000-04:00"))
     playByPlay.toString should be("Mystics (73) at Sun (68) on 2015-06-05: 391 events")
   }
 
@@ -57,10 +56,8 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "read an invalid XML file" in {
-    val xmlStream = new FileInputStream("src/main/resources/logback.xml")
-    val rootElem = XmlHelper.parseXml(xmlStream)
     intercept[InvalidPlayByPlayException] {
-      var invalidPlayByPlay = new EspnPlayByPlay(rootElem, "INVALID FILE")
+      var invalidPlayByPlay = new EspnPlayByPlay(path, "400610636.html", "INVALID FILENAME")
     }
   }
 
@@ -77,10 +74,10 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
       .toSet should be(
         Set(
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Game",
-          "http://www.stellman-greene.com/pbprdf#gameTime -> 2015-06-05T19:00:00.000-05:00",
+          "http://www.stellman-greene.com/pbprdf#gameTime -> 2015-06-05T18:00:00.000-05:00",
           "http://www.stellman-greene.com/pbprdf#homeTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
           "http://www.stellman-greene.com/pbprdf#awayTeam -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
-          "http://www.stellman-greene.com/pbprdf#gameLocation -> Mohegan Sun Arena, Uncasville, CT",
+          "http://www.stellman-greene.com/pbprdf#gameLocation -> Mohegan Sun Arena",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics (73) at Sun (68) on 2015-06-05: 391 events"))
 
     rep.executeQuery("""

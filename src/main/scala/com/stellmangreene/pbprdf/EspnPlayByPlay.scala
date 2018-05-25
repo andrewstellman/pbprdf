@@ -1,34 +1,47 @@
 package com.stellmangreene.pbprdf
 
+
+
 import scala.language.postfixOps
+import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-import scala.xml.Elem
+
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.ISODateTimeFormat
 import org.openrdf.model.URI
 import org.openrdf.model.vocabulary.RDF
 import org.openrdf.model.vocabulary.RDFS
 import org.openrdf.repository.Repository
+
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.stellmangreene.pbprdf.plays.PlayFactory
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.util.XmlHelper
 import com.typesafe.scalalogging.LazyLogging
+
 import javax.xml.datatype.DatatypeFactory
-import javax.xml.datatype.XMLGregorianCalendar
-import scala.util.Failure
-import org.joda.time.DateTime
+
+import better.files._
 
 /**
  * @author andrewstellman
  */
-class EspnPlayByPlay(rootElem: Elem, filename: String) extends PlayByPlay with LazyLogging with RdfOperations {
+class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename: String) extends PlayByPlay with LazyLogging with RdfOperations {
 
   /** Game source (eg. filename) */
-  override val gameSource = filename
-  
-  private val divs = (rootElem \\ "body" \\ "div")
+  override val gameSource = playByPlayFilename
+
+  private val playByPlayXmlFile = path / playByPlayFilename
+  private val playByPlayRootElem = XmlHelper.parseXml(playByPlayXmlFile.newInputStream)
+  private val divs = (playByPlayRootElem \\ "body" \\ "div")
+
+  private val gameInfoXmlFile = path / gameInfoFilename
+  private val gameInfoRootElem = XmlHelper.parseXml(gameInfoXmlFile.newInputStream)
+  private val gameinfoDivs = (gameInfoRootElem \\ "body" \\ "div")
 
   private val awayTeamElems = XmlHelper.getElemByClassAndTag(divs, "team away", "a")
 
@@ -36,51 +49,102 @@ class EspnPlayByPlay(rootElem: Elem, filename: String) extends PlayByPlay with L
     Try(XmlHelper.getElemByClassAndTag(divs, clazz, tag).map(_.text).get) match {
       case Success(s) => s
       case _ => {
-        val msg = s"Unable to find ${clazz} in ${filename}"
+        val msg = s"Unable to find ${clazz} in ${playByPlayFilename}"
         logger.error(msg)
         throw new InvalidPlayByPlayException(msg)
       }
     }
   }
 
-  /** Away team name */
-  override val awayTeam = getElementFromXml("team away", "a")
-
-  /** Away team score */
-  override val awayScore = getElementFromXml("team away", "span")
-
-  /** Home team name */
-  override val homeTeam = getElementFromXml("team home", "a")
-
-  /** Home team score */
-  override val homeScore = getElementFromXml("team home", "span")
-
-  private val gameTimeLocationDivs = XmlHelper.getElemByClassAndTag(divs, "game-time-location", "p")
-  val timeAndLocation =
-    if (gameTimeLocationDivs.isDefined && gameTimeLocationDivs.get.size == 2) {
-      (gameTimeLocationDivs.get.head.text, gameTimeLocationDivs.get.tail.text)
-    } else {
-        val msg = s"Unable to find game time and location in ${filename}"
-        logger.error(msg)
-        throw new InvalidPlayByPlayException(msg)
+  def getTeamNameAndScore(teamType: String) = {
+    val teamNode = XmlHelper.getElemByClassAndTag(divs, s"team $teamType", "div")
+    if (teamNode.isEmpty) {
+      val msg = s"Unable to find ${teamType} team name in ${playByPlayFilename}"
+      logger.error(msg)
+      throw new InvalidPlayByPlayException(msg)
     }
 
+    val teamContainer = teamNode.get.find(_.attribute("class").mkString == "team-container")
+    if (teamContainer.isEmpty) {
+      val msg = s"Unable to find team-container for ${teamType} team name in ${playByPlayFilename}"
+      logger.error(msg)
+      throw new InvalidPlayByPlayException(msg)
+    }
+
+    val nameContainer = teamContainer.get \ "div" \ "div" \ "a"
+
+    val teamHref = nameContainer.head.attribute("href")
+    if (teamHref.isEmpty) {
+      val msg = s"Unable to find team href for ${teamType} team name in ${playByPlayFilename}"
+      logger.error(msg)
+      throw new InvalidPlayByPlayException(msg)
+    }
+
+    val nameSpan = nameContainer \ "span"
+    val name = nameSpan.find(_.attribute("class").mkString == "short-name").get.text
+
+    val scoreContainer = teamNode.get.find(_.attribute("class").mkString == "score-container")
+    if (teamContainer.isEmpty) {
+      val msg = s"Unable to find score-container for ${teamType} team name in ${playByPlayFilename}"
+      logger.error(msg)
+      throw new InvalidPlayByPlayException(msg)
+    }
+
+    val score = (scoreContainer.get \ "div").text
+
+    (name, score, teamHref.get.mkString)
+  }
+
+  private val away = getTeamNameAndScore("away")
+
+  /** Away team name */
+  override val awayTeam = away._1
+
+  /** Away team score */
+  override val awayScore = away._2
+
+  private val home = getTeamNameAndScore("home")
+
+  /** Home team name */
+  override val homeTeam = home._1
+
+  /** Home team score */
+  override val homeScore = home._2
+
+  private val dataDateSpan = XmlHelper.getElemByClassAndTag(gameinfoDivs, "game-date-time", "span")
+  if (dataDateSpan.isEmpty || dataDateSpan.get.isEmpty || dataDateSpan.get.head.attribute("data-date").isEmpty) {
+    val msg = s"Unable to find game time in ${gameInfoFilename}"
+    logger.error(msg)
+    throw new InvalidPlayByPlayException(msg)
+  }
+  private val timestamp = dataDateSpan.get.head.attribute("data-date")
+
   /** Game time */
-  val dateTimeFormatter = DateTimeFormat.forPattern("h:m a 'ET', MMM d, y")
-  override val gameTime: DateTime =
-    Try(dateTimeFormatter.parseDateTime(timeAndLocation._1)) match {
+  override val gameTime: DateTime = {
+    val dataDateDiv = XmlHelper.getElemByClassAndTag(gameinfoDivs, "game-date-time", "div")
+    if (dataDateDiv.isEmpty || (dataDateDiv.head \ "span").isEmpty || (dataDateDiv.get \ "span").head.attribute("data-date").isEmpty) {
+      val msg = s"Unable to find game time and location in ${gameInfoFilename}"
+      logger.error(msg)
+      throw new InvalidPlayByPlayException(msg)
+    }
+    val dataDateValue = (dataDateDiv.get \ "span").head.attribute("data-date").mkString
+      .replace("Z", ":00.00+0000")
+
+    val formatter = ISODateTimeFormat.dateTime().withZone(DateTimeZone.getDefault())
+    Try(formatter.parseDateTime(dataDateValue)) match {
       case Success(dateTime) => {
         dateTime
       }
-      case Failure(e: Throwable) => {
-        val message = s"Unable to parse game time in ${filename}: ${e.getMessage}"
-        logger.error(message)
-        throw new InvalidPlayByPlayException(message)
-      }
+      case Failure(e: Throwable) => logMessageAndThrowException(s"Unable to parse game time in ${gameInfoFilename}: ${e.getMessage}")
     }
+  }
 
   /** Game location */
-  override val gameLocation = timeAndLocation._2
+  override val gameLocation = {
+    val locationDiv = XmlHelper.getElemByClassAndTag(gameinfoDivs, "caption-wrapper", "div")
+    if (locationDiv.isEmpty || locationDiv.get.isEmpty || locationDiv.get.head.text.trim.isEmpty) logMessageAndThrowException(s"Unable get location in ${gameInfoFilename}")
+    Some(locationDiv.get.head.text.trim)
+  }
 
   /** URI of this game */
   val gameUri: URI = EntityUriFactory.getGameUri(homeTeam, awayTeam, gameTime)
@@ -91,66 +155,100 @@ class EspnPlayByPlay(rootElem: Elem, filename: String) extends PlayByPlay with L
   private def readEvents(): Seq[Event] = {
     logger.debug("Reading game: " + (awayTeam, awayScore, homeTeam, homeScore).toString)
 
-    val p = (rootElem \\ "table")
-      .find(_.attribute("class").mkString == "mod-data mod-pbp")
+    val pngRegex = """/[a-z]+\.png""".r
 
-    val eventsRead = if (p.isEmpty)
-      Seq()
-    else {
-      var period: Int = 0
-      var eventNumber: Int = 0
+    /** find the image filename, needed to identify the team for each play */
+    def findImageFilename(href: String): String = {
+      val imgSrcs =
+        (gameinfoDivs \\ "a").
+          filter(_.attribute("href").mkString == href)
+          .map(_ \ "img").filter(!_.isEmpty)
+          .flatten
+          .map(_.attribute("src").mkString)
 
-      val eventRows = (p.get \\ "table" \\ "tr")
-      eventRows.map(r => {
-        if ((r \\ "h4").size > 0) {
-          val description = (r \\ "h4" text).mkString
-          if (description.endsWith("Summary")) {
-            period += 1
-            logger.debug(s"Reading period ${period}: ${description}")
-          }
-          None
+      val matches = imgSrcs
+        .map(pngRegex.findFirstIn(_))
+        .filter(_.isDefined)
+        .map(_.get)
 
-        } else {
-          val td = (r \\ "td")
-          if (td.size == 2) {
-            eventNumber += 1
-            Some(new Event(gameUri, eventNumber, period, (td.head text).mkString.trim, (td.last text).mkString.trim))
+      if (matches.isEmpty) logMessageAndThrowException(s"Unable to find image for $href in ${playByPlayFilename}")
 
-          } else if (td.size == 4) {
-            val time = (td(0) text).mkString
-            val score = (td(2) text).mkString
-            val awayPlay = (td(1) text).mkString.trim
-            val homePlay = (td(3) text).mkString.trim
-
-            val teamNameAndPlay: Option[(String, String)] =
-              if (homePlay.size > 1)
-                Some((homeTeam, homePlay))
-              else if (awayPlay.size > 1)
-                Some((awayTeam, awayPlay))
-              else
-                None
-
-            if (teamNameAndPlay.isDefined) {
-              eventNumber += 1
-              Some(PlayFactory.createPlay(gameUri, filename, eventNumber, period, time, teamNameAndPlay.get._1, teamNameAndPlay.get._2, score))
-            } else
-              None
-
-          } else
-            None
-        }
-      }).filter(_.isDefined)
-        .map(event => {
-          logger.debug("Read event: " + event.toString)
-          event.get
-        })
+      matches.head
     }
 
-    if (eventsRead.isEmpty)
-      logger.warn(s"No events read from ${filename}")
+    val homeImageFilename = findImageFilename(home._3)
+    val awayImageFilename = findImageFilename(away._3)
+
+    val isWnba = home._3.toLowerCase.contains("wnba")
+
+    val quarterDivs = (playByPlayRootElem \\ "li" \ "div").filter(_.attribute("id").map(_.text).getOrElse("").startsWith("gp-quarter-"))
+    if (quarterDivs.size < 4) logMessageAndThrowException(s"Unable find play-by-play events (only found ${quarterDivs.size} quarters) in ${playByPlayFilename}")
+
+    val periodsAndPlayData: Seq[(Int, scala.xml.Node)] = quarterDivs.map(quarterDiv => {
+      val period = quarterDiv.attribute("id").get.text.replace("gp-quarter-", "").toInt
+      period -> quarterDiv
+    })
+      .sortBy(_._1)
+
+    /** Map of period number to its length */
+    val periodLengths: Map[Int, Int] = periodsAndPlayData.groupBy(_._1).map(e => {
+      val period = e._1
+      period match {
+        case i if (i <= 4) && isWnba  => period -> 10
+        case i if (i <= 4) && !isWnba => period -> 12
+        case _                       => period -> 5
+      }
+    }).toMap
+
+    periodsAndPlayData.groupBy(_._1).map(e => {
+      val (period, nodes) = e
+      val timeStampTd = (nodes.head._2 \\ "td").find(_.attribute("class").mkString == "time-stamp")
+      if (timeStampTd.isEmpty) logMessageAndThrowException(s"Invalid event found in in ${playByPlayFilename}: ${nodes.head._2.mkString}")
+      period -> timeStampTd.get.text
+    }).toMap
+
+    val eventsAndPeriods = periodsAndPlayData.flatMap(e => {
+      val (period: Int, quarterDiv: scala.xml.Node) = e
+
+      val playRows = quarterDiv.head \\ "tr"
+      playRows.tail.map(tr => {
+
+        def findTd(clazz: String) = {
+          val td = (tr \ "td").find(_.attribute("class").mkString == clazz)
+          if (td.isEmpty) logMessageAndThrowException(s"Invalid event found in in ${playByPlayFilename}: ${tr.mkString}")
+          td
+        }
+
+        val gameDetails = findTd("game-details").get.text
+        val timeStamp = findTd("time-stamp").get.text
+        val score = findTd("combined-score").get.text.replaceAll(" ", "")
+
+        val logo = findTd("logo")
+        if (logo.isEmpty || (logo.get \ "img").isEmpty || (logo.get \ "img").head.attribute("src").isEmpty) logMessageAndThrowException(s"Invalid event found in in ${playByPlayFilename}: ${tr.mkString}")
+        val logoHref = (logo.get \ "img").head.attribute("src").mkString
+        val teamName =
+          logoHref match {
+            case s if s.contains(homeImageFilename) => homeTeam
+            case s if s.contains(awayImageFilename) => awayTeam
+            case _                                  => logMessageAndThrowException(s"Invalid team logo href (${logoHref}) found in in ${playByPlayFilename}: ${tr.mkString}")
+          }
+
+        (period, gameDetails, timeStamp, teamName, score)
+      })
+    })
+
+    val eventData: Seq[Event] = eventsAndPeriods.zipWithIndex.map(e => {
+      val ((period, play, timeStamp, teamName, score), eventIndex) = e
+      val periodLengthInMinutes = periodLengths.get(period).get
+      val gamePeriodInfo = if (isWnba) GamePeriodInfo.WNBAPeriodInfo else GamePeriodInfo.NBAPeriodInfo
+      PlayFactory.createPlay(gameUri, playByPlayFilename, eventIndex + 1, period, timeStamp, teamName, play, score, gamePeriodInfo)
+    })
+
+    if (eventData.isEmpty)
+      logger.warn(s"No events read from ${playByPlayFilename}")
     logger.debug(s"Finished reading game")
 
-    eventsRead
+    eventData
   }
 
   /**
@@ -161,11 +259,12 @@ class EspnPlayByPlay(rootElem: Elem, filename: String) extends PlayByPlay with L
    */
   override def addRdf(rep: Repository) = {
     rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME)
-    rep.addTriple(gameUri, Ontology.GAME_LOCATION, rep.getValueFactory.createLiteral(gameLocation))
+    gameLocation.foreach(location =>
+      rep.addTriple(gameUri, Ontology.GAME_LOCATION, rep.getValueFactory.createLiteral(location)))
     rep.addTriple(gameUri, RDFS.LABEL, rep.getValueFactory.createLiteral(this.toString))
     val gregorianGameTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(gameTime.toGregorianCalendar())
     rep.addTriple(gameUri, Ontology.GAME_TIME, rep.getValueFactory.createLiteral(gregorianGameTime))
-    
+
     events.foreach(_.addRdf(rep))
     super.addRdf(rep)
   }
@@ -173,6 +272,12 @@ class EspnPlayByPlay(rootElem: Elem, filename: String) extends PlayByPlay with L
   override def toString(): String = {
     val fmt = DateTimeFormat.forPattern("YYYY-MM-dd")
     s"${awayTeam} (${awayScore}) at ${homeTeam} (${homeScore}) on ${fmt.print(gameTime)}: ${events.size} events"
+  }
+
+  /** log a message and throw an InvalidPlayByPlayException */
+  private def logMessageAndThrowException(message: String) = {
+    logger.error(message)
+    throw new InvalidPlayByPlayException(message)
   }
 
 }

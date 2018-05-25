@@ -7,6 +7,7 @@ import org.scalatest.Matchers
 import com.stellmangreene.pbprdf.plays.ShotPlay
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.GamePeriodInfo
 
 /**
  * Test the ShotPlay class
@@ -24,7 +25,7 @@ class ShotPlaySpec extends FlatSpec with Matchers with RdfOperations {
   val testUri = TestUri.create("400610636")
   
   it should "parse shots" in {
-    new ShotPlay(testUri, 4, 1, "9:18", "Mystics", "Stefanie Dolson misses 13-foot jumper", "0-0").addRdf(rep)
+    new ShotPlay(testUri, 4, 1, "9:18", "Mystics", "Stefanie Dolson misses 13-foot jumper", "0-0", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/4> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -44,7 +45,7 @@ class ShotPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#shotMade -> false",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Stefanie Dolson misses 13-foot jumper"))
 
-    new ShotPlay(testUri, 5, 1, "9:15", "Sun", "Kelsey Bone  misses", "0-0").addRdf(rep)
+    new ShotPlay(testUri, 5, 1, "9:15", "Sun", "Kelsey Bone  misses", "0-0", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/5> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -66,7 +67,7 @@ class ShotPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse assisted shots" in {
-    new ShotPlay(testUri, 8, 2, "9:11", "Mystics", "Ivory Latta makes 24-foot three point jumper (Tierra Ruffin-Pratt assists)", "3-0").addRdf(rep)
+    new ShotPlay(testUri, 8, 2, "9:11", "Mystics", "Ivory Latta makes 24-foot three point jumper (Tierra Ruffin-Pratt assists)", "3-0", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/8> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -90,7 +91,7 @@ class ShotPlaySpec extends FlatSpec with Matchers with RdfOperations {
   }
 
   it should "parse the correct number of points for free throws" in {
-    new ShotPlay(testUri, 88, 2, "9:15", "Sun", "Alyssa Thomas makes free throw 2 of 2", "18-26").addRdf(rep)
+    new ShotPlay(testUri, 88, 2, "9:15", "Sun", "Alyssa Thomas makes free throw 2 of 2", "18-26", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/88> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

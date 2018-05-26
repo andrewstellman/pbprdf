@@ -26,7 +26,7 @@ import better.files._
 
 //TODO: Add triples for the current score (e.g. "10-4") -- grep -r "CURRENTLY IGNORED" src/main/scala
 
- * /**
+/**
  * @author andrewstellman
  */
 class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename: String) extends PlayByPlay with LazyLogging with RdfOperations {

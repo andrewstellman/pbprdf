@@ -13,6 +13,9 @@ import org.joda.time.DateTime
 import com.stellmangreene.pbprdf.InvalidPlayByPlayException
 import better.files._
 
+// TODO: Add a few more NBA tests
+// TODO: Make sure all tests pass (invalid XML file currently throws the wrong exception)
+
 /**
  * Test the EspnPlayByPlay class
  * @author andrewstellman
@@ -23,26 +26,37 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
   behavior of "EspnPlayByPlay"
 
-  var playByPlay = new EspnPlayByPlay(path, "400610636.html", "400610636-gameinfo.html")
+  var wnbaPlayByPlay = new EspnPlayByPlay(path, "400610636.html", "400610636-gameinfo.html")
+  var nbaPlayByPlay = new EspnPlayByPlay(path, "401029417.html", "401029417-gameinfo.html")
 
-  it should "read information about the game" in {
-    playByPlay.homeTeam should be("Sun")
-    playByPlay.homeScore should be("68")
-    playByPlay.awayTeam should be("Mystics")
-    playByPlay.awayScore should be("73")
-    playByPlay.gameLocation should be(Some("Mohegan Sun Arena"))
-    playByPlay.gameTime should equal(new DateTime("2015-06-05T19:00:00.000-04:00"))
-    playByPlay.toString should be("Mystics (73) at Sun (68) on 2015-06-05: 391 events")
+  it should "read information about a WNBA game" in {
+    wnbaPlayByPlay.homeTeam should be("Sun")
+    wnbaPlayByPlay.homeScore should be("68")
+    wnbaPlayByPlay.awayTeam should be("Mystics")
+    wnbaPlayByPlay.awayScore should be("73")
+    wnbaPlayByPlay.gameLocation should be(Some("Mohegan Sun Arena"))
+    wnbaPlayByPlay.gameTime should equal(new DateTime("2015-06-05T19:00:00.000-04:00"))
+    wnbaPlayByPlay.toString should be("Mystics (73) at Sun (68) on 2015-06-05: 391 events")
+  }
+
+  it should "read information about an NBA game" in {
+    nbaPlayByPlay.homeTeam should be("Cavaliers")
+    nbaPlayByPlay.homeScore should be("80")
+    nbaPlayByPlay.awayTeam should be("Pacers")
+    nbaPlayByPlay.awayScore should be("98")
+    nbaPlayByPlay.gameLocation should be(Some("Quicken Loans Arena"))
+    nbaPlayByPlay.gameTime should equal(new DateTime("2018-04-15T14:30:00.000-05:00"))
+    nbaPlayByPlay.toString should be("Pacers (98) at Cavaliers (80) on 2018-04-15: 458 events")
   }
 
   it should "read the events from the game" in {
-    playByPlay.events.size should be(391)
+    wnbaPlayByPlay.events.size should be(391)
 
-    playByPlay.events.filter(_.period == 1)
+    wnbaPlayByPlay.events.filter(_.period == 1)
       .filter(!_.isInstanceOf[Play])
       .map(_.description) should be(List("Official timeout", "End of the 1st Quarter"))
 
-    val firstQuarterPlays = playByPlay.events
+    val firstQuarterPlays = wnbaPlayByPlay.events
       .filter(_.period == 1)
       .filter(_.isInstanceOf[Play])
     firstQuarterPlays.size should be(81)
@@ -59,6 +73,9 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
     intercept[InvalidPlayByPlayException] {
       var invalidPlayByPlay = new EspnPlayByPlay(path, "400610636.html", "INVALID FILENAME")
     }
+    intercept[InvalidPlayByPlayException] {
+      var xmlFile = new EspnPlayByPlay("src/main/resources", "logback.xml", "logback.xml")
+    }
   }
 
   it should "generate RDF" in {
@@ -66,7 +83,7 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
     var rep = new SailRepository(new MemoryStore)
     rep.initialize
 
-    playByPlay.addRdf(rep)
+    wnbaPlayByPlay.addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))

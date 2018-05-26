@@ -5,6 +5,14 @@ import com.typesafe.scalalogging.LazyLogging
 /** Times for a specific event */
 case class EventTimes(secondsIntoGame: Int, secondsLeftInPeriod: Int)
 
+/** Companion object for GamePeriodInfo that defines period information for various leagues */
+object GamePeriodInfo {
+  val WNBAPeriodInfo = GamePeriodInfo(10, 5, 4)
+  val NBAPeriodInfo = GamePeriodInfo(12, 5, 0)
+  val NCAAWPeriodInfo = GamePeriodInfo(10, 5, 4)
+  val NCAAMPeriodInfo = GamePeriodInfo(20, 5, 2)
+}
+
 /** Information about the number of periods in the game and the number of minutes in each period */
 case class GamePeriodInfo(regulationPeriodMinutes: Int, overtimePeriodMinutes: Int, regulationPeriods: Int) extends LazyLogging {
 
@@ -67,11 +75,4 @@ case class GamePeriodInfo(regulationPeriodMinutes: Int, overtimePeriodMinutes: I
     })
 
   }
-}
-
-object GamePeriodInfo {
-  val WNBAPeriodInfo = GamePeriodInfo(10, 5, 4)
-  val NBAPeriodInfo = GamePeriodInfo(12, 5, 0)
-  val NCAAWPeriodInfo = GamePeriodInfo(10, 5, 4)
-  val NCAAMPeriodInfo = GamePeriodInfo(20, 5, 2)
 }

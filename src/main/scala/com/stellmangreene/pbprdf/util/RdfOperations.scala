@@ -19,6 +19,9 @@ import org.openrdf.model.vocabulary.RDFS
 import org.openrdf.model.vocabulary.XMLSchema
 import com.typesafe.scalalogging.LazyLogging
 
+// TODO: Change this to an object that's included by importing RdfOperations._
+// TODO: refactor this into its own library, publish it to Maven Central, and add it as a dependency
+
 /**
  * Define implicit operations to perform RDF functions on Sesame repositories and collections
  *

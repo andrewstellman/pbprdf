@@ -12,6 +12,9 @@ import org.openrdf.model.vocabulary.RDFS
 import org.openrdf.model.BNode
 import org.joda.time.DateTime
 
+//TODO: Add triples for the box score, test against official box scores
+//TODO: Add triples for the players on the court for each possession
+
 /**
  * Play by play
  *

@@ -6,6 +6,8 @@ import com.typesafe.scalalogging.LazyLogging
 import org.openrdf.model.URI
 import com.stellmangreene.pbprdf.GamePeriodInfo
 
+//TODO: Turn this into Event.apply() in a companion object for Event
+
 /**
  * Factory to create Play objects, choosing the subclass based on the play description
  *

@@ -1,7 +1,5 @@
 package com.stellmangreene.pbprdf
 
-
-
 import scala.language.postfixOps
 import scala.util.Failure
 import scala.util.Success
@@ -27,6 +25,9 @@ import javax.xml.datatype.DatatypeFactory
 
 import better.files._
 
+//TODO: Support timeout plays ("Washington 20 Sec. timeout")
+//TODO: Support end of quarter plays ("End of the 3rd quarter")
+
 /**
  * @author andrewstellman
  */
@@ -36,11 +37,25 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
   override val gameSource = playByPlayFilename
 
   private val playByPlayXmlFile = path / playByPlayFilename
-  private val playByPlayRootElem = XmlHelper.parseXml(playByPlayXmlFile.newInputStream)
+  private val playByPlayRootElem = Try(XmlHelper.parseXml(playByPlayXmlFile.newInputStream)) match {
+      case Success(s) => s
+      case Failure(t: Throwable) => {
+        val msg = s"Unable to read ${playByPlayXmlFile.pathAsString}: ${t.getMessage}"
+        logger.error(msg)
+        throw new InvalidPlayByPlayException(msg)
+      }
+  }
   private val divs = (playByPlayRootElem \\ "body" \\ "div")
 
   private val gameInfoXmlFile = path / gameInfoFilename
-  private val gameInfoRootElem = XmlHelper.parseXml(gameInfoXmlFile.newInputStream)
+  private val gameInfoRootElem = Try(XmlHelper.parseXml(gameInfoXmlFile.newInputStream)) match {
+      case Success(s) => s
+      case Failure(t: Throwable) => {
+        val msg = s"Unable to read ${gameInfoXmlFile.pathAsString}: ${t.getMessage}"
+        logger.error(msg)
+        throw new InvalidPlayByPlayException(msg)
+      }
+  }
   private val gameinfoDivs = (gameInfoRootElem \\ "body" \\ "div")
 
   private val awayTeamElems = XmlHelper.getElemByClassAndTag(divs, "team away", "a")
@@ -58,37 +73,21 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
 
   def getTeamNameAndScore(teamType: String) = {
     val teamNode = XmlHelper.getElemByClassAndTag(divs, s"team $teamType", "div")
-    if (teamNode.isEmpty) {
-      val msg = s"Unable to find ${teamType} team name in ${playByPlayFilename}"
-      logger.error(msg)
-      throw new InvalidPlayByPlayException(msg)
-    }
+    if (teamNode.isEmpty) logMessageAndThrowException(s"Unable to find ${teamType} team name in ${playByPlayFilename}")
 
     val teamContainer = teamNode.get.find(_.attribute("class").mkString == "team-container")
-    if (teamContainer.isEmpty) {
-      val msg = s"Unable to find team-container for ${teamType} team name in ${playByPlayFilename}"
-      logger.error(msg)
-      throw new InvalidPlayByPlayException(msg)
-    }
+    if (teamContainer.isEmpty) logMessageAndThrowException(s"Unable to find team-container for ${teamType} team name in ${playByPlayFilename}")
 
     val nameContainer = teamContainer.get \ "div" \ "div" \ "a"
 
     val teamHref = nameContainer.head.attribute("href")
-    if (teamHref.isEmpty) {
-      val msg = s"Unable to find team href for ${teamType} team name in ${playByPlayFilename}"
-      logger.error(msg)
-      throw new InvalidPlayByPlayException(msg)
-    }
+    if (teamHref.isEmpty) logMessageAndThrowException(s"Unable to find team href for ${teamType} team name in ${playByPlayFilename}")
 
     val nameSpan = nameContainer \ "span"
     val name = nameSpan.find(_.attribute("class").mkString == "short-name").get.text
 
     val scoreContainer = teamNode.get.find(_.attribute("class").mkString == "score-container")
-    if (teamContainer.isEmpty) {
-      val msg = s"Unable to find score-container for ${teamType} team name in ${playByPlayFilename}"
-      logger.error(msg)
-      throw new InvalidPlayByPlayException(msg)
-    }
+    if (teamContainer.isEmpty) logMessageAndThrowException(s"Unable to find score-container for ${teamType} team name in ${playByPlayFilename}")
 
     val score = (scoreContainer.get \ "div").text
 
@@ -112,21 +111,15 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
   override val homeScore = home._2
 
   private val dataDateSpan = XmlHelper.getElemByClassAndTag(gameinfoDivs, "game-date-time", "span")
-  if (dataDateSpan.isEmpty || dataDateSpan.get.isEmpty || dataDateSpan.get.head.attribute("data-date").isEmpty) {
-    val msg = s"Unable to find game time in ${gameInfoFilename}"
-    logger.error(msg)
-    throw new InvalidPlayByPlayException(msg)
-  }
+  if (dataDateSpan.isEmpty || dataDateSpan.get.isEmpty || dataDateSpan.get.head.attribute("data-date").isEmpty)
+    logMessageAndThrowException(s"Unable to find game time in ${gameInfoFilename}")
   private val timestamp = dataDateSpan.get.head.attribute("data-date")
 
   /** Game time */
   override val gameTime: DateTime = {
     val dataDateDiv = XmlHelper.getElemByClassAndTag(gameinfoDivs, "game-date-time", "div")
-    if (dataDateDiv.isEmpty || (dataDateDiv.head \ "span").isEmpty || (dataDateDiv.get \ "span").head.attribute("data-date").isEmpty) {
-      val msg = s"Unable to find game time and location in ${gameInfoFilename}"
-      logger.error(msg)
-      throw new InvalidPlayByPlayException(msg)
-    }
+    if (dataDateDiv.isEmpty || (dataDateDiv.head \ "span").isEmpty || (dataDateDiv.get \ "span").head.attribute("data-date").isEmpty) 
+      logMessageAndThrowException(s"Unable to find game time and location in ${gameInfoFilename}")
     val dataDateValue = (dataDateDiv.get \ "span").head.attribute("data-date").mkString
       .replace("Z", ":00.00+0000")
 
@@ -196,7 +189,7 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
       period match {
         case i if (i <= 4) && isWnba  => period -> 10
         case i if (i <= 4) && !isWnba => period -> 12
-        case _                       => period -> 5
+        case _                        => period -> 5
       }
     }).toMap
 

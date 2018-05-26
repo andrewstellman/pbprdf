@@ -14,6 +14,8 @@ import java.io.FileOutputStream
 import com.stellmangreene.pbprdf.util.RdfOperations
 import better.files._
 
+//TODO: Migrate to rdf4j and Scala 2.12.3 (or 4?) and maybe the latest sbt (add a build/ folder)
+
 object PbpRdfApp extends App with LazyLogging with RdfOperations {
 
   def printUsageAndExit(message: Option[String] = None) = {

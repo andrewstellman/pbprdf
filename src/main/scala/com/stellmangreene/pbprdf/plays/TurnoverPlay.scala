@@ -71,7 +71,7 @@ class TurnoverPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, te
           Set((eventUri, RDF.TYPE, Ontology.TURNOVER)) ++ turnoverPlayerTriple ++ stolenByTriple
         }
 
-        case _ => Set()
+        case _ => { logger.warn(s"Unrecognized turnover play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

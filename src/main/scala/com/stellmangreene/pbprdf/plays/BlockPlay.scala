@@ -49,8 +49,7 @@ class BlockPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team:
             (eventUri, Ontology.SHOT_BY, EntityUriFactory.getPlayerUri(shotBy)),
             (eventUri, Ontology.SHOT_BLOCKED_BY, EntityUriFactory.getPlayerUri(blockedBy)))
         }
-        //TODO: add warning to this and other plays --        case _ => { logger.warn(s"Unrecognized block play: ${play}"); Set() }
-        case _ => Set()
+        case _ => { logger.warn(s"Unrecognized block play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

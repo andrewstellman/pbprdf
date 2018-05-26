@@ -90,7 +90,7 @@ class ShotPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
             assistedByTriple
         }
 
-        case _ => Set()
+        case _ => { logger.warn(s"Unrecognized shot play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

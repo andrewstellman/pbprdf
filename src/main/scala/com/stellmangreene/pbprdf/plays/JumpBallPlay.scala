@@ -61,7 +61,7 @@ class JumpBallPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, te
           }
         }
 
-        case _ => Set()
+        case _ => { logger.warn(s"Unrecognized jump ball play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

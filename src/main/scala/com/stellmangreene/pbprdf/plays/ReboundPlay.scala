@@ -57,7 +57,7 @@ class ReboundPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, tea
             (eventUri, Ontology.REBOUNDED_BY, EntityUriFactory.getPlayerUri(reboundedBy))) ++
             offensiveReboundTriples
         }
-        case _ => Set()
+        case _ => { logger.warn(s"Unrecognized rebound play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

@@ -47,7 +47,7 @@ class ThreeSecondViolationPlay(gameUri: URI, eventNumber: Int, period: Int, time
             (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy)))
         }
 
-        case _ => Set()
+        case _ => { logger.warn(s"Unrecognized three second violation play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

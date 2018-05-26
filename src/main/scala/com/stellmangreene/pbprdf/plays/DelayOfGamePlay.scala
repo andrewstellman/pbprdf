@@ -47,7 +47,7 @@ class DelayOfGamePlay(gameUri: URI, eventNumber: Int, period: Int, time: String,
             (eventUri, Ontology.IS_DELAY_OF_GAME, rep.getValueFactory.createLiteral(true)))
         }
 
-        case _ => Set()
+        case _ => { logger.warn(s"Unrecognized delay of game play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

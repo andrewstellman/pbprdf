@@ -52,7 +52,7 @@ class TechnicalFoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: Strin
             (eventUri, Ontology.TECHNICAL_FOUL_NUMBER, rep.getValueFactory.createLiteral(foulNumber.toInt))) ++ committedByTriple
         }
 
-        case _ => Set()
+        case _ => { logger.warn(s"Unrecognized technical foul play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

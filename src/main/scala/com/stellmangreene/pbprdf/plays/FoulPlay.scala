@@ -80,7 +80,7 @@ class FoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
             (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy))) ++
             drawnByTriple ++ isShootingFoulTriple ++ offensiveTriples ++ looseBallTriple
         }
-        case _ => Set()
+        case _ => { logger.warn(s"Unrecognized foul play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

@@ -48,7 +48,7 @@ class DoubleTechnicalFoulPlay(gameUri: URI, eventNumber: Int, period: Int, time:
             (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy2)))
         }
 
-        case _ => Set()
+        case _ => { logger.warn(s"Unrecognized double technical foul play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

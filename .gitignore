@@ -27,3 +27,7 @@ project/plugins/project/
 # data folders
 wnba-20*/
 data/
+
+# MacOS
+.DS_Store
+

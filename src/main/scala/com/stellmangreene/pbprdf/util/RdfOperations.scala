@@ -46,12 +46,12 @@ trait RdfOperations extends LazyLogging {
 
     /**
      * Write all of the statements in the repository to a file or System.out
-     * 
+     *
      * @param outputFile
      *        The name of the file to write to, or None to write to System.out
-     *        
+     *
      * @param format
-     *        The format to write (defaults to Turtle) 
+     *        The format to write (defaults to Turtle)
      */
     def writeAllStatements(outputFile: Option[String], rdfFormat: RDFFormat = RDFFormat.TURTLE) = {
       val conn = repository.getConnection

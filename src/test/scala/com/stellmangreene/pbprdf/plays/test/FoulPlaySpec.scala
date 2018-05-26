@@ -23,7 +23,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
   rep.initialize
 
   val testUri = TestUri.create("400610636")
-  
+
   it should "parse fouls" in {
     new FoulPlay(testUri, 37, 1, "4:56", "Sun", "Camille Little personal foul  (Stefanie Dolson draws the foul)", "10-9", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
@@ -133,7 +133,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#isLooseBallFoul -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: Jantel Lavender loose ball foul (Sylvia Fowles draws the foul)"))
   }
-  
+
   it should "parse fouls when no player draws the foul" in {
     val testUri3 = TestUri.create("400539523")
     new FoulPlay(testUri3, 13, 1, "8:12", "Sparks", "Jenna O'Hea offensive foul", "8-8", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
@@ -154,7 +154,7 @@ class FoulPlaySpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Jenna_O'Hea",
           "http://www.stellman-greene.com/pbprdf#isOffensive -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: Jenna O'Hea offensive foul"))
-    
+
   }
 
 }

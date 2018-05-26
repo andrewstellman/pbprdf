@@ -24,7 +24,7 @@ class DelayOfGamePlaySpec extends FlatSpec with Matchers with RdfOperations {
 
   it should "parse a delay of game violation" in {
     val testUri = TestUri.create("400610739")
-    
+
     new DelayOfGamePlay(testUri, 86, 2, "10:00", "Sparks", "Los Angeles delay of game violation", "15-22", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
     new DelayOfGamePlay(testUri, 295, 3, "1:39", "Sparks", "delay techfoul", "54-56", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 

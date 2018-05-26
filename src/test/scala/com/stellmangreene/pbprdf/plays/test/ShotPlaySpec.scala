@@ -23,7 +23,7 @@ class ShotPlaySpec extends FlatSpec with Matchers with RdfOperations {
   rep.initialize
 
   val testUri = TestUri.create("400610636")
-  
+
   it should "parse shots" in {
     new ShotPlay(testUri, 4, 1, "9:18", "Mystics", "Stefanie Dolson misses 13-foot jumper", "0-0", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 

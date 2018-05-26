@@ -18,7 +18,6 @@ import org.scalatest.Matchers
 
 import com.stellmangreene.pbprdf.util.RdfOperations
 
-
 /**
  * Unit tests for the RdfOperations trait that provides implicit RDF operations
  * for Sesame repositories and Aduna Iterators such as TupleQueryResult objects
@@ -93,7 +92,7 @@ WHERE {
     // Write all statements to stdout
     rep.writeAllStatements(None, RDFFormat.NQUADS)
 
-    // Verify that stdout contains all of the expected nquads 
+    // Verify that stdout contains all of the expected nquads
     var standardOutput = myOut.toString
     standardOutput.split("\n")
       .toSet

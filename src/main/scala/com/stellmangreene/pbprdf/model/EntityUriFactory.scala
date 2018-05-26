@@ -15,7 +15,7 @@ object EntityUriFactory {
   private val valueFactory = ValueFactoryImpl.getInstance()
 
   val NAMESPACE = "http://www.stellman-greene.com/pbprdf/"
-  
+
   /**
    * Generate the URI for a game entity
    */
@@ -23,7 +23,7 @@ object EntityUriFactory {
     val fmt = DateTimeFormat.forPattern("YYYY-MM-dd")
     valueFactory.createURI(NAMESPACE, s"games/${fmt.print(gameTime)}_${awayTeam}_at_${homeTeam}")
   }
-  
+
   /**
    * Generate the URI for an event entity
    */
@@ -31,19 +31,19 @@ object EntityUriFactory {
     val fmt = DateTimeFormat.forPattern("YYYY-MM-dd")
     valueFactory.createURI(s"${gameUri.stringValue}/${eventNumber.toString}")
   }
-  
+
   /**
    * Generate the URI for a team
    */
   def getTeamUri(name: String): URI = {
     valueFactory.createURI(NAMESPACE, s"teams/${name.trim.replaceAll(" ", "_")}")
   }
-  
+
   /**
    * Generate the URI for a player
    */
   def getPlayerUri(name: String): URI = {
     valueFactory.createURI(NAMESPACE, s"players/${name.trim.replaceAll(" ", "_")}")
   }
-  
+
 }

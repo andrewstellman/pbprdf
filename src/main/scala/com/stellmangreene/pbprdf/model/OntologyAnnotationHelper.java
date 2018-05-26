@@ -21,11 +21,11 @@ public class OntologyAnnotationHelper {
 	public static OntologyProperty getOntologyPropertyAnnotation(Field field) {
 		return field.getAnnotation(OntologyProperty.class);
 	}
-	
+
 	public static Boolean isObjectProperty(Field field) {
 		return field.getAnnotation(OntologyObjectProperty.class) != null;
 	}
-	
+
 	public static String getComment(Field field) {
 		OntologyComment ontologyComment = field.getAnnotation(OntologyComment.class);
 		if (ontologyComment == null)

@@ -34,9 +34,9 @@ import com.stellmangreene.pbprdf.GamePeriodInfo
  * @author andrewstellman
  */
 class DelayOfGamePlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-    extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-    with RdfOperations
-    with LazyLogging {
+  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  with RdfOperations
+  with LazyLogging {
 
   override def addRdf(rep: Repository) = {
     val triples: Set[(Resource, URI, Value)] =

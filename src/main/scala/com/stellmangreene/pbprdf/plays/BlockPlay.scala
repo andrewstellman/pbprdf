@@ -35,22 +35,23 @@ import com.stellmangreene.pbprdf.GamePeriodInfo
  * @author andrewstellman
  */
 class BlockPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-    extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-    with RdfOperations
-    with LazyLogging {
+  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  with RdfOperations
+  with LazyLogging {
 
   override def addRdf(rep: Repository) = {
     val triples: Set[(Resource, URI, Value)] =
-    play match {
-      case BlockPlay.playByPlayRegex(blockedBy, shotBy, shotType) => {
-        Set(
-          (eventUri, RDF.TYPE, Ontology.SHOT),
-          (eventUri, RDF.TYPE, Ontology.BLOCK),
-          (eventUri, Ontology.SHOT_BY, EntityUriFactory.getPlayerUri(shotBy)),
-          (eventUri, Ontology.SHOT_BLOCKED_BY, EntityUriFactory.getPlayerUri(blockedBy)))
+      play match {
+        case BlockPlay.playByPlayRegex(blockedBy, shotBy, shotType) => {
+          Set(
+            (eventUri, RDF.TYPE, Ontology.SHOT),
+            (eventUri, RDF.TYPE, Ontology.BLOCK),
+            (eventUri, Ontology.SHOT_BY, EntityUriFactory.getPlayerUri(shotBy)),
+            (eventUri, Ontology.SHOT_BLOCKED_BY, EntityUriFactory.getPlayerUri(blockedBy)))
+        }
+        //TODO: add warning to this and other plays --        case _ => { logger.warn(s"Unrecognized block play: ${play}"); Set() }
+        case _ => Set()
       }
-      case _ => Set()
-    }
 
     if (!triples.isEmpty)
       rep.addTriples(triples)

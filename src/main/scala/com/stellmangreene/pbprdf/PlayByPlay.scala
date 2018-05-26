@@ -45,7 +45,7 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
 
   /** Game time */
   val gameTime: DateTime
-  
+
   /** Game source (eg. filename) */
   val gameSource: String
 
@@ -100,7 +100,7 @@ abstract class PlayByPlay extends RdfOperations with LazyLogging {
     val players = playerTeamMap.keys.toSeq.distinct
     players.foreach(player => {
       rep.addTriple(EntityUriFactory.getPlayerUri(player), RDFS.LABEL, rep.getValueFactory.createLiteral(player.trim))
-      
+
       val playerTeam = playerTeamMap.get(player).get
       val playerUri = EntityUriFactory.getPlayerUri(player)
       rep.addTriple(playerUri, RDF.TYPE, Ontology.PLAYER)

@@ -14,7 +14,7 @@ import java.io.FileOutputStream
 import com.stellmangreene.pbprdf.util.RdfOperations
 import better.files._
 
-//TODO: Migrate to rdf4j and Scala 2.12.3 (or 4?) and maybe the latest sbt (add a build/ folder)
+//TODO: Migrate to rdf4j and Scala 2.12.3 (or 4?) and maybe the latest sbt (add a build/ folder) - search comments for "Sesame"
 
 object PbpRdfApp extends App with LazyLogging with RdfOperations {
 

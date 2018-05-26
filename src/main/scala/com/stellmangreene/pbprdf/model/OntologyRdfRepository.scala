@@ -13,7 +13,7 @@ import Ontology._
 
 /**
  * Object that uses the Java annotations in Ontology to build an RDF repository
- * that contains statements that describe the ontology 
+ * that contains statements that describe the ontology
  *
  * @author andrewstellman
  */

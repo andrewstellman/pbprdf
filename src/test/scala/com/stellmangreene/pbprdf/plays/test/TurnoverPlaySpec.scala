@@ -21,7 +21,7 @@ class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
   // As long as each event has unique game and event IDs, they can all go into the same repository
   val rep = new SailRepository(new MemoryStore)
   rep.initialize
-  
+
   val testUri = TestUri.create("400610636")
 
   it should "parse a turnover" in {

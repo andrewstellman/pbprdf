@@ -41,7 +41,7 @@ object XmlHelper {
    * Get children of an element by class and tag
    * @param clazz     Class to look for
    * @param tag       Tag to look for
-   * @return          Some(NodeSeq) with the matching nodes, or None if not found 
+   * @return          Some(NodeSeq) with the matching nodes, or None if not found
    */
   def getElemByClassAndTag(elem: NodeSeq, clazz: String, tag: String): Option[NodeSeq] = {
     elem

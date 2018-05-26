@@ -66,7 +66,7 @@ case class GamePeriodInfo(regulationPeriodMinutes: Int, overtimePeriodMinutes: I
         else 0
 
       val secondsIntoGame = secondsIntoPeriod + previousRegulationPeriodSecondsElapsed + previousOvertimePeriodSecondsElapsed
-      
+
       val secondsLeftInPeriod =
         if (inOvertime) (overtimePeriodMinutes * 60) - secondsIntoPeriod
         else (regulationPeriodMinutes * 60) - secondsIntoPeriod

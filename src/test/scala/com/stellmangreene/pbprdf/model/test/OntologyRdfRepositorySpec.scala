@@ -22,13 +22,15 @@ class OntologyRdfRepositorySpec extends FlatSpec with Matchers with RdfOperation
     OntologyRdfRepository.rep.executeQuery("SELECT * {<http://www.stellman-greene.com/pbprdf#Game> ?p ?o}")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
-        Set("http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.w3.org/2002/07/owl#Class",
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.w3.org/2002/07/owl#Class",
           "http://www.w3.org/2000/01/rdf-schema#label -> A game"))
 
     OntologyRdfRepository.rep.executeQuery("SELECT * {<http://www.stellman-greene.com/pbprdf#Turnover> ?p ?o}")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
-        Set("http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.w3.org/2002/07/owl#Class",
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.w3.org/2002/07/owl#Class",
           "http://www.w3.org/2000/01/rdf-schema#subClassOf -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/2000/01/rdf-schema#subClassOf -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/2000/01/rdf-schema#label -> A turnover"))

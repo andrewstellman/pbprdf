@@ -24,10 +24,9 @@ import javax.xml.datatype.DatatypeFactory
 
 import better.files._
 
-//TODO: Support timeout plays ("Washington 20 Sec. timeout")
-//TODO: Support end of quarter plays ("End of the 3rd quarter")
+//TODO: Add triples for the current score (e.g. "10-4") -- grep -r "CURRENTLY IGNORED" src/main/scala
 
-/**
+ * /**
  * @author andrewstellman
  */
 class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename: String) extends PlayByPlay with LazyLogging with RdfOperations {
@@ -37,23 +36,23 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
 
   private val playByPlayXmlFile = path / playByPlayFilename
   private val playByPlayRootElem = Try(XmlHelper.parseXml(playByPlayXmlFile.newInputStream)) match {
-      case Success(s) => s
-      case Failure(t: Throwable) => {
-        val msg = s"Unable to read ${playByPlayXmlFile.pathAsString}: ${t.getMessage}"
-        logger.error(msg)
-        throw new InvalidPlayByPlayException(msg)
-      }
+    case Success(s) => s
+    case Failure(t: Throwable) => {
+      val msg = s"Unable to read ${playByPlayXmlFile.pathAsString}: ${t.getMessage}"
+      logger.error(msg)
+      throw new InvalidPlayByPlayException(msg)
+    }
   }
   private val divs = (playByPlayRootElem \\ "body" \\ "div")
 
   private val gameInfoXmlFile = path / gameInfoFilename
   private val gameInfoRootElem = Try(XmlHelper.parseXml(gameInfoXmlFile.newInputStream)) match {
-      case Success(s) => s
-      case Failure(t: Throwable) => {
-        val msg = s"Unable to read ${gameInfoXmlFile.pathAsString}: ${t.getMessage}"
-        logger.error(msg)
-        throw new InvalidPlayByPlayException(msg)
-      }
+    case Success(s) => s
+    case Failure(t: Throwable) => {
+      val msg = s"Unable to read ${gameInfoXmlFile.pathAsString}: ${t.getMessage}"
+      logger.error(msg)
+      throw new InvalidPlayByPlayException(msg)
+    }
   }
   private val gameinfoDivs = (gameInfoRootElem \\ "body" \\ "div")
 
@@ -117,7 +116,7 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
   /** Game time */
   override val gameTime: DateTime = {
     val dataDateDiv = XmlHelper.getElemByClassAndTag(gameinfoDivs, "game-date-time", "div")
-    if (dataDateDiv.isEmpty || (dataDateDiv.head \ "span").isEmpty || (dataDateDiv.get \ "span").head.attribute("data-date").isEmpty) 
+    if (dataDateDiv.isEmpty || (dataDateDiv.head \ "span").isEmpty || (dataDateDiv.get \ "span").head.attribute("data-date").isEmpty)
       logMessageAndThrowException(s"Unable to find game time and location in ${gameInfoFilename}")
     val dataDateValue = (dataDateDiv.get \ "span").head.attribute("data-date").mkString
       .replace("Z", ":00.00+0000")

@@ -14,6 +14,7 @@ import com.stellmangreene.pbprdf.util.RdfOperations
 import com.typesafe.scalalogging.LazyLogging
 import com.stellmangreene.pbprdf.plays._
 
+//TODO: Add next and previous event triples
 
 /**
  * A play-by-play event that can be parsed into RDF triples
@@ -49,7 +50,6 @@ case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, desc
     val valueFactory = rep.getValueFactory
     rep.addTriples(eventTriples(valueFactory))
     rep.addTriples(secondsIntoGameTriple(valueFactory))
-    rep.addTriples(parseTimeoutTriplesIfPossible(valueFactory))
   }
 
   /** Generate the type, period, time, and label triples that every event must have */
@@ -73,28 +73,7 @@ case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, desc
     })
       .getOrElse(Set[(Resource, URI, Value)]())
   }
-
-  /**
-   * Generate the triples for a timeout event
-   * @return Triples for a timeout event, or Set() if this is not a timeout event
-   */
-  private def parseTimeoutTriplesIfPossible(valueFactory: ValueFactory): Set[(Resource, URI, Value)] = {
-    val timeoutRegex = """^(.*) (Full|20 Sec\.) timeout$""".r
-
-    description match {
-      case timeoutRegex(team, duration) => {
-        Set(
-          (eventUri, RDF.TYPE, Ontology.TIMEOUT),
-          (eventUri, Ontology.TIMEOUT_TEAM, valueFactory.createLiteral(team)),
-          (eventUri, Ontology.TIMEOUT_DURATION, valueFactory.createLiteral(duration)))
-      }
-      case _ => {
-        Set()
-      }
-    }
-  }
 }
-
 
 /**
  * Factory to create Play objects, choosing the subclass based on the play description
@@ -126,7 +105,7 @@ object Event extends LazyLogging with RdfOperations {
   def apply(gameUri: URI, filename: String, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo): Event = {
 
     val trimmedPlay = play.trim.replaceAll(" +", " ")
-    
+
     if (BlockPlay.matches(play))
       new BlockPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
 
@@ -159,6 +138,12 @@ object Event extends LazyLogging with RdfOperations {
 
     else if (TurnoverPlay.matches(play))
       new TurnoverPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+
+    else if (TimeoutPlay.matches(play))
+      new TimeoutPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+
+    else if (EndOfPlay.matches(play))
+      new EndOfPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
 
     else {
       logger.warn(s"Unable to find a specific kind of play that matches description in ${filename}: ${play}")

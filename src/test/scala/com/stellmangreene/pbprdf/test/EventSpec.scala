@@ -36,13 +36,13 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
     event.time should be("4:56")
   }
 
-  it should "generate RDF for the event" in {
+  it should "generate RDF for an unmatched event" in {
     var rep = new SailRepository(new MemoryStore)
     rep.initialize
 
     val testUri = TestUri.create("400610636")
-    new Event(testUri, 38, 1, "4:56", "Official timeout")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
-    new Event(testUri, 119, 2, "7:05", "Connecticut Full timeout")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(testUri, 38, 1, "4:56", "Unmatched event")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new Event(testUri, 119, 2, "7:05", "Unmatched event 2")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep
       .executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/38> ?p ?o }")
@@ -55,7 +55,7 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
           "http://www.stellman-greene.com/pbprdf#time -> 4:56",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 304",
           "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 296",
-          "http://www.w3.org/2000/01/rdf-schema#label -> Official timeout"))
+          "http://www.w3.org/2000/01/rdf-schema#label -> Unmatched event"))
 
     rep
       .executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/119> ?p ?o }")
@@ -63,15 +63,12 @@ class EventSpec extends FlatSpec with Matchers with RdfOperations {
       .toSet should be(
         Set(
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Timeout",
           s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
           "http://www.stellman-greene.com/pbprdf#time -> 7:05",
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 775",
           "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 425",
-          "http://www.stellman-greene.com/pbprdf#timeoutTeam -> Connecticut",
-          "http://www.stellman-greene.com/pbprdf#timeoutDuration -> Full",
-          "http://www.w3.org/2000/01/rdf-schema#label -> Connecticut Full timeout"))
+          "http://www.w3.org/2000/01/rdf-schema#label -> Unmatched event 2"))
   }
 
   it should "calculate the correct times for the start, middle, and end of a period" in {

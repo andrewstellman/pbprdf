@@ -53,12 +53,12 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
 
     wnbaPlayByPlay.events.filter(_.period == 1)
       .filter(!_.isInstanceOf[Play])
-      .map(_.description) should be(List("Official timeout", "End of the 1st Quarter"))
+      .map(_.description) should be(List())
 
     val firstQuarterPlays = wnbaPlayByPlay.events
       .filter(_.period == 1)
       .filter(_.isInstanceOf[Play])
-    firstQuarterPlays.size should be(81)
+    firstQuarterPlays.size should be(83)
     firstQuarterPlays
       .filter(_.description.contains("Stefanie Dolson makes"))
       .map(_.description) should be(
@@ -196,6 +196,7 @@ SELECT * {
       .toSet should be(
         Set(
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Timeout",
           "http://www.stellman-greene.com/pbprdf#inGame -> http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun",
           "http://www.stellman-greene.com/pbprdf#period -> 2",
@@ -203,8 +204,8 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 775",
           "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 425",
           "http://www.stellman-greene.com/pbprdf#timeoutDuration -> Full",
-          "http://www.stellman-greene.com/pbprdf#timeoutTeam -> Connecticut",
-          "http://www.w3.org/2000/01/rdf-schema#label -> Connecticut Full timeout"))
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Connecticut Full timeout"))
 
   }
 

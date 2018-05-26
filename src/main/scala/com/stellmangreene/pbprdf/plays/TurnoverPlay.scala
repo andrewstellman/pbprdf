@@ -40,8 +40,8 @@ import com.stellmangreene.pbprdf.GamePeriodInfo
  * @author andrewstellman
  */
 class TurnoverPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-    extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-    with RdfOperations with LazyLogging {
+  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  with RdfOperations with LazyLogging {
 
   override def addRdf(rep: Repository) = {
     val triples: Set[(Resource, URI, Value)] =
@@ -53,7 +53,8 @@ class TurnoverPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, te
               if (player.trim == "shot clock")
                 Set((eventUri, Ontology.TURNOVER_TYPE, rep.getValueFactory.createLiteral("shot clock")))
               else
-                Set((eventUri, Ontology.TURNED_OVER_BY, EntityUriFactory.getPlayerUri(player)),
+                Set(
+                  (eventUri, Ontology.TURNED_OVER_BY, EntityUriFactory.getPlayerUri(player)),
                   (eventUri, Ontology.TURNOVER_TYPE, rep.getValueFactory.createLiteral(turnoverType.trim)))
             else
               Set()

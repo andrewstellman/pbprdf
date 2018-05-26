@@ -16,7 +16,6 @@ import org.openrdf.repository.Repository
 
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
-import com.stellmangreene.pbprdf.plays.PlayFactory
 import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.util.XmlHelper
 import com.typesafe.scalalogging.LazyLogging
@@ -234,7 +233,7 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
       val ((period, play, timeStamp, teamName, score), eventIndex) = e
       val periodLengthInMinutes = periodLengths.get(period).get
       val gamePeriodInfo = if (isWnba) GamePeriodInfo.WNBAPeriodInfo else GamePeriodInfo.NBAPeriodInfo
-      PlayFactory.createPlay(gameUri, playByPlayFilename, eventIndex + 1, period, timeStamp, teamName, play, score, gamePeriodInfo)
+      Event(gameUri, playByPlayFilename, eventIndex + 1, period, timeStamp, teamName, play, score, gamePeriodInfo)
     })
 
     if (eventData.isEmpty)

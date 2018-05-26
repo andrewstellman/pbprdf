@@ -14,7 +14,6 @@ import com.stellmangreene.pbprdf.InvalidPlayByPlayException
 import better.files._
 
 // TODO: Add a few more NBA tests
-// TODO: Make sure all tests pass (invalid XML file currently throws the wrong exception)
 
 /**
  * Test the EspnPlayByPlay class

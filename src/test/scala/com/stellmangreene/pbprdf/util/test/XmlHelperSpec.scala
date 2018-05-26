@@ -13,27 +13,29 @@ class XmlHelperSpec extends FlatSpec with Matchers {
 
   behavior of "XmlHelper"
 
-  val xml = "src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636.html".toFile.newInputStream
-  val rootElem = XmlHelper.parseXml(xml)
-
   it should "return the root element with valid XML" in {
-    ((rootElem \\ "title") text) should be("Washington Mystics vs. Connecticut Sun - Play By Play - June 05, 2015 - ESPN")
+    val xml = "src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636.html".toFile.newInputStream
+    val rootElem = XmlHelper.parseXml(xml)
+
+    ((rootElem \\ "title") text) should be("Washington vs. Connecticut - Play-By-Play - June 5, 2015 - ESPN")
 
     (rootElem \\ "body" \\ "div")
       .filter(_.attribute("id").isDefined)
       .map(_.attribute("id").get.mkString) should be(
-        List(
-          "subheader", "content-wrapper", "ad-top", "content", "fb-root", "ootScoreboard", "ootShadow", "scoreboard2", "wnba-scores",
-          "gamepackageTop", "matchup-wnba-400610636", "gp-adwrap", "global-viewport", "header-wrapper", "global-search", "footer"))
-
+        List("fb-root", "global-viewport", "header-wrapper", "fullbtn", "global-search", "custom-nav", "gamepackage-header-wrap", "gamepackage-matchup-wrap",
+          "gamepackage-linescore-wrap", "gamepackage-links-wrap", "gamepackage-wrap", "gamepackage-content-wrap", "gamepackage-column-wrap", "gamepackage-shot-chart",
+          "chart1", "accordion-1", "gamepackage-play-by-play", "gamepackage-qtrs-wrap", "gp-quarter-1", "gp-quarter-2", "gp-quarter-3", "gp-quarter-4",
+          "gamepackage-outbrain", "gamepackage-shop", "gamepackage-ad", "gamepackage-cliplist", "gamepackage-news", "gamepackage-season-series"))
   }
 
   it should "get elements by class and tag" in {
+    val xml = "src/test/resources/com/stellmangreene/pbprdf/test/htmldata/400610636-gameinfo.html".toFile.newInputStream
+    val rootElem = XmlHelper.parseXml(xml)
+
     val divs = (rootElem \\ "body" \\ "div")
-    val gameTimeLocationDivs = XmlHelper.getElemByClassAndTag(divs, "game-time-location", "p")
-    gameTimeLocationDivs.get.size should be(2)
-    gameTimeLocationDivs.get.head.mkString should be("""<p xmlns="http://www.w3.org/1999/xhtml">7:00 PM ET, June 5, 2015</p>""")
-    gameTimeLocationDivs.get.tail.mkString should be("""<p xmlns="http://www.w3.org/1999/xhtml">Mohegan Sun Arena, Uncasville, CT</p>""")
+    val gameTimeLocationDivs = XmlHelper.getElemByClassAndTag(divs, "game-date-time", "span")
+    gameTimeLocationDivs.get.size should be(3)
+    gameTimeLocationDivs.get.mkString.contains("""<span data-behavior="date_time" data-date="2015-06-05T23:00Z" xmlns="http://www.w3.org/1999/xhtml">""") should be(true)
   }
 
 }

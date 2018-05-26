@@ -1,19 +1,18 @@
 package com.stellmangreene.pbprdf.model.test
 
 import scala.language.postfixOps
-import org.scalatest._
-import com.stellmangreene.pbprdf.model.Ontology
-import org.openrdf.model.URI
-import org.openrdf.model.impl.ValueFactoryImpl
-import com.stellmangreene.pbprdf.model.OntologyClass
-import com.stellmangreene.pbprdf.model.OntologyAnnotationHelper
-import com.stellmangreene.pbprdf.util.RdfOperations
+
+import org.scalatest.FlatSpec
+import org.scalatest.Matchers
+
 import com.stellmangreene.pbprdf.model.OntologyRdfRepository
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
 
 /**
  * @author andrewstellman
  */
-class OntologyRdfRepositorySpec extends FlatSpec with Matchers with RdfOperations {
+class OntologyRdfRepositorySpec extends FlatSpec with Matchers {
 
   behavior of "OntologyRdfRepository"
 

@@ -8,14 +8,15 @@ import org.scalatest.Matchers
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.plays.JumpBallPlay
 import com.stellmangreene.pbprdf.test.TestUri
-import com.stellmangreene.pbprdf.util.RdfOperations
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
 
 /**
  * Test the JumpBallPlay class
  *
  * @author andrewstellman
  */
-class JumpBallPlaySpec extends FlatSpec with Matchers with RdfOperations {
+class JumpBallPlaySpec extends FlatSpec with Matchers {
 
   behavior of "JumpBallPlay"
 

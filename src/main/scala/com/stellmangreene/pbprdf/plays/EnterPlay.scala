@@ -5,11 +5,14 @@ import org.openrdf.model.URI
 import org.openrdf.model.Value
 import org.openrdf.model.vocabulary.RDF
 import org.openrdf.repository.Repository
+
+import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
-import com.stellmangreene.pbprdf.util.RdfOperations
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
+
 import com.typesafe.scalalogging.LazyLogging
-import com.stellmangreene.pbprdf.GamePeriodInfo
 
 /**
  * A play that represents a player entering the game
@@ -34,7 +37,6 @@ import com.stellmangreene.pbprdf.GamePeriodInfo
  */
 class EnterPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  with RdfOperations
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {

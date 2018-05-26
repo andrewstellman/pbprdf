@@ -1,17 +1,16 @@
 package com.stellmangreene.pbprdf.test
 
-import org.scalatest._
-import com.stellmangreene.pbprdf.EspnPlayByPlay
-import com.stellmangreene.pbprdf.plays.Play
+import org.joda.time.DateTime
 import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
-import org.openrdf.repository.RepositoryResult
-import info.aduna.iteration.Iteration
-import com.stellmangreene.pbprdf.util.RdfOperations
-import com.stellmangreene.pbprdf.plays.test.EnterPlaySpec
-import org.joda.time.DateTime
+import org.scalatest.FlatSpec
+import org.scalatest.Matchers
+
+import com.stellmangreene.pbprdf.EspnPlayByPlay
 import com.stellmangreene.pbprdf.InvalidPlayByPlayException
-import better.files._
+import com.stellmangreene.pbprdf.plays.Play
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
 
 // TODO: Add a few more NBA tests
 
@@ -19,7 +18,7 @@ import better.files._
  * Test the EspnPlayByPlay class
  * @author andrewstellman
  */
-class EspnPlayByPlaySpec extends FlatSpec with Matchers with RdfOperations {
+class EspnPlayByPlaySpec extends FlatSpec with Matchers {
 
   val path = "src/test/resources/com/stellmangreene/pbprdf/test/htmldata/"
 

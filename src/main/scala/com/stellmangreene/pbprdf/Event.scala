@@ -10,9 +10,11 @@ import org.openrdf.repository.Repository
 
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
-import com.stellmangreene.pbprdf.util.RdfOperations
-import com.typesafe.scalalogging.LazyLogging
 import com.stellmangreene.pbprdf.plays._
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
+
+import com.typesafe.scalalogging.LazyLogging
 
 //TODO: Add next and previous event triples
 
@@ -33,7 +35,7 @@ import com.stellmangreene.pbprdf.plays._
  * @author andrewstellman
  */
 case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, description: String)(gamePeriodInfo: GamePeriodInfo)
-  extends RdfOperations with LazyLogging {
+  extends LazyLogging {
 
   override def toString = "Period " + period + " " + time + " - " + description
 
@@ -80,7 +82,7 @@ case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, desc
  *
  * @author andrewstellman
  */
-object Event extends LazyLogging with RdfOperations {
+object Event extends LazyLogging {
 
   /**
    * Create an instance of a play class, choosing the specific class based on the play description

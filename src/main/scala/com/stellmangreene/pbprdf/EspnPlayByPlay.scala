@@ -16,8 +16,10 @@ import org.openrdf.repository.Repository
 
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
-import com.stellmangreene.pbprdf.util.RdfOperations
 import com.stellmangreene.pbprdf.util.XmlHelper
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
+
 import com.typesafe.scalalogging.LazyLogging
 
 import javax.xml.datatype.DatatypeFactory
@@ -29,7 +31,7 @@ import better.files._
 /**
  * @author andrewstellman
  */
-class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename: String) extends PlayByPlay with LazyLogging with RdfOperations {
+class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename: String) extends PlayByPlay with LazyLogging {
 
   /** Game source (eg. filename) */
   override val gameSource = playByPlayFilename

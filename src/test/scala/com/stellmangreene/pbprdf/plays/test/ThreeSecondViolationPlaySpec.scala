@@ -4,17 +4,19 @@ import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import com.stellmangreene.pbprdf.plays.ThreeSecondViolationPlay
-import com.stellmangreene.pbprdf.util.RdfOperations
-import com.stellmangreene.pbprdf.test.TestUri
+
 import com.stellmangreene.pbprdf.GamePeriodInfo
+import com.stellmangreene.pbprdf.plays.ThreeSecondViolationPlay
+import com.stellmangreene.pbprdf.test.TestUri
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
 
 /**
  * Test the ThreeSecondViolationPlay class
  *
  * @author andrewstellman
  */
-class ThreeSecondViolationPlaySpec extends FlatSpec with Matchers with RdfOperations {
+class ThreeSecondViolationPlaySpec extends FlatSpec with Matchers {
 
   behavior of "ThreeSecondViolationPlay"
 

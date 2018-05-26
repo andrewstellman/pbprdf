@@ -1,15 +1,15 @@
 package com.stellmangreene.pbprdf.model
 
-import org.openrdf.repository.Repository
-import org.openrdf.repository.sail.SailRepository
-import org.openrdf.sail.memory.MemoryStore
-import com.stellmangreene.pbprdf.util.RdfOperations
+import java.lang.reflect.Field
+
+import org.openrdf.model.URI
 import org.openrdf.model.vocabulary.OWL
 import org.openrdf.model.vocabulary.RDF
 import org.openrdf.model.vocabulary.RDFS
-import java.lang.reflect.Field
-import org.openrdf.model.URI
-import Ontology._
+import org.openrdf.repository.sail.SailRepository
+import org.openrdf.sail.memory.MemoryStore
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
 
 /**
  * Object that uses the Java annotations in Ontology to build an RDF repository
@@ -17,7 +17,7 @@ import Ontology._
  *
  * @author andrewstellman
  */
-object OntologyRdfRepository extends RdfOperations {
+object OntologyRdfRepository {
 
   /** Repository that contains all of the ontology triples */
   val rep = new SailRepository(new MemoryStore)

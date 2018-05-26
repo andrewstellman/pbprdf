@@ -1,26 +1,21 @@
 package com.stellmangreene.pbprdf.test
 
-import java.io.FileInputStream
-import org.scalatest._
-import com.stellmangreene.pbprdf.EspnPlayByPlay
-import com.stellmangreene.pbprdf.util.XmlHelper
-import com.stellmangreene.pbprdf.plays.Play
 import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
-import org.openrdf.repository.RepositoryResult
-import info.aduna.iteration.Iteration
-import com.stellmangreene.pbprdf.util.RdfOperations
+import org.scalatest.FlatSpec
+import org.scalatest.Matchers
+
 import com.stellmangreene.pbprdf.Event
-import org.openrdf.model.Statement
-import org.openrdf.query.BindingSet
 import com.stellmangreene.pbprdf.GamePeriodInfo
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
 
 /**
  * Test the Event class
  *
  * @author andrewstellman
  */
-class EventSpec extends FlatSpec with Matchers with RdfOperations {
+class EventSpec extends FlatSpec with Matchers {
 
   behavior of "an instance of Event"
 

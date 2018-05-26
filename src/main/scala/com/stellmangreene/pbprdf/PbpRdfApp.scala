@@ -1,22 +1,21 @@
 package com.stellmangreene.pbprdf
 
-import org.openrdf.repository.Repository
+import java.io.File
+
 import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
-import com.typesafe.scalalogging.LazyLogging
-import java.io.File
-import org.xml.sax.InputSource
-import com.stellmangreene.pbprdf.model._
-import com.stellmangreene.pbprdf.util.XmlHelper
-import scala.util.Try
-import scala.util.Success
-import java.io.FileOutputStream
-import com.stellmangreene.pbprdf.util.RdfOperations
+
+import com.stellmangreene.pbprdf.model.OntologyRdfRepository
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
+
 import better.files._
+
+import com.typesafe.scalalogging.LazyLogging
 
 //TODO: Migrate to rdf4j and Scala 2.12.3 (or 4?) and maybe the latest sbt (add a build/ folder) - search comments for "Sesame"
 
-object PbpRdfApp extends App with LazyLogging with RdfOperations {
+object PbpRdfApp extends App with LazyLogging {
 
   def printUsageAndExit(message: Option[String] = None) = {
     if (message.isDefined)

@@ -19,30 +19,29 @@ import org.openrdf.model.vocabulary.RDFS
 import org.openrdf.model.vocabulary.XMLSchema
 import com.typesafe.scalalogging.LazyLogging
 
-// TODO: Change this to an object that's included by importing RdfOperations._
-// TODO: refactor this into its own library, publish it to Maven Central, and add it as a dependency
+// TODO: Move this into a separate project, publish it to Maven Central, and add it as a dependency
 
 /**
  * Define implicit operations to perform RDF functions on Sesame repositories and collections
  *
  * @author andrewstellman
  */
-trait RdfOperations extends LazyLogging {
+object RdfOperations {
 
   /**
    * Define implicit Repository operations
    */
-  implicit protected def repositoryImplicitOperations(repository: Repository) = new RepositoryImplicitOperations(repository)
+  implicit def repositoryImplicitOperations(repository: Repository) = new RepositoryImplicitOperations(repository)
 
   /**
    * Define implicit Iteration operations
    */
-  implicit protected def iterationImplicitOperations[T, X <: Exception](i: Iteration[T, X]) = new IterationImplicitOperations(i)
+  implicit def iterationImplicitOperations[T, X <: Exception](i: Iteration[T, X]) = new IterationImplicitOperations(i)
 
   /**
    * Implicit Repository operations to help execute SPARQL queries
    */
-  protected class RepositoryImplicitOperations(repository: Repository) {
+  class RepositoryImplicitOperations(repository: Repository) extends LazyLogging {
 
     /**
      * Write all of the statements in the repository to a file or System.out

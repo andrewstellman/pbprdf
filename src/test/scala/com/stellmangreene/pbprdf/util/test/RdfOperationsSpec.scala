@@ -16,7 +16,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
-import com.stellmangreene.pbprdf.util.RdfOperations
+import com.stellmangreene.pbprdf.util.RdfOperations._
 
 /**
  * Unit tests for the RdfOperations trait that provides implicit RDF operations
@@ -24,7 +24,7 @@ import com.stellmangreene.pbprdf.util.RdfOperations
  *
  * @author andrewstellman
  */
-class RdfOperationsSpec extends FlatSpec with Matchers with BeforeAndAfterEach with RdfOperations {
+class RdfOperationsSpec extends FlatSpec with Matchers with BeforeAndAfterEach {
 
   behavior of "RdfOperations"
 

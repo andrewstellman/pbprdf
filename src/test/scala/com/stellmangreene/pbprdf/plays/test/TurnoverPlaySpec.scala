@@ -4,17 +4,19 @@ import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
-import com.stellmangreene.pbprdf.plays.TurnoverPlay
-import com.stellmangreene.pbprdf.util.RdfOperations
-import com.stellmangreene.pbprdf.test.TestUri
+
 import com.stellmangreene.pbprdf.GamePeriodInfo
+import com.stellmangreene.pbprdf.plays.TurnoverPlay
+import com.stellmangreene.pbprdf.test.TestUri
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
 
 /**
  * Test the TurnoverPlay class
  *
  * @author andrewstellman
  */
-class TurnoverPlaySpec extends FlatSpec with Matchers with RdfOperations {
+class TurnoverPlaySpec extends FlatSpec with Matchers {
 
   behavior of "TurnoverPlay"
 

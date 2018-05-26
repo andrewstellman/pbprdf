@@ -1,16 +1,18 @@
 package com.stellmangreene.pbprdf
 
-import org.openrdf.repository.Repository
-import com.stellmangreene.pbprdf.model.Ontology
-import org.openrdf.model.vocabulary.RDF
-import com.stellmangreene.pbprdf.model.EntityUriFactory
-import org.openrdf.model.URI
-import com.stellmangreene.pbprdf.util.RdfOperations
-import com.stellmangreene.pbprdf.plays.EnterPlay
-import com.typesafe.scalalogging.LazyLogging
-import org.openrdf.model.vocabulary.RDFS
-import org.openrdf.model.BNode
 import org.joda.time.DateTime
+import org.openrdf.model.URI
+import org.openrdf.model.vocabulary.RDF
+import org.openrdf.model.vocabulary.RDFS
+import org.openrdf.repository.Repository
+
+import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.Ontology
+import com.stellmangreene.pbprdf.plays.EnterPlay
+
+import com.stellmangreene.pbprdf.util.RdfOperations._
+
+import com.typesafe.scalalogging.LazyLogging
 
 //TODO: Add triples for the box score, test against official box scores
 //TODO: Add triples for the players on the court for each possession
@@ -20,7 +22,7 @@ import org.joda.time.DateTime
  *
  * @author andrewstellman
  */
-abstract class PlayByPlay extends RdfOperations with LazyLogging {
+abstract class PlayByPlay extends LazyLogging {
 
   /** Events from the play-by-play */
   val events: Seq[Event]

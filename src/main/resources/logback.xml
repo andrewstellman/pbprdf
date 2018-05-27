@@ -1,4 +1,6 @@
 <configuration>
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
@@ -6,7 +8,16 @@
 		</encoder>
 	</appender>
 
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/pbprdf-${bySecond}.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%-5relative %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+        
 	<root level="info">
-		<appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
 	</root>
 </configuration>

@@ -27,6 +27,7 @@ project/plugins/project/
 # data folders
 data/
 tmp/
+logs/
 
 # MacOS
 .DS_Store

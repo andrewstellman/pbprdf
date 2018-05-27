@@ -107,4 +107,17 @@ WHERE {
           """<test:entity2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Thing> <test:context> ."""))
   }
 
+  it should "get an iterator with all of the statements in the repository" in {
+    val statements = rep.statements.toSet
+    statements.map(_.toString) should be(
+      Set(
+        """(test:entity1, http://www.w3.org/2000/01/rdf-schema#comment, "This is a comment") [null]""",
+        """(test:entity1, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#Thing) [null]""",
+        """(test:entity1, http://www.w3.org/2000/01/rdf-schema#label, "This is a label") [null]""",
+        """(test:entity2, test:predicate#is, "true"^^<http://www.w3.org/2001/XMLSchema#boolean>) [test:context]""",
+        """(test:entity2, http://www.w3.org/2000/01/rdf-schema#comment, "This is a second comment") [test:context]""",
+        """(test:entity2, http://www.w3.org/2000/01/rdf-schema#label, "This is a second label") [test:context]""",
+        """(test:entity2, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#Thing) [test:context]"""))
+  }
+
 }

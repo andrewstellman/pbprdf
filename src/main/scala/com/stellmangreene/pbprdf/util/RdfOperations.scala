@@ -44,6 +44,14 @@ object RdfOperations {
   class RepositoryImplicitOperations(repository: Repository) extends LazyLogging {
 
     /**
+     * Returns all of the statements in the repository
+     */
+    def statements = {
+      val conn = repository.getConnection
+      conn.getStatements(null, null, null, true).asIterator
+    }
+    
+    /**
      * Write all of the statements in the repository to a file or System.out
      *
      * @param outputFile

@@ -26,7 +26,7 @@ object PbpRdfApp extends App with LazyLogging {
   
 pbprdf --ontology [filename.ttl]
   Write the ontology to stout, or a file if specified""")
-    System.exit(1)
+    System.exit(0)
   }
 
   if (args.size != 1 && args.size != 2) {
@@ -60,14 +60,16 @@ pbprdf --ontology [filename.ttl]
 
       val playByPlayRegex = """^\d+\.html$"""
 
-      val filenames = inputFolder.list.map(_.name).toSeq
-      val inputFiles = filenames.map(f => {
-        val base = f.name.split(".").head
-        (s"$base.html", s"$base-gameinfo.html")
-      })
-        .filter(e => filenames.contains(e._1) && filenames.contains(e._2))
+      val playByPlayFilenames = inputFolder.list.map(_.name).toArray
+      val inputFiles = playByPlayFilenames
+        .filter(!_.contains("-gameinfo"))
+        .map(f => {
+          val base = f.split("\\.").head
+          (s"$base.html", s"$base-gameinfo.html")
+        })
+        .filter(e => playByPlayFilenames.contains(e._1) && playByPlayFilenames.contains(e._2))
 
-      logger.info(s"Reading ${inputFiles.size} sets of play-by-play files from folder ${inputFolder}")
+      logger.info(s"Reading ${playByPlayFilenames.size} sets of play-by-play files from folder ${inputFolder}")
 
       var rep = new SailRepository(new MemoryStore)
       rep.initialize
@@ -77,7 +79,7 @@ pbprdf --ontology [filename.ttl]
         .zipWithIndex
         .foreach(e => {
           val ((playByPlayFile, gameInfoFile), index) = e
-          logger.debug(s"Reading plays from ${filenames} (file ${index} of ${filenames.size})")
+          logger.debug(s"Reading plays from $playByPlayFile and $gameInfoFile (file ${index} of ${inputFiles.size})")
           try {
             val playByPlay: PlayByPlay = new EspnPlayByPlay(inputFolder.pathAsString, playByPlayFile, gameInfoFile)
             playByPlay.addRdf(rep)

@@ -188,6 +188,7 @@ SELECT * {
           "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Kayla_Thornton",
           "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
           "http://www.stellman-greene.com/pbprdf#isCharge -> true",
+          "http://www.stellman-greene.com/pbprdf#isOffensive -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Kayla Thornton offensive Charge (Jasmine Thomas draws the foul)"))
 
     rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/119> ?p ?o }")

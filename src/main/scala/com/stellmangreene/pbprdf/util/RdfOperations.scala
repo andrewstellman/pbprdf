@@ -19,7 +19,7 @@ import org.openrdf.model.vocabulary.RDFS
 import org.openrdf.model.vocabulary.XMLSchema
 import com.typesafe.scalalogging.LazyLogging
 
-// TODO: Move this into a separate project, publish it to Maven Central, and add it as a dependency
+// TODO: Move this into a separate project, publish it to Maven Central, and add it as a dependency (including the ontology annotatins and ontology file generation)
 
 /**
  * Define implicit operations to perform RDF functions on Sesame repositories and collections

@@ -18,6 +18,7 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  * <p>
  * Examples:
  * Kara Lawson defensive 3-seconds (Technical Foul)
+ * Rudy Gobert defensive 3-seconds (technical foul)
  *
  * @param gameID
  *        Unique ID of the game
@@ -64,6 +65,6 @@ class ThreeSecondViolationPlay(gameUri: URI, eventNumber: Int, period: Int, time
  */
 object ThreeSecondViolationPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*) defensive 3-seconds +\(Technical Foul\)$""".r
+  val playByPlayRegex = """(?i)^(.*) defensive 3-seconds +\(Technical Foul\)$""".r
 
 }

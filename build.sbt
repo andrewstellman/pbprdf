@@ -7,6 +7,10 @@ lazy val root = (project in file("."))
   // Scala options
   scalaVersion := "2.12.6",
   scalacOptions ++= Seq("-feature"),
+  fork in run := true,
+
+  // Java options
+  javaOptions ++= Seq("-Xms2G", "-Xmx4G", "-XX:MaxPermSize=4G"),
 
   // sbt options
   logLevel := Level.Info,

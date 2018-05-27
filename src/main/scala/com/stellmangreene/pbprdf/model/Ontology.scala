@@ -300,6 +300,13 @@ object Ontology {
   @OntologyComment(comment = "Only ever has the value xsd:true, no value exists if the play was not a charge")
   val IS_CHARGE = valueFactory.createURI(NAMESPACE, "isCharge")
 
+  @OntologyProperty(
+    label = "Determines if a foul is a personal blocking foul",
+    domains = Array("http://www.stellman-greene.com/pbprdf#Foul"),
+    range = "http://www.w3.org/2001/XMLSchema#boolean")
+  @OntologyComment(comment = "Only ever has the value xsd:true, no value exists if the play was not a personal blocking foul")
+  val IS_PERSONAL_BLOCKING_FOUL = valueFactory.createURI(NAMESPACE, "isPersonalBlockingFoul")
+
   // Technicals
 
   @OntologyClass(label = "A technical foul")

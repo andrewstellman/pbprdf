@@ -23,6 +23,8 @@ import com.typesafe.scalalogging.LazyLogging
  * Kayla Thornton shooting foul  (Alyssa Thomas draws the foul)
  * Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)
  * Jantel Lavender loose ball foul (Sylvia Fowles draws the foul)
+ * Serge Ibaka offensive charge
+ * Kevin Love personal blocking foul
  *
  * @param gameID
  *        Unique ID of the game
@@ -62,12 +64,19 @@ class FoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
             else
               Set()
 
+          val isPersonalBlockingFoulTriple: Set[(Resource, URI, Value)] =
+            if (foulType.trim == "personal blocking foul")
+              Set((eventUri, Ontology.IS_PERSONAL_BLOCKING_FOUL, rep.getValueFactory.createLiteral(true)))
+            else
+              Set()
+
           val offensiveTriples: Set[(Resource, URI, Value)] =
             if (foulType.trim == "offensive foul")
               Set((eventUri, Ontology.IS_OFFENSIVE, rep.getValueFactory.createLiteral(true)))
-            else if (foulType.trim == "offensive Charge") {
-              Set((eventUri, Ontology.IS_OFFENSIVE, rep.getValueFactory.createLiteral(true)))
-              Set((eventUri, Ontology.IS_CHARGE, rep.getValueFactory.createLiteral(true)))
+            else if (foulType.trim.toLowerCase == "offensive charge") {
+              Set(
+                (eventUri, Ontology.IS_OFFENSIVE, rep.getValueFactory.createLiteral(true)),
+                (eventUri, Ontology.IS_CHARGE, rep.getValueFactory.createLiteral(true)))
             } else
               Set()
 
@@ -80,7 +89,7 @@ class FoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
           Set(
             (eventUri, RDF.TYPE, Ontology.FOUL),
             (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy))) ++
-            drawnByTriple ++ isShootingFoulTriple ++ offensiveTriples ++ looseBallTriple
+            drawnByTriple ++ isShootingFoulTriple ++ isPersonalBlockingFoulTriple ++ offensiveTriples ++ looseBallTriple
         }
         case _ => { logger.warn(s"Unrecognized foul play: ${play}"); Set() }
       }
@@ -98,6 +107,6 @@ class FoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
  */
 object FoulPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*) (personal foul|shooting foul|offensive foul|offensive Charge|loose ball foul|personal take foul|shooting block foul|personal block|in.?bound foul|away from play foul|clear path foul|flagrant foul type .)( +\(.* draws the foul\))?$""".r
+  val playByPlayRegex = """^(.*) (personal foul|personal blocking foul|shooting foul|offensive foul|offensive charge|offensive Charge|loose ball foul|personal take foul|shooting block foul|personal block|in.?bound foul|away from play foul|clear path foul|flagrant foul type .)( +\(.* draws the foul\))?$""".r
 
 }

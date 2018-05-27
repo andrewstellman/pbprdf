@@ -25,6 +25,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
   rep.initialize
 
   val testUri = TestUri.create("400610636")
+  val testUriNba = TestUri.create("401031716")
 
   it should "parse fouls" in {
     new FoulPlay(testUri, 37, 1, "4:56", "Sun", "Camille Little personal foul  (Stefanie Dolson draws the foul)", "10-9", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
@@ -45,6 +46,27 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Camille_Little",
           "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Camille Little personal foul  (Stefanie Dolson draws the foul)"))
+  }
+
+  it should "parse personal blocking fouls" in {
+    new FoulPlay(testUriNba, 47, 2, "5:16", "Cavaliers", "Kevin Love personal blocking foul", "40-47", GamePeriodInfo.NBAPeriodInfo).addRdf(rep)
+
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/401031716/47> ?p ?o }")
+      .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
+      .toSet should be(
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Foul",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUriNba.stringValue}",
+          "http://www.stellman-greene.com/pbprdf#period -> 2",
+          "http://www.stellman-greene.com/pbprdf#time -> 5:16",
+          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 300",
+          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 300",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Cavaliers",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Kevin_Love",
+          "http://www.stellman-greene.com/pbprdf#isPersonalBlockingFoul -> true",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Cavaliers: Kevin Love personal blocking foul"))
   }
 
   it should "parse offensive fouls" in {
@@ -109,8 +131,29 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
           "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Kayla_Thornton",
           "http://www.stellman-greene.com/pbprdf#foulDrawnBy -> http://www.stellman-greene.com/pbprdf/players/Jasmine_Thomas",
+          "http://www.stellman-greene.com/pbprdf#isOffensive -> true",
           "http://www.stellman-greene.com/pbprdf#isCharge -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)"))
+
+    new FoulPlay(testUriNba, 68, 2, "2:44", "Raptors", "Serge Ibaka offensive charge", "47-51", GamePeriodInfo.NBAPeriodInfo).addRdf(rep)
+
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/401031716/68> ?p ?o }")
+      .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
+      .toSet should be(
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Foul",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUriNba.stringValue}",
+          "http://www.stellman-greene.com/pbprdf#period -> 2",
+          "http://www.stellman-greene.com/pbprdf#time -> 2:44",
+          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 436",
+          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 164",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Raptors",
+          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Serge_Ibaka",
+          "http://www.stellman-greene.com/pbprdf#isOffensive -> true",
+          "http://www.stellman-greene.com/pbprdf#isCharge -> true",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Raptors: Serge Ibaka offensive charge"))
   }
 
   it should "parse loose ball fouls" in {
@@ -156,7 +199,5 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Jenna_O'Hea",
           "http://www.stellman-greene.com/pbprdf#isOffensive -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: Jenna O'Hea offensive foul"))
-
   }
-
 }

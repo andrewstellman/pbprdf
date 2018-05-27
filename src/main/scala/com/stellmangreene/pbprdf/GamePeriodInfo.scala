@@ -8,7 +8,7 @@ case class EventTimes(secondsIntoGame: Int, secondsLeftInPeriod: Int)
 /** Companion object for GamePeriodInfo that defines period information for various leagues */
 object GamePeriodInfo {
   val WNBAPeriodInfo = GamePeriodInfo(10, 5, 4)
-  val NBAPeriodInfo = GamePeriodInfo(12, 5, 0)
+  val NBAPeriodInfo = GamePeriodInfo(12, 5, 4)
   val NCAAWPeriodInfo = GamePeriodInfo(10, 5, 4)
   val NCAAMPeriodInfo = GamePeriodInfo(20, 5, 2)
 }

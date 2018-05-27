@@ -334,6 +334,10 @@ object Ontology {
   @OntologyComment(comment = "Will be 1 for first technical foul, 2 for 2nd")
   val TECHNICAL_FOUL_NUMBER = valueFactory.createURI(NAMESPACE, "technicalFoulNumber")
 
+  @OntologyClass(label = "A five-second violation")
+  @OntologySubClassOf(subClassOf = Array("http://www.stellman-greene.com/pbprdf#Event", "http://www.stellman-greene.com/pbprdf#Play"))
+  val FIVE_SECOND_VIOLATION = valueFactory.createURI(NAMESPACE, "FiveSecondViolation")
+
   // Players entering
 
   @OntologyClass(label = "A player entering the game")

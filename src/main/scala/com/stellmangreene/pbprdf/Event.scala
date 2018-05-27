@@ -108,48 +108,25 @@ object Event extends LazyLogging {
 
     val trimmedPlay = play.trim.replaceAll(" +", " ")
 
-    if (BlockPlay.matches(play))
-      new BlockPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (DelayOfGamePlay.matches(play))
-      new DelayOfGamePlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (EnterPlay.matches(play))
-      new EnterPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (FoulPlay.matches(play))
-      new FoulPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (JumpBallPlay.matches(play))
-      new JumpBallPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (ReboundPlay.matches(play))
-      new ReboundPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (ShotPlay.matches(play))
-      new ShotPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (DoubleTechnicalFoulPlay.matches(play))
-      new DoubleTechnicalFoulPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (TechnicalFoulPlay.matches(play))
-      new TechnicalFoulPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (ThreeSecondViolationPlay.matches(play))
-      new ThreeSecondViolationPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (TurnoverPlay.matches(play))
-      new TurnoverPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (TimeoutPlay.matches(play))
-      new TimeoutPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else if (EndOfPlay.matches(play))
-      new EndOfPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
-
-    else {
-      logger.warn(s"Unable to find a specific kind of play that matches description in ${filename}: ${play}")
-      new Event(gameUri, eventNumber, period, time, trimmedPlay)(gamePeriodInfo)
+    trimmedPlay match {
+      case trimmedPlay if BlockPlay.matches(trimmedPlay)                => new BlockPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if DelayOfGamePlay.matches(trimmedPlay)          => new DelayOfGamePlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if EnterPlay.matches(trimmedPlay)                => new EnterPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if FoulPlay.matches(trimmedPlay)                 => new FoulPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if JumpBallPlay.matches(trimmedPlay)             => new JumpBallPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if ReboundPlay.matches(trimmedPlay)              => new ReboundPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if ShotPlay.matches(trimmedPlay)                 => new ShotPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if DoubleTechnicalFoulPlay.matches(trimmedPlay)  => new DoubleTechnicalFoulPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if TechnicalFoulPlay.matches(trimmedPlay)        => new TechnicalFoulPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if ThreeSecondViolationPlay.matches(trimmedPlay) => new ThreeSecondViolationPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if FiveSecondViolationPlay.matches(trimmedPlay)  => new FiveSecondViolationPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if TurnoverPlay.matches(trimmedPlay)             => new TurnoverPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if TimeoutPlay.matches(trimmedPlay)              => new TimeoutPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if EndOfPlay.matches(trimmedPlay)                => new EndOfPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay => {
+        logger.warn(s"Unable to find a specific kind of trimmedPlay that matches description in ${filename}: ${trimmedPlay}")
+        new Event(gameUri, eventNumber, period, time, trimmedPlay)(gamePeriodInfo)
+      }
     }
 
   }

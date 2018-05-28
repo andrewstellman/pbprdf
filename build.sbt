@@ -10,7 +10,7 @@ lazy val root = (project in file("."))
   fork in run := true,
 
   // Java options
-  javaOptions ++= Seq("-Xms2G", "-Xmx4G", "-XX:MaxPermSize=4G"),
+  javaOptions ++= Seq("-Xms2G", "-Xmx8G", "-XX:MaxPermSize=8G"),
 
   // sbt options
   logLevel := Level.Info,

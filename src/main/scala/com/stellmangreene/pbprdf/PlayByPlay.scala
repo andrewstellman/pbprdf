@@ -59,6 +59,7 @@ abstract class PlayByPlay extends LazyLogging {
    */
   def addRdf(rep: Repository) = {
     rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME)
+    Event.addPreviousAndNextTriples(rep, events)
     addRosterBnodes(rep)
   }
 

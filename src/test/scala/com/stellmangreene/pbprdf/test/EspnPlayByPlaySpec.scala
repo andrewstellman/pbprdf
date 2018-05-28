@@ -12,8 +12,6 @@ import com.stellmangreene.pbprdf.plays.Play
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
 
-// TODO: Add a few more NBA tests
-
 /**
  * Test the EspnPlayByPlay class
  * @author andrewstellman
@@ -158,6 +156,7 @@ SELECT * {
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
+          "http://www.stellman-greene.com/pbprdf#nextEvent -> http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/2",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#JumpBall",
@@ -176,6 +175,8 @@ SELECT * {
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
+          "http://www.stellman-greene.com/pbprdf#previousEvent -> http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/165",
+          "http://www.stellman-greene.com/pbprdf#nextEvent -> http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/167",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Foul",
@@ -195,6 +196,8 @@ SELECT * {
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
+          "http://www.stellman-greene.com/pbprdf#previousEvent -> http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/118",
+          "http://www.stellman-greene.com/pbprdf#nextEvent -> http://www.stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/120",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Timeout",

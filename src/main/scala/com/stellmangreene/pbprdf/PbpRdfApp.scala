@@ -13,7 +13,8 @@ import better.files._
 
 import com.typesafe.scalalogging.LazyLogging
 
-//TODO: Migrate to rdf4j and Scala 2.12.3 (or 4?) and maybe the latest sbt (add a build/ folder) - search comments for "Sesame"
+//TODO: Migrate to rdf4j - search comments for "Sesame"
+//TODO: Remove "www." from base IRI
 
 object PbpRdfApp extends App with LazyLogging {
 
@@ -74,7 +75,6 @@ pbprdf --ontology [filename.ttl]
       var rep = new SailRepository(new MemoryStore)
       rep.initialize
 
-      var i = 0
       inputFiles
         .zipWithIndex
         .foreach(e => {

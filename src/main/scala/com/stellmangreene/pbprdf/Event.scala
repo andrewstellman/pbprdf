@@ -16,8 +16,6 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
 
 import com.typesafe.scalalogging.LazyLogging
 
-//TODO: Add next and previous event triples
-
 /**
  * A play-by-play event that can be parsed into RDF triples
  *
@@ -128,7 +126,23 @@ object Event extends LazyLogging {
         new Event(gameUri, eventNumber, period, time, trimmedPlay)(gamePeriodInfo)
       }
     }
+  }
 
+  /**
+   * Adds pbprdf:nextEvent and pbprdf:previousEvent triples to a list of events
+   */
+  def addPreviousAndNextTriples(rep: Repository, events: Seq[Event]) = {
+    events
+    .sortBy(_.eventNumber)
+    .zipWithIndex.foreach(e => {
+      val (event, index) = e
+      if (index + 1 < events.size) {
+        rep.addTriple(event.eventUri, Ontology.NEXT_EVENT, events(index + 1).eventUri)
+      }
+      if (index > 0) {
+        rep.addTriple(event.eventUri, Ontology.PREVIOUS_EVENT, events(index - 1).eventUri)
+      }
+    })
   }
 
 }

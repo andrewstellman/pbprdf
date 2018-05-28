@@ -79,7 +79,7 @@ pbprdf --ontology [filename.ttl]
         .zipWithIndex
         .foreach(e => {
           val ((playByPlayFile, gameInfoFile), index) = e
-          logger.info(s"Reading plays from $playByPlayFile and $gameInfoFile (file ${index} of ${inputFiles.size})")
+          logger.info(s"Reading plays from $playByPlayFile and $gameInfoFile (file ${index + 1} of ${inputFiles.size})")
           try {
             val playByPlay: PlayByPlay = new EspnPlayByPlay(inputFolder.pathAsString, playByPlayFile, gameInfoFile)
             playByPlay.addRdf(rep)

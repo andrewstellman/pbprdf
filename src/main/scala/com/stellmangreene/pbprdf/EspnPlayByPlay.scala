@@ -135,8 +135,12 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
   /** Game location */
   override val gameLocation = {
     val locationDiv = XmlHelper.getElemByClassAndTag(gameinfoDivs, "caption-wrapper", "div")
-    if (locationDiv.isEmpty || locationDiv.get.isEmpty || locationDiv.get.head.text.trim.isEmpty) logMessageAndThrowException(s"Unable get location in ${gameInfoFilename}")
-    Some(locationDiv.get.head.text.trim)
+    if (locationDiv.isEmpty || locationDiv.get.isEmpty || locationDiv.get.head.text.trim.isEmpty) {
+      logger.warn(s"Unable get location in ${gameInfoFilename}")
+      None
+    } else {
+      Some(locationDiv.get.head.text.trim)
+    }
   }
 
   /** URI of this game */

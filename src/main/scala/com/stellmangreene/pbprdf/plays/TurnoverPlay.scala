@@ -57,7 +57,7 @@ class TurnoverPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, te
               else
                 Set(
                   (eventUri, Ontology.TURNED_OVER_BY, EntityUriFactory.getPlayerUri(player)),
-                  (eventUri, Ontology.TURNOVER_TYPE, rep.getValueFactory.createLiteral(turnoverType.trim)))
+                  (eventUri, Ontology.TURNOVER_TYPE, rep.getValueFactory.createLiteral(turnoverType.trim.toLowerCase)))
             else
               Set()
 
@@ -89,6 +89,6 @@ class TurnoverPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, te
  */
 object TurnoverPlay extends PlayMatcher {
 
-  val playByPlayRegex = """^(.*?) +(turnover|lost ball turnover|traveling|turnover|bad pass|kicked ball violation|lane violation|turnover \(lane violation\)|double lane violation|jump ball violation|defensive goaltending violation)( ?.*)$""".r
+  val playByPlayRegex = """(?i)^(.*?) +(turnover|lost ball turnover|traveling|turnover|bad pass|kicked ball violation|lane violation|turnover \(lane violation\)|double lane violation|jump ball violation|defensive goaltending violation|Out-of-Bounds Bad Pass)( ?.*)$""".r
 
 }

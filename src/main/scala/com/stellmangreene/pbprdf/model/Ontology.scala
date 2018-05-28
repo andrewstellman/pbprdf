@@ -338,6 +338,16 @@ object Ontology {
   @OntologySubClassOf(subClassOf = Array("http://www.stellman-greene.com/pbprdf#Event", "http://www.stellman-greene.com/pbprdf#Play"))
   val FIVE_SECOND_VIOLATION = valueFactory.createURI(NAMESPACE, "FiveSecondViolation")
 
+  // Ejection
+
+  @OntologyClass(label = "An ejection")
+  @OntologySubClassOf(subClassOf = Array("http://www.stellman-greene.com/pbprdf#Event", "http://www.stellman-greene.com/pbprdf#Play"))
+  val EJECTION = valueFactory.createURI(NAMESPACE, "Ejection")
+
+  @OntologyClass(label = "Player that was ejected")
+  @OntologySubClassOf(subClassOf = Array("http://www.stellman-greene.com/pbprdf#Event", "http://www.stellman-greene.com/pbprdf#Play"))
+  val PLAYER_EJECTED = valueFactory.createURI(NAMESPACE, "playerEjected")
+
   // Players entering
 
   @OntologyClass(label = "A player entering the game")

@@ -121,8 +121,9 @@ object Event extends LazyLogging {
       case trimmedPlay if TurnoverPlay.matches(trimmedPlay)             => new TurnoverPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
       case trimmedPlay if TimeoutPlay.matches(trimmedPlay)              => new TimeoutPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
       case trimmedPlay if EndOfPlay.matches(trimmedPlay)                => new EndOfPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
+      case trimmedPlay if EjectionPlay.matches(trimmedPlay)             => new EjectionPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
       case trimmedPlay => {
-        logger.warn(s"Unable to find a specific kind of trimmedPlay that matches description in ${filename}: ${trimmedPlay}")
+        logger.warn(s"Could not match play description in ${filename}: ${trimmedPlay}")
         new Event(gameUri, eventNumber, period, time, trimmedPlay)(gamePeriodInfo)
       }
     }
@@ -133,16 +134,16 @@ object Event extends LazyLogging {
    */
   def addPreviousAndNextTriples(rep: Repository, events: Seq[Event]) = {
     events
-    .sortBy(_.eventNumber)
-    .zipWithIndex.foreach(e => {
-      val (event, index) = e
-      if (index + 1 < events.size) {
-        rep.addTriple(event.eventUri, Ontology.NEXT_EVENT, events(index + 1).eventUri)
-      }
-      if (index > 0) {
-        rep.addTriple(event.eventUri, Ontology.PREVIOUS_EVENT, events(index - 1).eventUri)
-      }
-    })
+      .sortBy(_.eventNumber)
+      .zipWithIndex.foreach(e => {
+        val (event, index) = e
+        if (index + 1 < events.size) {
+          rep.addTriple(event.eventUri, Ontology.NEXT_EVENT, events(index + 1).eventUri)
+        }
+        if (index > 0) {
+          rep.addTriple(event.eventUri, Ontology.PREVIOUS_EVENT, events(index - 1).eventUri)
+        }
+      })
   }
 
 }

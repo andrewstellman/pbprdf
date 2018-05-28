@@ -174,4 +174,26 @@ class TurnoverPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Kara Lawson kicked ball violation"))
   }
 
+  it should "parse an out-of-bounds bad pass turnover" in {
+    val testUri2 = TestUri.create("400610636")
+    new TurnoverPlay(testUri2, 345, 4, "2:38", "Sparks", "Candace Parker Out-of-Bounds Bad Pass Turnover", "67-70", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+
+    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/345> ?p ?o }")
+      .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
+      .toSet should be(
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Turnover",
+          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          "http://www.stellman-greene.com/pbprdf#period -> 4",
+          "http://www.stellman-greene.com/pbprdf#time -> 2:38",
+          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 2242",
+          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 158",
+          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sparks",
+          "http://www.stellman-greene.com/pbprdf#turnoverType -> out-of-bounds bad pass",
+          "http://www.stellman-greene.com/pbprdf#turnedOverBy -> http://www.stellman-greene.com/pbprdf/players/Candace_Parker",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: Candace Parker Out-of-Bounds Bad Pass Turnover"))
+
+  }
 }

@@ -45,7 +45,7 @@ class FiveSecondViolationPlay(gameUri: URI, eventNumber: Int, period: Int, time:
           Set((eventUri, RDF.TYPE, Ontology.FIVE_SECOND_VIOLATION))
         }
 
-        case _ => { logger.warn(s"Unrecognized three second violation play: ${play}"); Set() }
+        case _ => { logger.warn(s"Unrecognized five second violation play: ${play}"); Set() }
       }
 
     if (!triples.isEmpty)

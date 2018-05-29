@@ -4,11 +4,11 @@ Generate RDF for basketball play-by-play data by reading a folder full of ESPN-s
 Install and run
 ===============
 
-__Prerequisite: must have [sbt](http://www.scala-sbt.org/) in your path. [Installing SBT](http://www.scala-sbt.org/0.13/tutorial/Setup.html)__
+__Prerequisite: must have [sbt](http://www.scala-sbt.org/) 1.x in your path. [Installing SBT](https://www.scala-sbt.org/1.x/docs/Setup.html)__
 
 Download or clone the source, use [sbt-assembly](https://github.com/sbt/sbt-assembly) to assemble the program (into the target/scala-2.11 folder), and run the script:
 
-Unix: (make sure you install sbt ([Unix](http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Linux.html), [Mac](http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Mac.html))
+Unix: (make sure you install sbt 1.x ([Unix](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html), [Mac](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html))
 ```
 $ git clone https://github.com/andrewstellman/pbprdf.git
 $ cd pbprdf
@@ -16,7 +16,7 @@ $ sbt assembly
 $ ./pbprdf
 ```
 
-Windows: (make sure you [install SBT 0.13.x or later on Windows](http://www.scala-sbt.org/0.13/tutorial/Installing-sbt-on-Windows.html))
+Windows: (make sure you [install sbt 1.x on Windows](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html))
 ```
 C:\Users\Public\src>git clone https://github.com/andrewstellman/pbprdf.git
 C:\Users\Public\src>cd pbprdf
@@ -37,7 +37,7 @@ Generate an Eclipse project:
 $ sbt eclipse
 ```
 
-Generatesample Turtle from the unit test data and print it to the console
+Generate sample Turtle from the unit test data and print it to the console
 
 using the script:
 ```
@@ -66,9 +66,9 @@ Step 2: Download a set of play-by-play HTML files
 $ ./fetch-wnba-play-by-plays.sh
 ```
 
-Step 3: Run pbprdf and generate the Turtle file
+Step 3: Run pbprdf and generate the Turtle file for the 2014 WNBA playoffs
 ```
-$ ./pbprdf wnba-2014-playoffs wnba-2014-playoffs.ttl
+$ ./pbprdf data/wnba-2014-playoffs/ wnba-2014-playoffs.ttl
 ```
 
 Step 4: Import the Turtle file into Sesame

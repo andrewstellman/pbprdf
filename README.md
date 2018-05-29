@@ -73,18 +73,33 @@ Step 3: Run pbprdf and generate the Turtle file for the 2014 WNBA playoffs
 $ ./pbprdf data/wnba-2014-playoffs/ wnba-2014-playoffs.ttl
 ```
 
-Step 4: Import the Turtle file into Sesame
+Step 4: Import the Turtle file into RDF4J Server
 ```
-$ console -s http://localhost:8080/openrdf-sesame MyRdfDatabase
+$ console -s http://localhost:8080/rdf4j-server PbpRdfDatabase
 Type 'help' for help.
-MyRdfDatabase> load wnba-2014-playoffs.ttl into http://www.stellman-greene.com/pbprdf/wnba-2014-playoffs
+PbpRdfDatabase> load wnba-2014-playoffs.ttl into http://www.stellman-greene.com/pbprdf/wnba-2014-playoffs
 Loading data...
 Data has been added to the repository (20410 ms)
 ```
 
+If your file is large, you can use zip or gzip to compress it. Make sure it has the extension `.ttl.zip`:
+
+```
+$ ./fetch-nba-play-by-plays.sh
+$ ./pbprdf data/nba-2017-2018-season/ nba-2017-2018-season.ttl
+$ zip nba-2017-2018-season.ttl.zip nba-2017-2018-season.ttl
+$ console -s http://localhost:8080/rdf4j-server PbpRdfDatabase
+Type 'help' for help.
+PbpRdfDatabase> load nba-2017-2018-season.ttl.zip into http://stellman-greene.com/pbprdf/nba-2017-2018
+Loading data...
+Data has been added to the repository (427100 ms)
+```
+
+__See 'Setting up RDF4J Server' below for details on setting up RDF4J server__
+
 Step 5: Run SPARQL queries
 ```
-MyRdfDatabase> SPARQL
+PbpRdfDatabase> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
 BASE <http://www.stellman-greene.com/>
 PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
@@ -117,8 +132,8 @@ Evaluating SPARQL query...
 12 result(s) (1033 ms)
 ```
 
-Example: Load the ontology into Sesame
---------------------------------------
+Example: Load the ontology into RDF4J Server
+--------------------------------------------
 
 Step 1: Generate the ontology
 ```
@@ -127,14 +142,14 @@ $ ./pbprdf --ontology ontology.ttl
 
 Step 2: Load the ontology into its own context
 ```
-MyRdfDatabase> load ontology.ttl into http://www.stellman-greene.com/pbprdf/Ontology
+PbpRdfDatabase> load ontology.ttl into http://www.stellman-greene.com/pbprdf/Ontology
 Loading data...
 Data has been added to the repository (18 ms)
 ```
 
 Step 3: Execute a query that retrieves only the data in the ontology
 ```
-MyRdfDatabase> SPARQL
+PbpRdfDatabase> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
 BASE <http://www.stellman-greene.com/>
 PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
@@ -267,3 +282,36 @@ WHERE
 LIMIT 100
 ```
 
+Setting up RDF4J Server
+=======================
+
+One effective way to execute SPARQL queries against these files is to use [RDF4J Server, Workbench, and Console](http://docs.rdf4j.org/server-workbench-console/). RDF4J Server and its GUI, RDF Workbench, are both web applications that run in an application server like Tomcat.
+
+__Step 1: [Download RDF4J](http://rdf4j.org/download/)__
+Download and extract the latest RDF4J SDK. It will contain a `bin` folder with the `console` binary, and a `war` folder with the `rdf4j-server.war` and `rdf4j-workbench.war` web applications.
+
+__Step 2: [Install Apache Tomcat](https://tomcat.apache.org/tomcat-7.0-doc/appdev/installation.html)__
+Make sure you edit libexec/conf/tomcat-users.xml to add a user with `tomcat` and `manager-gui` permissions.
+
+__Step 3: Open the Apache Tomcat App Manager (http://localhost:8080/manager/html) and deploy the web applications
+Use the app manager GUI to deploy the `rdf4j-server.war` and `rdf4j-workbench.war` web applications to your Tomcat installations.
+
+__Step 4: Use the RDF4J console to create a database__
+Create a Native database with `spoc`,`sopc`,`opsc`,`ospc`,`posc`, and `psoc` indexes. This will take disk space for the indexes, but will make your queries run much faster.
+
+```
+$ ./console.sh -s http://localhost:8080/rdf4j-server 
+Connected to http://localhost:8080/rdf4j-server
+
+> create native
+Please specify values for the following variables:
+Repository ID [native]: PbpRdfDatabase
+Repository title [Native store]: PBPRDF Database
+Query Iteration Cache size [10000]: 
+Triple indexes [spoc,posc]: spoc,sopc,opsc,ospc,posc,psoc
+EvaluationStrategyFactory [org.eclipse.rdf4j.query.algebra.evaluation.impl.StrictEvaluationStrategyFactory]: 
+Repository created
+```
+
+__Step 5: Import your Turtle file__
+You can use the instructions above to import your `*.ttl` or `*.ttl.zip` files into your newly created database. You can either use the RDF4J console or RDF4J workbench GUI to execute SPARQL queries.

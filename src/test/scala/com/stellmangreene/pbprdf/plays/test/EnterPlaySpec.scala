@@ -32,21 +32,21 @@ class EnterPlaySpec extends FlatSpec with Matchers {
     var testUri = TestUri.create("400610636")
     new EnterPlay(testUri, 101, 1, "8:00", "Sun", "Kelly Faris enters the game for Alyssa Thomas", "21-26", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
-    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/101> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/101> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Enters",
-          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
-          "http://www.stellman-greene.com/pbprdf#period -> 1",
-          "http://www.stellman-greene.com/pbprdf#time -> 8:00",
-          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 120",
-          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 480",
-          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
-          "http://www.stellman-greene.com/pbprdf#playerEntering -> http://www.stellman-greene.com/pbprdf/players/Kelly_Faris",
-          "http://www.stellman-greene.com/pbprdf#playerExiting -> http://www.stellman-greene.com/pbprdf/players/Alyssa_Thomas",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Enters",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          "http://stellman-greene.com/pbprdf#period -> 1",
+          "http://stellman-greene.com/pbprdf#time -> 8:00",
+          "http://stellman-greene.com/pbprdf#secondsIntoGame -> 120",
+          "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 480",
+          "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Sun",
+          "http://stellman-greene.com/pbprdf#playerEntering -> http://stellman-greene.com/pbprdf/players/Kelly_Faris",
+          "http://stellman-greene.com/pbprdf#playerExiting -> http://stellman-greene.com/pbprdf/players/Alyssa_Thomas",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Kelly Faris enters the game for Alyssa Thomas"))
   }
 

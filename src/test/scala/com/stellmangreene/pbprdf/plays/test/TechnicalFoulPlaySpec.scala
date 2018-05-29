@@ -29,21 +29,21 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers {
     val testUri = TestUri.create("400496779")
     new TechnicalFoulPlay(testUri, 93, 2, "7:37", "Mercury", "Diana Taurasi technical foul(1st technical foul)", "21-28", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
-    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400496779/93> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400496779/93> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#TechnicalFoul",
-          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
-          "http://www.stellman-greene.com/pbprdf#period -> 2",
-          "http://www.stellman-greene.com/pbprdf#time -> 7:37",
-          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 743",
-          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 457",
-          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
-          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Diana_Taurasi",
-          "http://www.stellman-greene.com/pbprdf#technicalFoulNumber -> 1",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#TechnicalFoul",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          "http://stellman-greene.com/pbprdf#period -> 2",
+          "http://stellman-greene.com/pbprdf#time -> 7:37",
+          "http://stellman-greene.com/pbprdf#secondsIntoGame -> 743",
+          "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 457",
+          "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Mercury",
+          "http://stellman-greene.com/pbprdf#foulCommittedBy -> http://stellman-greene.com/pbprdf/players/Diana_Taurasi",
+          "http://stellman-greene.com/pbprdf#technicalFoulNumber -> 1",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: Diana Taurasi technical foul(1st technical foul)"))
 
   }
@@ -52,20 +52,20 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers {
     val testUri = TestUri.create("400496779")
     new TechnicalFoulPlay(testUri, 152, 2, "1:03", "Mercury", "technical foul(2nd technical foul)", "37-32", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
-    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400496779/152> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400496779/152> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#TechnicalFoul",
-          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
-          "http://www.stellman-greene.com/pbprdf#period -> 2",
-          "http://www.stellman-greene.com/pbprdf#time -> 1:03",
-          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1137",
-          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 63",
-          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
-          "http://www.stellman-greene.com/pbprdf#technicalFoulNumber -> 2",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#TechnicalFoul",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          "http://stellman-greene.com/pbprdf#period -> 2",
+          "http://stellman-greene.com/pbprdf#time -> 1:03",
+          "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1137",
+          "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 63",
+          "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Mercury",
+          "http://stellman-greene.com/pbprdf#technicalFoulNumber -> 2",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: technical foul(2nd technical foul)"))
 
   }
@@ -74,21 +74,21 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers {
     val testUri = TestUri.create("400445797")
     new DoubleTechnicalFoulPlay(testUri, 231, 3, "4:22", "Shock", "Double technical foul: Marissa Coleman and Glory Johnson", "47-41", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
-    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400445797/231> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400445797/231> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#TechnicalFoul",
-          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
-          "http://www.stellman-greene.com/pbprdf#period -> 3",
-          "http://www.stellman-greene.com/pbprdf#time -> 4:22",
-          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1538",
-          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 262",
-          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Marissa_Coleman",
-          "http://www.stellman-greene.com/pbprdf#foulCommittedBy -> http://www.stellman-greene.com/pbprdf/players/Glory_Johnson",
-          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Shock",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#TechnicalFoul",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          "http://stellman-greene.com/pbprdf#period -> 3",
+          "http://stellman-greene.com/pbprdf#time -> 4:22",
+          "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1538",
+          "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 262",
+          "http://stellman-greene.com/pbprdf#foulCommittedBy -> http://stellman-greene.com/pbprdf/players/Marissa_Coleman",
+          "http://stellman-greene.com/pbprdf#foulCommittedBy -> http://stellman-greene.com/pbprdf/players/Glory_Johnson",
+          "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Shock",
           "http://www.w3.org/2000/01/rdf-schema#label -> Shock: Double technical foul: Marissa Coleman and Glory Johnson"))
   }
 

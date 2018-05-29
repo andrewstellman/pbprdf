@@ -14,7 +14,7 @@ object EntityUriFactory {
 
   private val valueFactory = ValueFactoryImpl.getInstance()
 
-  val NAMESPACE = "http://www.stellman-greene.com/pbprdf/"
+  val NAMESPACE = "http://stellman-greene.com/pbprdf/"
 
   /**
    * Generate the URI for a game entity

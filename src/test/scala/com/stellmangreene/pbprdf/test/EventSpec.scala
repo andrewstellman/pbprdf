@@ -21,7 +21,7 @@ class EventSpec extends FlatSpec with Matchers {
 
   it should "generate the event URI" in {
     val event = Event(TestUri.create("400610636"), 38, 1, "4:56", "Official timeout")(GamePeriodInfo.WNBAPeriodInfo)
-    event.eventUri.stringValue should be("http://www.stellman-greene.com/pbprdf/400610636/38")
+    event.eventUri.stringValue should be("http://stellman-greene.com/pbprdf/400610636/38")
   }
 
   it should "populate the event fields" in {
@@ -40,29 +40,29 @@ class EventSpec extends FlatSpec with Matchers {
     Event(testUri, 119, 2, "7:05", "Unmatched event 2")(GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep
-      .executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/38> ?p ?o }")
+      .executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/38> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
-          "http://www.stellman-greene.com/pbprdf#period -> 1",
-          "http://www.stellman-greene.com/pbprdf#time -> 4:56",
-          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 304",
-          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 296",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          "http://stellman-greene.com/pbprdf#period -> 1",
+          "http://stellman-greene.com/pbprdf#time -> 4:56",
+          "http://stellman-greene.com/pbprdf#secondsIntoGame -> 304",
+          "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 296",
           "http://www.w3.org/2000/01/rdf-schema#label -> Unmatched event"))
 
     rep
-      .executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/119> ?p ?o }")
+      .executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/119> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
-          "http://www.stellman-greene.com/pbprdf#period -> 2",
-          "http://www.stellman-greene.com/pbprdf#time -> 7:05",
-          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 775",
-          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 425",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          "http://stellman-greene.com/pbprdf#period -> 2",
+          "http://stellman-greene.com/pbprdf#time -> 7:05",
+          "http://stellman-greene.com/pbprdf#secondsIntoGame -> 775",
+          "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 425",
           "http://www.w3.org/2000/01/rdf-schema#label -> Unmatched event 2"))
   }
 
@@ -87,7 +87,7 @@ class EventSpec extends FlatSpec with Matchers {
     rep
       .executeQuery("""
 SELECT * { 
-  ?s <http://www.stellman-greene.com/pbprdf#secondsIntoGame> ?secondsIntoGame .
+  ?s <http://stellman-greene.com/pbprdf#secondsIntoGame> ?secondsIntoGame .
   ?s <http://www.w3.org/2000/01/rdf-schema#label> ?label .
 }""")
       .map(statement => (s"${statement.getValue("label").stringValue} -> ${statement.getValue("secondsIntoGame").stringValue}"))
@@ -123,8 +123,8 @@ SELECT * {
 
     Event.addPreviousAndNextTriples(rep, events)
 
-    def stripSO(s: String) = s.replaceAll("^http://www.stellman-greene.com/pbprdf/12345678/", "").toInt
-    def stripP(s: String) = s.replaceAll("^http://www.stellman-greene.com/pbprdf#", "")
+    def stripSO(s: String) = s.replaceAll("^http://stellman-greene.com/pbprdf/12345678/", "").toInt
+    def stripP(s: String) = s.replaceAll("^http://stellman-greene.com/pbprdf#", "")
 
     val statements = rep.statements.toSeq
       .map(s => (stripSO(s.getSubject.stringValue), stripP(s.getPredicate.stringValue), stripSO(s.getObject.stringValue)))

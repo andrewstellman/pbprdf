@@ -30,36 +30,36 @@ class DelayOfGamePlaySpec extends FlatSpec with Matchers {
     new DelayOfGamePlay(testUri, 86, 2, "10:00", "Sparks", "Los Angeles delay of game violation", "15-22", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
     new DelayOfGamePlay(testUri, 295, 3, "1:39", "Sparks", "delay techfoul", "54-56", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
-    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610739/86> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610739/86> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#TechnicalFoul",
-          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
-          "http://www.stellman-greene.com/pbprdf#period -> 2",
-          "http://www.stellman-greene.com/pbprdf#time -> 10:00",
-          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 600",
-          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 600",
-          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sparks",
-          "http://www.stellman-greene.com/pbprdf#isDelayOfGame -> true",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#TechnicalFoul",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          "http://stellman-greene.com/pbprdf#period -> 2",
+          "http://stellman-greene.com/pbprdf#time -> 10:00",
+          "http://stellman-greene.com/pbprdf#secondsIntoGame -> 600",
+          "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 600",
+          "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Sparks",
+          "http://stellman-greene.com/pbprdf#isDelayOfGame -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: Los Angeles delay of game violation"))
 
-    rep.executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610739/295> ?p ?o }")
+    rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610739/295> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet should be(
         Set(
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
-          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#TechnicalFoul",
-          s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
-          "http://www.stellman-greene.com/pbprdf#period -> 3",
-          "http://www.stellman-greene.com/pbprdf#time -> 1:39",
-          "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 1701",
-          "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 99",
-          "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sparks",
-          "http://www.stellman-greene.com/pbprdf#isDelayOfGame -> true",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#TechnicalFoul",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          "http://stellman-greene.com/pbprdf#period -> 3",
+          "http://stellman-greene.com/pbprdf#time -> 1:39",
+          "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1701",
+          "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 99",
+          "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Sparks",
+          "http://stellman-greene.com/pbprdf#isDelayOfGame -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sparks: delay techfoul"))
   }
 

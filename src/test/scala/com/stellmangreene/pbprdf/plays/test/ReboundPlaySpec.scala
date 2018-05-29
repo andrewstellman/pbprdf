@@ -30,23 +30,23 @@ class ReboundPlaySpec extends FlatSpec with Matchers {
     play.addRdf(rep)
 
     val statements = rep
-      .executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/125> ?p ?o }")
+      .executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/125> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet
 
     statements should be(
       Set(
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Rebound",
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-        s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
-        "http://www.stellman-greene.com/pbprdf#period -> 2",
-        "http://www.stellman-greene.com/pbprdf#time -> 4:02",
-        "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 958",
-        "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 242",
-        "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mystics",
-        "http://www.stellman-greene.com/pbprdf#reboundedBy -> http://www.stellman-greene.com/pbprdf/players/Emma_Meesseman",
-        "http://www.stellman-greene.com/pbprdf#isOffensive -> true",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Rebound",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+        s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+        "http://stellman-greene.com/pbprdf#period -> 2",
+        "http://stellman-greene.com/pbprdf#time -> 4:02",
+        "http://stellman-greene.com/pbprdf#secondsIntoGame -> 958",
+        "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 242",
+        "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Mystics",
+        "http://stellman-greene.com/pbprdf#reboundedBy -> http://stellman-greene.com/pbprdf/players/Emma_Meesseman",
+        "http://stellman-greene.com/pbprdf#isOffensive -> true",
         "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Emma Meesseman offensive rebound"))
   }
 

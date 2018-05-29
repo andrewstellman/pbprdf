@@ -30,24 +30,24 @@ class JumpBallPlaySpec extends FlatSpec with Matchers {
     play.addRdf(rep)
 
     val statements = rep
-      .executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610736/426> ?p ?o }")
+      .executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610736/426> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet
 
     statements should be(
       Set(
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#JumpBall",
-        s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
-        "http://www.stellman-greene.com/pbprdf#period -> 5",
-        "http://www.stellman-greene.com/pbprdf#time -> 4:58",
-        "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 2402",
-        "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 298",
-        "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Mercury",
-        "http://www.stellman-greene.com/pbprdf#jumpBallHomePlayer -> http://www.stellman-greene.com/pbprdf/players/Brittney_Griner",
-        "http://www.stellman-greene.com/pbprdf#jumpBallAwayPlayer -> http://www.stellman-greene.com/pbprdf/players/Elena_Delle_Donne",
-        "http://www.stellman-greene.com/pbprdf#jumpBallGainedPossession -> http://www.stellman-greene.com/pbprdf/players/DeWanna_Bonner",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#JumpBall",
+        s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+        "http://stellman-greene.com/pbprdf#period -> 5",
+        "http://stellman-greene.com/pbprdf#time -> 4:58",
+        "http://stellman-greene.com/pbprdf#secondsIntoGame -> 2402",
+        "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 298",
+        "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Mercury",
+        "http://stellman-greene.com/pbprdf#jumpBallHomePlayer -> http://stellman-greene.com/pbprdf/players/Brittney_Griner",
+        "http://stellman-greene.com/pbprdf#jumpBallAwayPlayer -> http://stellman-greene.com/pbprdf/players/Elena_Delle_Donne",
+        "http://stellman-greene.com/pbprdf#jumpBallGainedPossession -> http://stellman-greene.com/pbprdf/players/DeWanna_Bonner",
         "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: Elena Delle Donne vs. Brittney Griner (DeWanna Bonner gains possession)"))
 
     val testUri2 = TestUri.create("400610636")
@@ -55,23 +55,23 @@ class JumpBallPlaySpec extends FlatSpec with Matchers {
     play2.addRdf(rep)
 
     val statements2 = rep
-      .executeQuery("SELECT * { <http://www.stellman-greene.com/pbprdf/400610636/1> ?p ?o }")
+      .executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/1> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
       .toSet
 
     statements2 should be(
       Set(
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Event",
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#Play",
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://www.stellman-greene.com/pbprdf#JumpBall",
-        s"http://www.stellman-greene.com/pbprdf#inGame -> ${testUri2.stringValue}",
-        "http://www.stellman-greene.com/pbprdf#period -> 1",
-        "http://www.stellman-greene.com/pbprdf#time -> 10:00",
-        "http://www.stellman-greene.com/pbprdf#secondsIntoGame -> 0",
-        "http://www.stellman-greene.com/pbprdf#secondsLeftInPeriod -> 600",
-        "http://www.stellman-greene.com/pbprdf#forTeam -> http://www.stellman-greene.com/pbprdf/teams/Sun",
-        "http://www.stellman-greene.com/pbprdf#jumpBallHomePlayer -> http://www.stellman-greene.com/pbprdf/players/Kelsey_Bone",
-        "http://www.stellman-greene.com/pbprdf#jumpBallAwayPlayer -> http://www.stellman-greene.com/pbprdf/players/Stefanie_Dolson",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#JumpBall",
+        s"http://stellman-greene.com/pbprdf#inGame -> ${testUri2.stringValue}",
+        "http://stellman-greene.com/pbprdf#period -> 1",
+        "http://stellman-greene.com/pbprdf#time -> 10:00",
+        "http://stellman-greene.com/pbprdf#secondsIntoGame -> 0",
+        "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 600",
+        "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Sun",
+        "http://stellman-greene.com/pbprdf#jumpBallHomePlayer -> http://stellman-greene.com/pbprdf/players/Kelsey_Bone",
+        "http://stellman-greene.com/pbprdf#jumpBallAwayPlayer -> http://stellman-greene.com/pbprdf/players/Stefanie_Dolson",
         "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Stefanie Dolson vs. Kelsey Bone"))
   }
 

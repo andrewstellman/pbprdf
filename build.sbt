@@ -14,6 +14,11 @@ lazy val root = (project in file("."))
 
   // sbt options
   logLevel := Level.Info,
+
+  // sbt-assembly options
+  mainClass in assembly := Some("com.stellmangreene.pbprdf.PbpRdfApp"),
+  assemblyOutputPath in assembly := file("./pbprdf.jar")
+  
 )
 
 // sbt-eclipse settings

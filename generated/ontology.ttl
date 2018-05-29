@@ -22,6 +22,14 @@ pbprdf:Player a <http://www.w3.org/2002/07/owl#Class> ;
 pbprdf:Roster a <http://www.w3.org/2002/07/owl#Class> ;
 	rdfs:label "A game roster" .
 
+pbprdf:EndOfPeriod a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "End of period" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:EndOfGame a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "End of game" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
 pbprdf:Timeout a <http://www.w3.org/2002/07/owl#Class> ;
 	rdfs:label "A timeout" ;
 	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
@@ -48,6 +56,18 @@ pbprdf:Foul a <http://www.w3.org/2002/07/owl#Class> ;
 
 pbprdf:TechnicalFoul a <http://www.w3.org/2002/07/owl#Class> ;
 	rdfs:label "A technical foul" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:FiveSecondViolation a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "A five-second violation" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:Ejection a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "An ejection" ;
+	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
+
+pbprdf:playerEjected a <http://www.w3.org/2002/07/owl#Class> ;
+	rdfs:label "Player that was ejected" ;
 	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
 
 pbprdf:Enters a <http://www.w3.org/2002/07/owl#Class> ;
@@ -131,16 +151,17 @@ pbprdf:secondsLeftInPeriod rdfs:label "The number of seconds left in the period 
 	rdfs:domain pbprdf:Event ;
 	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
 
-pbprdf:timeoutTeam rdfs:label "The team that called the timeout" ;
-	rdfs:range pbprdf:Team ;
-	rdfs:domain pbprdf:Timeout ;
-	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
-
 pbprdf:timeoutDuration rdfs:label "The duration of a timeout" ;
 	rdfs:range xsd:string ;
 	rdfs:domain pbprdf:Timeout ;
 	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
 	rdfs:comment "A string description (eg. Full timeout, 20 Sec." .
+
+pbprdf:isOfficial rdfs:label "Determines if a timeout is an official timeout" ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain pbprdf:Timeout ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "True for an official timeout" .
 
 pbprdf:jumpBallHomePlayer rdfs:label "The home player contesting the jump ball" ;
 	rdfs:range pbprdf:Player ;
@@ -229,6 +250,12 @@ pbprdf:isCharge rdfs:label "Determines if a foul is a charge" ;
 	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
 	rdfs:comment "Only ever has the value xsd:true, no value exists if the play was not a charge" .
 
+pbprdf:isPersonalBlockingFoul rdfs:label "Determines if a foul is a personal blocking foul" ;
+	rdfs:range xsd:boolean ;
+	rdfs:domain pbprdf:Foul ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
+	rdfs:comment "Only ever has the value xsd:true, no value exists if the play was not a personal blocking foul" .
+
 pbprdf:isThreeSecond rdfs:label "Determines if a technical foul is a three second violation" ;
 	rdfs:range xsd:boolean ;
 	rdfs:domain pbprdf:TechnicalFoul ;
@@ -272,3 +299,13 @@ pbprdf:turnedOverBy rdfs:label "The player who turned the ball over" ;
 	rdfs:range pbprdf:Player ;
 	rdfs:domain pbprdf:Turnover ;
 	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:previousEvent rdfs:label "The previous event in the game" ;
+	rdfs:range pbprdf:Event ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:nextEvent rdfs:label "The next event in the game" ;
+	rdfs:range pbprdf:Event ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .

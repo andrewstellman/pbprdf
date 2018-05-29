@@ -1,14 +1,16 @@
 # pbprdf
-Generate RDF for basketball play-by-play data by reading a folder full of ESPN-style play-by-play HTML pages (eg. [Mystics vs. Sun on 7:00 PM ET, June 5, 2015](http://scores.espn.go.com/wnba/playbyplay?gameId=400610636)), processing each play in each game file, and generating a Turtle file that contains all of the plays from each game.
+Generate RDF for basketball play-by-play data by reading a folder full of ESPN-style play-by-play HTML pages (eg. [Pacers vs. Cavaliers, April 15, 2018](http://tv5.espn.com/nba/playbyplay?gameId=401029417) or [Mystics vs. Sun, June 5, 2015](http://scores.espn.go.com/wnba/playbyplay?gameId=400610636)), processing each play in each game file, and generating a Turtle file that contains all of the plays from each game.
 
 Install and run
 ===============
 
-__Prerequisite: must have [sbt](http://www.scala-sbt.org/) 1.x in your path ([installing SBT](https://www.scala-sbt.org/1.x/docs/Setup.html))__
+__Prerequisite: must have [sbt](http://www.scala-sbt.org/) 1.x in your path
+* [Installing SBT](https://www.scala-sbt.org/1.x/docs/Setup.html)
+* [Install sbt 1.x on Unix](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
+* [Install sbt 1.x on Mac](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html)
+* [Install sbt 1.x on Windows](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html)
 
-Download or clone the source, use [sbt-assembly](https://github.com/sbt/sbt-assembly) to assemble the program (into the target/scala-2.11 folder), and run the script:
-
-Unix: (make sure you install sbt 1.x ([Unix](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html), [Mac](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html))
+Unix: 
 ```
 $ git clone https://github.com/andrewstellman/pbprdf.git
 $ cd pbprdf
@@ -16,7 +18,7 @@ $ sbt assembly
 $ ./pbprdf
 ```
 
-Windows: (make sure you [install sbt 1.x on Windows](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html))
+Windows:
 ```
 C:\Users\Public\src>git clone https://github.com/andrewstellman/pbprdf.git
 C:\Users\Public\src>cd pbprdf
@@ -27,7 +29,7 @@ C:\Users\Public\src\pbprdf>pbprdf
 Other useful build commands
 ---------------------------
 
-Run the unit tests:
+Compile the code and the unit tests:
 ```
 $ sbt compile test
 ```

@@ -1,7 +1,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix pbprdf: <http://www.stellman-greene.com/pbprdf#> .
+@prefix pbprdf: <http://stellman-greene.com/pbprdf#> .
 
 pbprdf:Game a <http://www.w3.org/2002/07/owl#Class> ;
 	rdfs:label "A game" .

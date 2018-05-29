@@ -1,9 +1,5 @@
 @echo off
 
-rem Set the lib dir relative to the batch file's directory
-set LIB_DIR=%~dp0\target\scala-2.11
-rem echo LIB_DIR = %LIB_DIR%
-
 rem Slurp the command line arguments. This loop allows for an unlimited number
 rem of arguments (up to the command line limit, anyway).
 set CMD_LINE_ARGS=%1
@@ -39,7 +35,7 @@ goto end
 :java8
 rem use java 6+ wildcard feature
 rem echo Using wildcard to set classpath
-"%JAVA%" -cp "%LIB_DIR%\*" com.stellmangreene.pbprdf.PbpRdfApp %CMD_LINE_ARGS%
+"%JAVA%" -jar pbprdf.jar %CMD_LINE_ARGS%
 goto end
 
 :end

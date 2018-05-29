@@ -4,7 +4,7 @@ Generate RDF for basketball play-by-play data by reading a folder full of ESPN-s
 Install and run
 ===============
 
-__Prerequisite: must have [sbt](http://www.scala-sbt.org/) 1.x in your path. [Installing SBT](https://www.scala-sbt.org/1.x/docs/Setup.html)__
+__Prerequisite: must have [sbt](http://www.scala-sbt.org/) 1.x in your path ([installing SBT](https://www.scala-sbt.org/1.x/docs/Setup.html))__
 
 Download or clone the source, use [sbt-assembly](https://github.com/sbt/sbt-assembly) to assemble the program (into the target/scala-2.11 folder), and run the script:
 

@@ -4,7 +4,7 @@ Generate RDF for NBA or WNBA basketball play-by-play data by reading a folder fu
 Install and run
 ===============
 
-__Prerequisite: must have [sbt](http://www.scala-sbt.org/) 1.x in your path__
+__Prerequisite: [sbt](http://www.scala-sbt.org/) 1.x and Java 8 or later must be in your path__
 * [Installing SBT](https://www.scala-sbt.org/1.x/docs/Setup.html)
 * [Install sbt 1.x on Unix](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
 * [Install sbt 1.x on Mac](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html)

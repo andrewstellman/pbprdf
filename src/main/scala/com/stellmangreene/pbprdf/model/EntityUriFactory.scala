@@ -21,7 +21,7 @@ object EntityUriFactory {
    */
   def getGameUri(homeTeam: String, awayTeam: String, gameTime: DateTime): URI = {
     val fmt = DateTimeFormat.forPattern("YYYY-MM-dd")
-    valueFactory.createURI(NAMESPACE, s"games/${fmt.print(gameTime)}_${awayTeam}_at_${homeTeam}")
+    valueFactory.createURI(NAMESPACE, s"games/${fmt.print(gameTime)}_${awayTeam.trim.replaceAll(" ", "_")}_at_${homeTeam.trim.replaceAll(" ", "_")}")
   }
 
   /**

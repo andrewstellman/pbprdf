@@ -6,11 +6,11 @@ Install and run
 
 __Prerequisite: [sbt](http://www.scala-sbt.org/) 1.x and Java 8 or later must be in your path__
 * [Installing SBT](https://www.scala-sbt.org/1.x/docs/Setup.html)
-* [Install sbt 1.x on Unix](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
 * [Install sbt 1.x on Mac](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html)
+* [Install sbt 1.x on Unix](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
 * [Install sbt 1.x on Windows](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html)
 
-Unix: 
+Mac or Unix: 
 ```
 $ git clone https://github.com/andrewstellman/pbprdf.git
 $ cd pbprdf

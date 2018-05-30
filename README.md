@@ -26,15 +26,17 @@ C:\Users\Public\src\pbprdf>sbt assembly
 C:\Users\Public\src\pbprdf>pbprdf
 ```
 
+*(The above commands use [sbt-assembly](https://github.com/sbt/sbt-assembly) to create a fat JAR.)*
+
 Other useful build commands
 ---------------------------
 
-Compile the code and the unit tests:
+Compile the code and run the unit tests:
 ```
 $ sbt compile test
 ```
 
-Generate an Eclipse project:
+Generate Eclipse project files (via [sbteclipse](https://github.com/sbt/sbteclipse):
 ```
 $ sbt eclipse
 ```
@@ -74,10 +76,11 @@ $ ./pbprdf data/wnba-2014-playoffs/ wnba-2014-playoffs.ttl
 ```
 
 Step 4: Import the Turtle file into RDF4J Server
+*(see instructions at the bottom for spinning up an RDF4J server, loading data into it, and connecting to it with the RDF4J console)
 ```
-$ console -s http://localhost:8080/rdf4j-server PbpRdfDatabase
+$ console -s http://localhost:8080/rdf4j-server pbprdf-database
 Type 'help' for help.
-PbpRdfDatabase> load wnba-2014-playoffs.ttl into http://stellman-greene.com/pbprdf/wnba-2014-playoffs
+pbprdf-database> load wnba-2014-playoffs.ttl into http://stellman-greene.com/pbprdf/wnba-2014-playoffs
 Loading data...
 Data has been added to the repository (20410 ms)
 ```
@@ -88,9 +91,9 @@ If your file is large, you can use zip or gzip to compress it. Make sure it has 
 $ ./fetch-nba-play-by-plays.sh
 $ ./pbprdf data/nba-2017-2018-season/ nba-2017-2018-season.ttl
 $ zip nba-2017-2018-season.ttl.zip nba-2017-2018-season.ttl
-$ console -s http://localhost:8080/rdf4j-server PbpRdfDatabase
+$ console -s http://localhost:8080/rdf4j-server pbprdf-database
 Type 'help' for help.
-PbpRdfDatabase> load nba-2017-2018-season.ttl.zip into http://stellman-greene.com/pbprdf/nba-2017-2018
+pbprdf-database> load nba-2017-2018-season.ttl.zip into http://stellman-greene.com/pbprdf/nba-2017-2018
 Loading data...
 Data has been added to the repository (427100 ms)
 ```
@@ -99,7 +102,7 @@ __See 'Setting up RDF4J Server' below for details on setting up RDF4J server__
 
 Step 5: Run SPARQL queries
 ```
-PbpRdfDatabase> SPARQL
+pbprdf-database> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
 BASE <http://stellman-greene.com/>
 SELECT ?teamName (COUNT(*) AS ?foulsDrawn) WHERE { 
@@ -148,14 +151,14 @@ $ ./pbprdf --ontology ontology.ttl
 
 Step 2: Load the ontology into its own context
 ```
-PbpRdfDatabase> load ontology.ttl into http://stellman-greene.com/pbprdf/Ontology
+pbprdf-database> load ontology.ttl into http://stellman-greene.com/pbprdf/Ontology
 Loading data...
 Data has been added to the repository (18 ms)
 ```
 
 Step 3: Execute a query that retrieves only the data in the ontology
 ```
-PbpRdfDatabase> SPARQL
+pbprdf-database> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
 SELECT *
 FROM NAMED <http://stellman-greene.com/pbprdf/Ontology>
@@ -297,12 +300,16 @@ __Step 4: Use the RDF4J console to create a database__
 Create a Native database with `spoc`,`sopc`,`opsc`,`ospc`,`posc`, and `psoc` indexes. This will take disk space for the indexes, but will make your queries run much faster.
 
 ```
+$ cd eclipse-rdf4j-2.3.2/bin/
 $ ./console.sh -s http://localhost:8080/rdf4j-server 
 Connected to http://localhost:8080/rdf4j-server
+RDF4J Console 2.3.2+496af9c
 
+2.3.2+496af9c
+Type 'help' for help.
 > create native
 Please specify values for the following variables:
-Repository ID [native]: PbpRdfDatabase
+Repository ID [native]: pbprdf-database
 Repository title [Native store]: PBPRDF Database
 Query Iteration Cache size [10000]: 
 Triple indexes [spoc,posc]: spoc,sopc,opsc,ospc,posc,psoc

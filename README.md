@@ -102,8 +102,6 @@ Step 5: Run SPARQL queries
 PbpRdfDatabase> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
 BASE <http://stellman-greene.com/>
-PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?teamName (COUNT(*) AS ?foulsDrawn) WHERE { 
   ?fouledPlayer pbprdf:foulDrawnBy ?player .
   ?roster pbprdf:hasPlayer ?player .
@@ -132,6 +130,14 @@ Evaluating SPARQL query...
 12 result(s) (1033 ms)
 ```
 
+NOTE: You may need to add `BASE` and `PREFIX` lines to the top of your query:
+```
+BASE <http://stellman-greene.com/>
+PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+```
+
+
 Example: Load the ontology into RDF4J Server
 --------------------------------------------
 
@@ -151,9 +157,6 @@ Step 3: Execute a query that retrieves only the data in the ontology
 ```
 PbpRdfDatabase> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
-BASE <http://stellman-greene.com/>
-PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
 SELECT *
 FROM NAMED <http://stellman-greene.com/pbprdf/Ontology>
 WHERE {
@@ -191,9 +194,6 @@ Other Useful Queries
 Clutch Shots
 ------------
 ```
-BASE <http://stellman-greene.com/>
-PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?playerName ?shotsTaken ?shotsMade ?shotPercentage
 WHERE 
 { 
@@ -239,9 +239,6 @@ ORDER BY DESC(?shotPercentage)
 Shots made and missed at Target Center in the first five minutes
 ----------------------------------------------------------------
 ```
-BASE <http://stellman-greene.com/>
-PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?game ?gameTime ?shotsTaken ?shotsMade ?shotsMadePercentage ?shotsMissed ?shotsMissedPercentage
 WHERE 
 { 

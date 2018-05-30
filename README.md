@@ -288,15 +288,19 @@ Setting up RDF4J Server
 One effective way to execute SPARQL queries against these files is to use [RDF4J Server, Workbench, and Console](http://docs.rdf4j.org/server-workbench-console/). RDF4J Server and its GUI, RDF Workbench, are both web applications that run in an application server like Tomcat.
 
 __Step 1: [Download RDF4J](http://rdf4j.org/download/)__
+
 Download and extract the latest RDF4J SDK. It will contain a `bin` folder with the `console` binary, and a `war` folder with the `rdf4j-server.war` and `rdf4j-workbench.war` web applications.
 
 __Step 2: [Install Apache Tomcat](https://tomcat.apache.org/tomcat-7.0-doc/appdev/installation.html)__
-Make sure you edit libexec/conf/tomcat-users.xml to add a user with `tomcat` and `manager-gui` permissions.
 
-__Step 3: Open the Apache Tomcat App Manager (http://localhost:8080/manager/html) and deploy the web applications
+This usually just involves downloading and extracting the Tomcat binaries, editing libexec/conf/tomcat-users.xml to add a user with `tomcat` and `manager-gui` permissions, and executing `catalina run` to start the server.
+
+__Step 3: Open the Apache Tomcat App Manager (http://localhost:8080/manager/html) and deploy the web applications__
+
 Use the app manager GUI to deploy the `rdf4j-server.war` and `rdf4j-workbench.war` web applications to your Tomcat installations.
 
 __Step 4: Use the RDF4J console to create a database__
+
 Create a Native database with `spoc`,`sopc`,`opsc`,`ospc`,`posc`, and `psoc` indexes. This will take disk space for the indexes, but will make your queries run much faster.
 
 ```

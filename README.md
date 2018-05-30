@@ -26,15 +26,17 @@ C:\Users\Public\src\pbprdf>sbt assembly
 C:\Users\Public\src\pbprdf>pbprdf
 ```
 
+*(The above commands use [sbt-assembly](https://github.com/sbt/sbt-assembly) to create a fat JAR.)*
+
 Other useful build commands
 ---------------------------
 
-Compile the code and the unit tests:
+Compile the code and run the unit tests:
 ```
 $ sbt compile test
 ```
 
-Generate an Eclipse project:
+Generate Eclipse project files (via [sbteclipse](https://github.com/sbt/sbteclipse):
 ```
 $ sbt eclipse
 ```
@@ -74,10 +76,11 @@ $ ./pbprdf data/wnba-2014-playoffs/ wnba-2014-playoffs.ttl
 ```
 
 Step 4: Import the Turtle file into RDF4J Server
+*(see instructions at the bottom for spinning up an RDF4J server, loading data into it, and connecting to it with the RDF4J console)
 ```
-$ console -s http://localhost:8080/rdf4j-server PbpRdfDatabase
+$ console -s http://localhost:8080/rdf4j-server pbprdf-database
 Type 'help' for help.
-PbpRdfDatabase> load wnba-2014-playoffs.ttl into http://stellman-greene.com/pbprdf/wnba-2014-playoffs
+pbprdf-database> load wnba-2014-playoffs.ttl into http://stellman-greene.com/pbprdf/wnba-2014-playoffs
 Loading data...
 Data has been added to the repository (20410 ms)
 ```
@@ -88,9 +91,9 @@ If your file is large, you can use zip or gzip to compress it. Make sure it has 
 $ ./fetch-nba-play-by-plays.sh
 $ ./pbprdf data/nba-2017-2018-season/ nba-2017-2018-season.ttl
 $ zip nba-2017-2018-season.ttl.zip nba-2017-2018-season.ttl
-$ console -s http://localhost:8080/rdf4j-server PbpRdfDatabase
+$ console -s http://localhost:8080/rdf4j-server pbprdf-database
 Type 'help' for help.
-PbpRdfDatabase> load nba-2017-2018-season.ttl.zip into http://stellman-greene.com/pbprdf/nba-2017-2018
+pbprdf-database> load nba-2017-2018-season.ttl.zip into http://stellman-greene.com/pbprdf/nba-2017-2018
 Loading data...
 Data has been added to the repository (427100 ms)
 ```
@@ -99,7 +102,7 @@ __See 'Setting up RDF4J Server' below for details on setting up RDF4J server__
 
 Step 5: Run SPARQL queries
 ```
-PbpRdfDatabase> SPARQL
+pbprdf-database> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
 BASE <http://stellman-greene.com/>
 SELECT ?teamName (COUNT(*) AS ?foulsDrawn) WHERE { 
@@ -148,17 +151,17 @@ $ ./pbprdf --ontology ontology.ttl
 
 Step 2: Load the ontology into its own context
 ```
-PbpRdfDatabase> load ontology.ttl into http://stellman-greene.com/pbprdf/Ontology
+pbprdf-database> load ontology.ttl into http://stellman-greene.com/pbprdf/ontology
 Loading data...
 Data has been added to the repository (18 ms)
 ```
 
 Step 3: Execute a query that retrieves only the data in the ontology
 ```
-PbpRdfDatabase> SPARQL
+pbprdf-database> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
 SELECT *
-FROM NAMED <http://stellman-greene.com/pbprdf/Ontology>
+FROM NAMED <http://stellman-greene.com/pbprdf/ontology>
 WHERE {
   GRAPH ?graph {
     ?class a owl:Class
@@ -169,23 +172,28 @@ Evaluating SPARQL query...
 +-------------------------------------+-------------------------------------+
 | graph                               | class                               |
 +-------------------------------------+-------------------------------------+
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Block                        |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Enters                       |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Event                        |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Foul                         |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Game                         |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:JumpBall                     |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Play                         |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Player                       |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Rebound                      |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Roster                       |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Shot                         |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Team                         |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:TechnicalFoul                |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Timeout                      |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Turnover                     |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Block                        |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Event                        |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Play                         |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Shot                         |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Ejection                     |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:EndOfGame                    |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:EndOfPeriod                  |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Enters                       |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:FiveSecondViolation          |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Foul                         |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Game                         |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:JumpBall                     |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Player                       |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Rebound                      |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Roster                       |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Team                         |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:TechnicalFoul                |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Timeout                      |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Turnover                     |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:playerEjected                |
 +-------------------------------------+-------------------------------------+
-15 result(s) (60 ms)
+20 result(s) (60 ms)
 ```
 
 Other Useful Queries
@@ -285,29 +293,40 @@ Setting up RDF4J Server
 One effective way to execute SPARQL queries against these files is to use [RDF4J Server, Workbench, and Console](http://docs.rdf4j.org/server-workbench-console/). RDF4J Server and its GUI, RDF Workbench, are both web applications that run in an application server like Tomcat.
 
 __Step 1: [Download RDF4J](http://rdf4j.org/download/)__
+
 Download and extract the latest RDF4J SDK. It will contain a `bin` folder with the `console` binary, and a `war` folder with the `rdf4j-server.war` and `rdf4j-workbench.war` web applications.
 
 __Step 2: [Install Apache Tomcat](https://tomcat.apache.org/tomcat-7.0-doc/appdev/installation.html)__
-Make sure you edit libexec/conf/tomcat-users.xml to add a user with `tomcat` and `manager-gui` permissions.
 
-__Step 3: Open the Apache Tomcat App Manager (http://localhost:8080/manager/html) and deploy the web applications
+This usually just involves downloading and extracting the Tomcat binaries, editing libexec/conf/tomcat-users.xml to add a user with `tomcat` and `manager-gui` permissions, and executing `catalina run` to start the server.
+
+__Step 3: Open the Apache Tomcat App Manager (http://localhost:8080/manager/html) and deploy the web applications__
+
 Use the app manager GUI to deploy the `rdf4j-server.war` and `rdf4j-workbench.war` web applications to your Tomcat installations.
 
 __Step 4: Use the RDF4J console to create a database__
+
 Create a Native database with `spoc`,`sopc`,`opsc`,`ospc`,`posc`, and `psoc` indexes. This will take disk space for the indexes, but will make your queries run much faster.
 
 ```
+$ cd eclipse-rdf4j-2.3.2/bin/
 $ ./console.sh -s http://localhost:8080/rdf4j-server 
 Connected to http://localhost:8080/rdf4j-server
+RDF4J Console 2.3.2+496af9c
 
+2.3.2+496af9c
+Type 'help' for help.
 > create native
 Please specify values for the following variables:
-Repository ID [native]: PbpRdfDatabase
+Repository ID [native]: pbprdf-database
 Repository title [Native store]: PBPRDF Database
 Query Iteration Cache size [10000]: 
 Triple indexes [spoc,posc]: spoc,sopc,opsc,ospc,posc,psoc
 EvaluationStrategyFactory [org.eclipse.rdf4j.query.algebra.evaluation.impl.StrictEvaluationStrategyFactory]: 
 Repository created
+> open pbprdf-database
+Opened repository 'pbprdf-database'
+pbprdf-database> 
 ```
 
 __Step 5: Import your Turtle file__

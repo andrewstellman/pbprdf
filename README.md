@@ -77,7 +77,7 @@ Step 4: Import the Turtle file into RDF4J Server
 ```
 $ console -s http://localhost:8080/rdf4j-server PbpRdfDatabase
 Type 'help' for help.
-PbpRdfDatabase> load wnba-2014-playoffs.ttl into http://www.stellman-greene.com/pbprdf/wnba-2014-playoffs
+PbpRdfDatabase> load wnba-2014-playoffs.ttl into http://stellman-greene.com/pbprdf/wnba-2014-playoffs
 Loading data...
 Data has been added to the repository (20410 ms)
 ```
@@ -101,8 +101,8 @@ Step 5: Run SPARQL queries
 ```
 PbpRdfDatabase> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
-BASE <http://www.stellman-greene.com/>
-PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
+BASE <http://stellman-greene.com/>
+PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?teamName (COUNT(*) AS ?foulsDrawn) WHERE { 
   ?fouledPlayer pbprdf:foulDrawnBy ?player .
@@ -142,7 +142,7 @@ $ ./pbprdf --ontology ontology.ttl
 
 Step 2: Load the ontology into its own context
 ```
-PbpRdfDatabase> load ontology.ttl into http://www.stellman-greene.com/pbprdf/Ontology
+PbpRdfDatabase> load ontology.ttl into http://stellman-greene.com/pbprdf/Ontology
 Loading data...
 Data has been added to the repository (18 ms)
 ```
@@ -151,11 +151,11 @@ Step 3: Execute a query that retrieves only the data in the ontology
 ```
 PbpRdfDatabase> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
-BASE <http://www.stellman-greene.com/>
-PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
+BASE <http://stellman-greene.com/>
+PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 SELECT *
-FROM NAMED <http://www.stellman-greene.com/pbprdf/Ontology>
+FROM NAMED <http://stellman-greene.com/pbprdf/Ontology>
 WHERE {
   GRAPH ?graph {
     ?class a owl:Class
@@ -166,21 +166,21 @@ Evaluating SPARQL query...
 +-------------------------------------+-------------------------------------+
 | graph                               | class                               |
 +-------------------------------------+-------------------------------------+
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Block                        |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Enters                       |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Event                        |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Foul                         |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Game                         |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:JumpBall                     |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Play                         |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Player                       |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Rebound                      |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Roster                       |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Shot                         |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Team                         |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:TechnicalFoul                |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Timeout                      |
-| <http://www.stellman-greene.com/pbprdf/Ontology>| pbprdf:Turnover                     |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Block                        |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Enters                       |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Event                        |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Foul                         |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Game                         |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:JumpBall                     |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Play                         |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Player                       |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Rebound                      |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Roster                       |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Shot                         |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Team                         |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:TechnicalFoul                |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Timeout                      |
+| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Turnover                     |
 +-------------------------------------+-------------------------------------+
 15 result(s) (60 ms)
 ```
@@ -191,8 +191,8 @@ Other Useful Queries
 Clutch Shots
 ------------
 ```
-BASE <http://www.stellman-greene.com/>
-PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
+BASE <http://stellman-greene.com/>
+PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?playerName ?shotsTaken ?shotsMade ?shotPercentage
 WHERE 
@@ -239,8 +239,8 @@ ORDER BY DESC(?shotPercentage)
 Shots made and missed at Target Center in the first five minutes
 ----------------------------------------------------------------
 ```
-BASE <http://www.stellman-greene.com/>
-PREFIX pbprdf: <http://www.stellman-greene.com/pbprdf#>
+BASE <http://stellman-greene.com/>
+PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?game ?gameTime ?shotsTaken ?shotsMade ?shotsMadePercentage ?shotsMissed ?shotsMissedPercentage
 WHERE 

@@ -137,6 +137,7 @@ object Event extends LazyLogging {
       .sortBy(_.eventNumber)
       .zipWithIndex.foreach(e => {
         val (event, index) = e
+        rep.addTriple(event.eventUri, Ontology.EVENT_NUMBER, rep.getValueFactory.createLiteral(index + 1))
         if (index + 1 < events.size) {
           rep.addTriple(event.eventUri, Ontology.NEXT_EVENT, events(index + 1).eventUri)
         }

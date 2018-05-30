@@ -300,12 +300,17 @@ pbprdf:turnedOverBy rdfs:label "The player who turned the ball over" ;
 	rdfs:domain pbprdf:Turnover ;
 	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
 
+pbprdf:eventNumber rdfs:label "The event number" ;
+	rdfs:range xsd:int ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
 pbprdf:previousEvent rdfs:label "The previous event in the game" ;
 	rdfs:range pbprdf:Event ;
 	rdfs:domain pbprdf:Event ;
-	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
 
 pbprdf:nextEvent rdfs:label "The next event in the game" ;
 	rdfs:range pbprdf:Event ;
 	rdfs:domain pbprdf:Event ;
-	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .

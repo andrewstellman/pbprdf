@@ -130,7 +130,12 @@ SELECT * {
       .map(s => (stripSO(s.getSubject.stringValue), stripP(s.getPredicate.stringValue), stripSO(s.getObject.stringValue)))
       .toSet
 
-    statements.size should be(8)
+    statements.size should be(13)
+    statements should contain(1, "eventNumber", 1)
+    statements should contain(2, "eventNumber", 2)
+    statements should contain(3, "eventNumber", 3)
+    statements should contain(4, "eventNumber", 4)
+    statements should contain(5, "eventNumber", 5)
     statements should contain(1, "nextEvent", 2)
     statements should contain(2, "previousEvent", 1)
     statements should contain(2, "nextEvent", 3)

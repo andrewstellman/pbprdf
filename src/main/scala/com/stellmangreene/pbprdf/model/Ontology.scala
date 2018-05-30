@@ -398,15 +398,23 @@ object Ontology {
   // Previous and next events
 
   @OntologyProperty(
+    label = "The event number",
+    domain = "http://stellman-greene.com/pbprdf#Event",
+    range = "http://www.w3.org/2001/XMLSchema#int")
+  val EVENT_NUMBER = valueFactory.createURI(NAMESPACE, "eventNumber")
+
+  @OntologyProperty(
     label = "The previous event in the game",
     domain = "http://stellman-greene.com/pbprdf#Event",
     range = "http://stellman-greene.com/pbprdf#Event")
+  @OntologyObjectProperty
   val PREVIOUS_EVENT = valueFactory.createURI(NAMESPACE, "previousEvent")
 
   @OntologyProperty(
     label = "The next event in the game",
     domain = "http://stellman-greene.com/pbprdf#Event",
     range = "http://stellman-greene.com/pbprdf#Event")
+  @OntologyObjectProperty
   val NEXT_EVENT = valueFactory.createURI(NAMESPACE, "nextEvent")
 
 }

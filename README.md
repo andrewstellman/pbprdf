@@ -324,6 +324,9 @@ Query Iteration Cache size [10000]:
 Triple indexes [spoc,posc]: spoc,sopc,opsc,ospc,posc,psoc
 EvaluationStrategyFactory [org.eclipse.rdf4j.query.algebra.evaluation.impl.StrictEvaluationStrategyFactory]: 
 Repository created
+> open pbprdf-database
+Opened repository 'pbprdf-database'
+pbprdf-database> 
 ```
 
 __Step 5: Import your Turtle file__

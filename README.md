@@ -151,7 +151,7 @@ $ ./pbprdf --ontology ontology.ttl
 
 Step 2: Load the ontology into its own context
 ```
-pbprdf-database> load ontology.ttl into http://stellman-greene.com/pbprdf/Ontology
+pbprdf-database> load ontology.ttl into http://stellman-greene.com/pbprdf/ontology
 Loading data...
 Data has been added to the repository (18 ms)
 ```
@@ -161,7 +161,7 @@ Step 3: Execute a query that retrieves only the data in the ontology
 pbprdf-database> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
 SELECT *
-FROM NAMED <http://stellman-greene.com/pbprdf/Ontology>
+FROM NAMED <http://stellman-greene.com/pbprdf/ontology>
 WHERE {
   GRAPH ?graph {
     ?class a owl:Class
@@ -172,23 +172,28 @@ Evaluating SPARQL query...
 +-------------------------------------+-------------------------------------+
 | graph                               | class                               |
 +-------------------------------------+-------------------------------------+
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Block                        |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Enters                       |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Event                        |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Foul                         |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Game                         |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:JumpBall                     |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Play                         |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Player                       |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Rebound                      |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Roster                       |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Shot                         |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Team                         |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:TechnicalFoul                |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Timeout                      |
-| <http://stellman-greene.com/pbprdf/Ontology>| pbprdf:Turnover                     |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Block                        |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Event                        |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Play                         |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Shot                         |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Ejection                     |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:EndOfGame                    |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:EndOfPeriod                  |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Enters                       |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:FiveSecondViolation          |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Foul                         |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Game                         |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:JumpBall                     |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Player                       |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Rebound                      |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Roster                       |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Team                         |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:TechnicalFoul                |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Timeout                      |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:Turnover                     |
+| <http://stellman-greene.com/pbprdf/ontology>| pbprdf:playerEjected                |
 +-------------------------------------+-------------------------------------+
-15 result(s) (60 ms)
+20 result(s) (60 ms)
 ```
 
 Other Useful Queries

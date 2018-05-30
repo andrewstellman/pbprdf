@@ -59,13 +59,12 @@ class ShotPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
               false
 
           val pointsTriple: Set[(Resource, URI, Value)] =
-            if (made && shotType.contains("free throw"))
+            if (shotType.contains("free throw"))
               Set((eventUri, Ontology.SHOT_POINTS, rep.getValueFactory.createLiteral(1)))
-            else if (made && shotType.contains("three point"))
+            else if (shotType.contains("three point"))
               Set((eventUri, Ontology.SHOT_POINTS, rep.getValueFactory.createLiteral(3)))
-            else if (made)
+            else
               Set((eventUri, Ontology.SHOT_POINTS, rep.getValueFactory.createLiteral(2)))
-            else Set()
 
           val assistsRegex = """ *\( *(.*) assists\)""".r
 

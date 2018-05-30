@@ -42,6 +42,7 @@ class ShotPlaySpec extends FlatSpec with Matchers {
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 42",
           "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 558",
           "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Mystics",
+          "http://stellman-greene.com/pbprdf#shotPoints -> 2",
           "http://stellman-greene.com/pbprdf#shotBy -> http://stellman-greene.com/pbprdf/players/Stefanie_Dolson",
           "http://stellman-greene.com/pbprdf#shotType -> 13-foot jumper",
           "http://stellman-greene.com/pbprdf#shotMade -> false",
@@ -63,6 +64,7 @@ class ShotPlaySpec extends FlatSpec with Matchers {
           "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 555",
           "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Sun",
           "http://stellman-greene.com/pbprdf#shotBy -> http://stellman-greene.com/pbprdf/players/Kelsey_Bone",
+          "http://stellman-greene.com/pbprdf#shotPoints -> 2",
           "http://stellman-greene.com/pbprdf#shotMade -> false",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Kelsey Bone  misses"))
 
@@ -113,6 +115,30 @@ class ShotPlaySpec extends FlatSpec with Matchers {
           "http://stellman-greene.com/pbprdf#shotMade -> true",
           "http://stellman-greene.com/pbprdf#shotPoints -> 1",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Alyssa Thomas makes free throw 2 of 2"))
+  }
+
+  it should "parse missed three point shots" in {
+    new ShotPlay(testUri, 20, 1, "7:35", "Mystics", "Jasmine Thomas misses 26-foot three point jumper", "5-2", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+
+    rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/20> ?p ?o }")
+      .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
+      .toSet should be(
+        Set(
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Shot",
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          "http://stellman-greene.com/pbprdf#period -> 1",
+          "http://stellman-greene.com/pbprdf#time -> 7:35",
+          "http://stellman-greene.com/pbprdf#secondsIntoGame -> 145",
+          "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 455",
+          "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Mystics",
+          "http://stellman-greene.com/pbprdf#shotBy -> http://stellman-greene.com/pbprdf/players/Jasmine_Thomas",
+          "http://stellman-greene.com/pbprdf#shotType -> 26-foot three point jumper",
+          "http://stellman-greene.com/pbprdf#shotMade -> false",
+          "http://stellman-greene.com/pbprdf#shotPoints -> 3",
+          "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Jasmine Thomas misses 26-foot three point jumper"))
+
   }
 
 }

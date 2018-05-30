@@ -157,6 +157,7 @@ SELECT * {
       .toSet should be(
         Set(
           "http://stellman-greene.com/pbprdf#eventNumber -> 1",
+          "http://stellman-greene.com/pbprdf#secondsUntilNextEvent -> 24",
           "http://stellman-greene.com/pbprdf#nextEvent -> http://stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/2",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
@@ -177,6 +178,8 @@ SELECT * {
       .toSet should be(
         Set(
           "http://stellman-greene.com/pbprdf#eventNumber -> 166",
+          "http://stellman-greene.com/pbprdf#secondsSincePreviousEvent -> 11",
+          "http://stellman-greene.com/pbprdf#secondsUntilNextEvent -> 0",
           "http://stellman-greene.com/pbprdf#previousEvent -> http://stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/165",
           "http://stellman-greene.com/pbprdf#nextEvent -> http://stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/167",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
@@ -199,6 +202,8 @@ SELECT * {
       .toSet should be(
         Set(
           "http://stellman-greene.com/pbprdf#eventNumber -> 119",
+          "http://stellman-greene.com/pbprdf#secondsSincePreviousEvent -> 4",
+          "http://stellman-greene.com/pbprdf#secondsUntilNextEvent -> 0",
           "http://stellman-greene.com/pbprdf#previousEvent -> http://stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/118",
           "http://stellman-greene.com/pbprdf#nextEvent -> http://stellman-greene.com/pbprdf/games/2015-06-05_Mystics_at_Sun/120",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",

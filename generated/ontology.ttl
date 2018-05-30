@@ -314,3 +314,13 @@ pbprdf:nextEvent rdfs:label "The next event in the game" ;
 	rdfs:range pbprdf:Event ;
 	rdfs:domain pbprdf:Event ;
 	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+
+pbprdf:secondsSincePreviousEvent rdfs:label "The number of seconds since the previous event" ;
+	rdfs:range xsd:int ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:secondsUntilNextEvent rdfs:label "The number of seconds until the next event" ;
+	rdfs:range xsd:int ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .

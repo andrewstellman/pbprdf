@@ -32,7 +32,7 @@ import com.typesafe.scalalogging.LazyLogging
  *
  * @author andrewstellman
  */
-case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, description: String)(gamePeriodInfo: GamePeriodInfo)
+case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, description: String)(val gamePeriodInfo: GamePeriodInfo)
   extends LazyLogging {
 
   override def toString = "Period " + period + " " + time + " - " + description
@@ -138,11 +138,33 @@ object Event extends LazyLogging {
       .zipWithIndex.foreach(e => {
         val (event, index) = e
         rep.addTriple(event.eventUri, Ontology.EVENT_NUMBER, rep.getValueFactory.createLiteral(index + 1))
+
         if (index + 1 < events.size) {
-          rep.addTriple(event.eventUri, Ontology.NEXT_EVENT, events(index + 1).eventUri)
+          val nextEvent = events(index + 1)
+          rep.addTriple(event.eventUri, Ontology.NEXT_EVENT, nextEvent.eventUri)
+
+          if (nextEvent.period == event.period) {
+            val eventSecondsLeft = event.gamePeriodInfo.clockToSecondsLeft(nextEvent.period, nextEvent.time)
+            val nextEventSecondsLeft = event.gamePeriodInfo.clockToSecondsLeft(event.period, event.time)
+            if (nextEventSecondsLeft.isDefined && eventSecondsLeft.isDefined) {
+              val secondsUntilNextEvent = nextEventSecondsLeft.get.secondsLeftInPeriod - eventSecondsLeft.get.secondsLeftInPeriod
+              rep.addTriple(event.eventUri, Ontology.SECONDS_UNTIL_NEXT_EVENT, rep.getValueFactory.createLiteral(secondsUntilNextEvent))
+            }
+          }
         }
+
         if (index > 0) {
-          rep.addTriple(event.eventUri, Ontology.PREVIOUS_EVENT, events(index - 1).eventUri)
+          val previousEvent = events(index - 1)
+          rep.addTriple(event.eventUri, Ontology.PREVIOUS_EVENT, previousEvent.eventUri)
+
+          if (previousEvent.period == event.period) {
+            val eventSecondsLeft = event.gamePeriodInfo.clockToSecondsLeft(previousEvent.period, previousEvent.time)
+            val previousEventSecondsLeft = event.gamePeriodInfo.clockToSecondsLeft(event.period, event.time)
+            if (previousEventSecondsLeft.isDefined && eventSecondsLeft.isDefined) {
+              val secondsSincePreviousEvent = eventSecondsLeft.get.secondsLeftInPeriod - previousEventSecondsLeft.get.secondsLeftInPeriod
+              rep.addTriple(event.eventUri, Ontology.SECONDS_SINCE_PREVIOUS_EVENT, rep.getValueFactory.createLiteral(secondsSincePreviousEvent))
+            }
+          }
         }
       })
   }

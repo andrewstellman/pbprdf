@@ -116,10 +116,10 @@ SELECT * {
 
     val events = Seq(
       Event(testUri, 1, 1, "9:59", "First event Q1")(GamePeriodInfo.WNBAPeriodInfo),
-      Event(testUri, 2, 1, "7:30", "Second event Q2")(GamePeriodInfo.WNBAPeriodInfo),
-      Event(testUri, 3, 1, "5:00", "Third event Q3")(GamePeriodInfo.WNBAPeriodInfo),
-      Event(testUri, 4, 1, "2:30", "Fourth event Q4")(GamePeriodInfo.WNBAPeriodInfo),
-      Event(testUri, 5, 1, "1.0", "Last event Q5")(GamePeriodInfo.WNBAPeriodInfo))
+      Event(testUri, 2, 2, "7:30", "Second event Q2")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 3, 3, "5:00", "Third event Q3")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 4, 4, "2:30", "Fourth event Q4")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 5, 5, "1.0", "Last event Q5")(GamePeriodInfo.WNBAPeriodInfo))
 
     Event.addPreviousAndNextTriples(rep, events)
 
@@ -136,6 +136,7 @@ SELECT * {
     statements should contain(3, "eventNumber", 3)
     statements should contain(4, "eventNumber", 4)
     statements should contain(5, "eventNumber", 5)
+
     statements should contain(1, "nextEvent", 2)
     statements should contain(2, "previousEvent", 1)
     statements should contain(2, "nextEvent", 3)
@@ -146,4 +147,63 @@ SELECT * {
     statements should contain(5, "previousEvent", 4)
   }
 
+  it should "add seconds since previous and until next event" in {
+    val rep = new SailRepository(new MemoryStore)
+    rep.initialize
+
+    val testUri = TestUri.create("12345678")
+
+    val events = Seq(
+      Event(testUri, 1, 1, "2:00", "First event Q1")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 2, 1, "1:43", "Second event Q1")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 3, 1, "1:25", "Third event Q1")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 4, 2, "3:15", "First event Q2")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 5, 2, "3:01", "Second event Q2")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 6, 2, "2:59", "Third event Q2")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 7, 2, "2:59", "Fourth event Q2")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 8, 2, "1:01", "Fifth event Q2")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 9, 2, "59.7", "Sixth event Q2")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 10, 2, "37.2", "Seventh event Q2")(GamePeriodInfo.WNBAPeriodInfo),
+      Event(testUri, 11, 2, "0.0", "Eighth event Q2")(GamePeriodInfo.WNBAPeriodInfo))
+
+    Event.addPreviousAndNextTriples(rep, events)
+
+    def stripSO(s: String) = s.replaceAll("^http://stellman-greene.com/pbprdf/12345678/", "").toInt
+    def stripP(s: String) = s.replaceAll("^http://stellman-greene.com/pbprdf#", "")
+
+    val statements = rep.statements.toSeq
+      .map(s => (stripSO(s.getSubject.stringValue), stripP(s.getPredicate.stringValue), stripSO(s.getObject.stringValue)))
+      .filter(_._2.contains("seconds"))
+      .toSet
+
+    statements.size should be(18)
+    statements should contain(1, "secondsUntilNextEvent", 17)
+
+    statements should contain(2, "secondsSincePreviousEvent", 17)
+    statements should contain(2, "secondsUntilNextEvent", 18)
+
+    statements should contain(3, "secondsSincePreviousEvent", 18)
+
+    statements should contain(4, "secondsUntilNextEvent", 14)
+
+    statements should contain(5, "secondsSincePreviousEvent", 14)
+    statements should contain(5, "secondsUntilNextEvent", 2)
+
+    statements should contain(6, "secondsSincePreviousEvent", 2)
+    statements should contain(6, "secondsUntilNextEvent", 0)
+
+    statements should contain(7, "secondsSincePreviousEvent", 0)
+    statements should contain(7, "secondsUntilNextEvent", 118)
+
+    statements should contain(8, "secondsSincePreviousEvent", 118)
+    statements should contain(8, "secondsUntilNextEvent", 2)
+
+    statements should contain(9, "secondsSincePreviousEvent", 2)
+    statements should contain(9, "secondsUntilNextEvent", 22)
+
+    statements should contain(10, "secondsSincePreviousEvent", 22)
+    statements should contain(10, "secondsUntilNextEvent", 37)
+
+    statements should contain(11, "secondsSincePreviousEvent", 37)
+  }
 }

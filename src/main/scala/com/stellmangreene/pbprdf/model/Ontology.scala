@@ -417,4 +417,16 @@ object Ontology {
   @OntologyObjectProperty
   val NEXT_EVENT = valueFactory.createURI(NAMESPACE, "nextEvent")
 
+  @OntologyProperty(
+    label = "The number of seconds since the previous event",
+    domain = "http://stellman-greene.com/pbprdf#Event",
+    range = "http://www.w3.org/2001/XMLSchema#int")
+  val SECONDS_SINCE_PREVIOUS_EVENT = valueFactory.createURI(NAMESPACE, "secondsSincePreviousEvent")
+
+  @OntologyProperty(
+    label = "The number of seconds until the next event",
+    domain = "http://stellman-greene.com/pbprdf#Event",
+    range = "http://www.w3.org/2001/XMLSchema#int")
+  val SECONDS_UNTIL_NEXT_EVENT = valueFactory.createURI(NAMESPACE, "secondsUntilNextEvent")
+
 }

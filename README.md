@@ -316,10 +316,10 @@ RDF4J Console 2.3.2+496af9c
 
 2.3.2+496af9c
 Type 'help' for help.
-> create native
+> create native-rdfs
 Please specify values for the following variables:
 Repository ID [native]: pbprdf-database
-Repository title [Native store]: PBPRDF Database
+Repository title [Native store with RDF Schema inferencing]: PBPRDF Database
 Query Iteration Cache size [10000]: 
 Triple indexes [spoc,posc]: spoc,sopc,opsc,ospc,posc,psoc
 EvaluationStrategyFactory [org.eclipse.rdf4j.query.algebra.evaluation.impl.StrictEvaluationStrategyFactory]: 

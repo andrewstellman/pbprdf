@@ -136,7 +136,7 @@ Evaluating SPARQL query...
 NOTE: You may need to add `BASE` and `PREFIX` lines to the top of your query:
 ```
 BASE <http://stellman-greene.com/>
-PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
+PREFIX pbprdf: <#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 ```
 

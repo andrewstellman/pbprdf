@@ -14,6 +14,11 @@ object Ontology {
 
   val NAMESPACE = "http://stellman-greene.com/pbprdf#"
 
+  // Prefixes
+
+  @OntologyPrefix(prefix = "players")
+  val PLAYERS_PREFIX = "http://stellman-greene.com/pbprdf/players/"
+
   // Basic entity types
 
   @OntologyClass(label = "A game")

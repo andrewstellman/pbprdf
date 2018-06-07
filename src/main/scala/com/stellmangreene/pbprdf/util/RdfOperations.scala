@@ -50,7 +50,7 @@ object RdfOperations {
       val conn = repository.getConnection
       conn.getStatements(null, null, null, true).asIterator
     }
-    
+
     /**
      * Write all of the statements in the repository to a file or System.out
      *

@@ -1,34 +1,22 @@
 package com.stellmangreene.pbprdf
 
 import scala.language.postfixOps
-import scala.util.Failure
-import scala.util.Success
-import scala.util.Try
+import scala.util.{Try, Success, Failure}
 
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.ISODateTimeFormat
-import org.openrdf.model.URI
-import org.openrdf.model.vocabulary.RDF
-import org.openrdf.model.vocabulary.RDFS
-import org.openrdf.repository.Repository
-
-import com.stellmangreene.pbprdf.model.EntityUriFactory
-import com.stellmangreene.pbprdf.model.Ontology
-import com.stellmangreene.pbprdf.util.XmlHelper
-
-import com.stellmangreene.pbprdf.util.RdfOperations._
-
-import com.typesafe.scalalogging.LazyLogging
-
-import javax.xml.datatype.DatatypeFactory
+import org.joda.time._
+import org.joda.time.format._
 
 import better.files._
 
-//TODO: Add triples for the current score (e.g. "10-4") -- grep -r "CURRENTLY IGNORED" src/main/scala
+import org.openrdf.model.URI
+
+import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.util.XmlHelper
+
+import com.typesafe.scalalogging.LazyLogging
 
 /**
+ * Read an ESPN-style play-by-play file
  * @author andrewstellman
  */
 class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename: String) extends PlayByPlay with LazyLogging {
@@ -104,6 +92,10 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
 
   private val home = getTeamNameAndScore("home")
 
+  private val isWnba = home._3.toLowerCase.contains("wnba")
+
+  override val gamePeriodInfo = if (isWnba) GamePeriodInfo.WNBAPeriodInfo else GamePeriodInfo.NBAPeriodInfo
+
   /** Home team name */
   override val homeTeam = home._1
 
@@ -176,8 +168,6 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
     val homeImageFilename = findImageFilename(home._3)
     val awayImageFilename = findImageFilename(away._3)
 
-    val isWnba = home._3.toLowerCase.contains("wnba")
-
     val quarterDivs = (playByPlayRootElem \\ "li" \ "div").filter(_.attribute("id").map(_.text).getOrElse("").startsWith("gp-quarter-"))
     if (quarterDivs.size < 4) logMessageAndThrowException(s"Unable find play-by-play events (only found ${quarterDivs.size} quarters) in ${playByPlayFilename}")
 
@@ -186,16 +176,6 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
       period -> quarterDiv
     })
       .sortBy(_._1)
-
-    /** Map of period number to its length */
-    val periodLengths: Map[Int, Int] = periodsAndPlayData.groupBy(_._1).map(e => {
-      val period = e._1
-      period match {
-        case i if (i <= 4) && isWnba  => period -> 10
-        case i if (i <= 4) && !isWnba => period -> 12
-        case _                        => period -> 5
-      }
-    }).toMap
 
     periodsAndPlayData.groupBy(_._1).map(e => {
       val (period, nodes) = e
@@ -236,8 +216,6 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
 
     val eventData: Seq[Event] = eventsAndPeriods.zipWithIndex.map(e => {
       val ((period, play, timeStamp, teamName, score), eventIndex) = e
-      val periodLengthInMinutes = periodLengths.get(period).get
-      val gamePeriodInfo = if (isWnba) GamePeriodInfo.WNBAPeriodInfo else GamePeriodInfo.NBAPeriodInfo
       Event(gameUri, playByPlayFilename, eventIndex + 1, period, timeStamp, teamName, play, score, gamePeriodInfo)
     })
 
@@ -246,29 +224,6 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
     logger.debug(s"Finished reading game")
 
     eventData
-  }
-
-  /**
-   * Add the events to an RDF repository
-   *
-   * @param rep
-   *            Sesame repository to add the events to
-   */
-  override def addRdf(rep: Repository) = {
-    rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME)
-    gameLocation.foreach(location =>
-      rep.addTriple(gameUri, Ontology.GAME_LOCATION, rep.getValueFactory.createLiteral(location)))
-    rep.addTriple(gameUri, RDFS.LABEL, rep.getValueFactory.createLiteral(this.toString))
-    val gregorianGameTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(gameTime.toGregorianCalendar())
-    rep.addTriple(gameUri, Ontology.GAME_TIME, rep.getValueFactory.createLiteral(gregorianGameTime))
-
-    events.foreach(_.addRdf(rep))
-    super.addRdf(rep)
-  }
-
-  override def toString(): String = {
-    val fmt = DateTimeFormat.forPattern("YYYY-MM-dd")
-    s"${awayTeam} (${awayScore}) at ${homeTeam} (${homeScore}) on ${fmt.print(gameTime)}: ${events.size} events"
   }
 
   /** log a message and throw an InvalidPlayByPlayException */

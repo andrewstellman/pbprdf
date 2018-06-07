@@ -10,6 +10,7 @@ import org.openrdf.repository.sail.SailRepository
 import org.openrdf.sail.memory.MemoryStore
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
+import org.openrdf.repository.Repository
 
 /**
  * Object that uses the Java annotations in Ontology to build an RDF repository
@@ -23,8 +24,27 @@ object OntologyRdfRepository {
   val rep = new SailRepository(new MemoryStore)
 
   rep.initialize
+
+  addRdfPrefixes(rep)
   addRdfClasses
   addRdfProperties
+
+  /** Add all of the RDF prefixes to the repository */
+  def addRdfPrefixes(rep: Repository) = {
+
+    val ontologyPrefixes: Seq[(Field, OntologyPrefix)] = Ontology.getClass.getDeclaredFields
+      .map(field => {
+        field.setAccessible(true)
+        (field, OntologyAnnotationHelper.getOntologyPrefixAnnotation(field))
+      })
+      .filter(_._2 != null)
+
+    ontologyPrefixes.foreach(field => {
+      val prefix = field._2.prefix
+      val name = field._1.get(Ontology).toString
+      rep.getConnection.setNamespace(prefix, name)
+    })
+  }
 
   /** Add all of the RDF classes to the repository */
   private def addRdfClasses = {

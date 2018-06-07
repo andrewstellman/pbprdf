@@ -12,13 +12,19 @@ import com.stellmangreene.pbprdf.plays.EnterPlay
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
 
-import com.typesafe.scalalogging.LazyLogging
+import better.files._
 
+import com.typesafe.scalalogging.LazyLogging
+import org.joda.time.format.ISODateTimeFormat
+import org.joda.time.format.DateTimeFormat
+import javax.xml.datatype.DatatypeFactory
+
+//TODO: Add triples for the current score (e.g. "10-4") -- grep -r "CURRENTLY IGNORED" src/main/scala
 //TODO: Add triples for the box score, test against official box scores
 //TODO: Add triples for the players on the court for each possession
 
 /**
- * Play by play
+ * Play by play that can generate RDF and contents of a text file
  *
  * @author andrewstellman
  */
@@ -51,6 +57,23 @@ abstract class PlayByPlay extends LazyLogging {
   /** Game source (eg. filename) */
   val gameSource: String
 
+  /** Game period information */
+  val gamePeriodInfo: GamePeriodInfo
+
+  /** returns the league (e.g. Some("WNBA")) based on GamePeriodInfo, None if unrecognized */
+  def league = {
+    gamePeriodInfo match {
+      case GamePeriodInfo.WNBAPeriodInfo  => Some("WNBA")
+      case GamePeriodInfo.NBAPeriodInfo   => Some("NBA")
+      case GamePeriodInfo.NCAAWPeriodInfo => Some("NCAAW")
+      case GamePeriodInfo.NCAAMPeriodInfo => Some("NCAAM")
+      case _ => {
+        logger.warn("Unrecognized league")
+        None
+      }
+    }
+  }
+
   /**
    * Add the events to an RDF repository
    *
@@ -59,6 +82,12 @@ abstract class PlayByPlay extends LazyLogging {
    */
   def addRdf(rep: Repository) = {
     rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME)
+    gameLocation.foreach(location =>
+      rep.addTriple(gameUri, Ontology.GAME_LOCATION, rep.getValueFactory.createLiteral(location)))
+    rep.addTriple(gameUri, RDFS.LABEL, rep.getValueFactory.createLiteral(this.toString))
+    val gregorianGameTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(gameTime.toGregorianCalendar())
+    rep.addTriple(gameUri, Ontology.GAME_TIME, rep.getValueFactory.createLiteral(gregorianGameTime))
+    events.foreach(_.addRdf(rep))
     Event.addPreviousAndNextTriples(rep, events)
     addRosterBnodes(rep)
   }
@@ -115,6 +144,28 @@ abstract class PlayByPlay extends LazyLogging {
         logger.warn(s"Entry plays contain team ${playerTeam} that does match home team ${homeTeam} or away team ${awayTeam} in ${gameSource}")
       }
     })
+  }
+
+  /**
+   * returns the contents of a text file representation of this play-by-play, or None if the play can't be rendered correctly
+   */
+  def textFileContents: Option[Seq[String]] = {
+    val header = Seq(
+      toString,
+      s"${gameLocation.getOrElse("Unknown Location")}\t${ISODateTimeFormat.dateTime().print(gameTime)}")
+
+    val eventLines = events.map(_.getText)
+
+    Some(header ++ eventLines)
+  }
+
+  override def toString: String = {
+    val fmt = DateTimeFormat.forPattern("YYYY-MM-dd")
+    val s = s"${awayTeam} (${awayScore}) at ${homeTeam} (${homeScore}) on ${fmt.print(gameTime)}"
+    if (events.isEmpty) s"Empty Game: $s"
+    else {
+      s"${league.getOrElse("Unrecognized league")} game: $s - ${events.size} events"
+    }
   }
 
 }

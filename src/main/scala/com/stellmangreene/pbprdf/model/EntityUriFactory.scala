@@ -20,8 +20,12 @@ object EntityUriFactory {
    * Generate the URI for a game entity
    */
   def getGameUri(homeTeam: String, awayTeam: String, gameTime: DateTime): URI = {
+    valueFactory.createURI(NAMESPACE, s"games/${getGameIdentifierString(homeTeam, awayTeam, gameTime)}")
+  }
+
+  def getGameIdentifierString(homeTeam: String, awayTeam: String, gameTime: DateTime): String = {
     val fmt = DateTimeFormat.forPattern("YYYY-MM-dd")
-    valueFactory.createURI(NAMESPACE, s"games/${fmt.print(gameTime)}_${awayTeam.trim.replaceAll(" ", "_")}_at_${homeTeam.trim.replaceAll(" ", "_")}")
+    s"${fmt.print(gameTime)}_${awayTeam.trim.replaceAll(" ", "_")}_at_${homeTeam.trim.replaceAll(" ", "_")}"
   }
 
   /**

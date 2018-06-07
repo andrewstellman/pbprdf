@@ -18,7 +18,7 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  * @author andrewstellman
  */
 abstract class Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Event(gameUri: URI, eventNumber, period, time, s"${team}: ${play}")(gamePeriodInfo) {
+  extends Event(gameUri: URI, eventNumber, period, time, s"${team}: ${play}")(gamePeriodInfo, team, score, play) {
 
   /**
    * Add the type and pbprdf:team triples that every Play event must have

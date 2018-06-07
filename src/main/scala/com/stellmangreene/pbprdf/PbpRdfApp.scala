@@ -10,8 +10,13 @@ import com.stellmangreene.pbprdf.model.OntologyRdfRepository
 import com.stellmangreene.pbprdf.util.RdfOperations._
 
 import better.files._
+import org.joda.time._
+import org.joda.time.format._
 
 import com.typesafe.scalalogging.LazyLogging
+import com.stellmangreene.pbprdf.model.OntologyRdfRepository
+import com.stellmangreene.pbprdf.model.EntityUriFactory
+import org.joda.time.format.DateTimeFormat
 
 //TODO: Migrate to rdf4j - search comments for "Sesame"
 //TODO: Remove "www." from base IRI
@@ -52,6 +57,12 @@ pbprdf --ontology [filename.ttl]
 
     } else {
 
+      val fmt = DateTimeFormat.forPattern("YYYY-MM-dd_hh-mm-ss")
+      val textFileFolder = "./play-by-play-textfiles" / fmt.print(new LocalDateTime())
+      textFileFolder.createIfNotExists(true, true)
+
+      logger.info(s"Writing text files to folder ${textFileFolder.pathAsString}")
+
       val inputFolder = args(0).toFile
       if (!inputFolder.exists || !inputFolder.isDirectory)
         printUsageAndExit(Some(s"Invalid folder: ${inputFolder}"))
@@ -74,6 +85,7 @@ pbprdf --ontology [filename.ttl]
 
       var rep = new SailRepository(new MemoryStore)
       rep.initialize
+      OntologyRdfRepository.addRdfPrefixes(rep)
 
       inputFiles
         .zipWithIndex
@@ -83,6 +95,7 @@ pbprdf --ontology [filename.ttl]
           try {
             val playByPlay: PlayByPlay = new EspnPlayByPlay(inputFolder.pathAsString, playByPlayFile, gameInfoFile)
             playByPlay.addRdf(rep)
+            writeTextFile(playByPlay, textFileFolder)
           } catch {
             case e: InvalidPlayByPlayException => {
               logger.error(s"Error reading play-by-play: ${e.getMessage}")
@@ -95,6 +108,35 @@ pbprdf --ontology [filename.ttl]
       rep.writeAllStatements(outputFile)
 
       logger.info(s"Finished writing Turtle")
+      logger.info(s"Wrote text files to folder ${textFileFolder.pathAsString}")
+
     }
+  }
+
+  /**
+   * Writes this play-by-play to a file in a folder, overwriting any existing file
+   * @param folder   folder to write the file into
+   */
+  def writeTextFile(playByPlay: PlayByPlay, folder: better.files.File) = {
+
+    if (playByPlay.textFileContents.isEmpty) {
+      logger.warn(s"Did not write empty play-by-play file for ${playByPlay}")
+    } else
+
+      try {
+        val filename = EntityUriFactory.getGameIdentifierString(playByPlay.homeTeam, playByPlay.awayTeam, playByPlay.gameTime) + ".txt"
+        val file = folder / filename
+        if (file.exists) {
+          logger.info(s"Overwriting ${file.pathAsString}")
+          file.delete(true)
+        }
+        file.writeText(playByPlay.textFileContents.get.mkString("\n"))
+      } catch {
+        case t: Throwable =>
+          {
+            logger.error(s"Error writing text file for game ${toString}")
+          }
+      }
+
   }
 }

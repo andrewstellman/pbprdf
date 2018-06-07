@@ -1,12 +1,10 @@
 package com.stellmangreene.pbprdf
 
-import org.openrdf.model.Resource
-import org.openrdf.model.URI
-import org.openrdf.model.Value
-import org.openrdf.model.ValueFactory
-import org.openrdf.model.vocabulary.RDF
-import org.openrdf.model.vocabulary.RDFS
+import org.openrdf.model._
+import org.openrdf.model.vocabulary._
 import org.openrdf.repository.Repository
+
+import better.files._
 
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
@@ -19,20 +17,28 @@ import com.typesafe.scalalogging.LazyLogging
 /**
  * A play-by-play event that can be parsed into RDF triples
  *
- * @param gameID
- *        Unique ID of the game
+ * @param gameUri
+ *        URI of the game
  * @param eventNumber
  *        Sequential number of this event
  * @param period
  *        Period this occurred in (overtime starts with period 5)
- * @param team
- *        Name of the team
+ * @param time
+ *        Time of the event
  * @param description
  *        Description of the event (eg. "Washington full timeout")
+ * @param gamePeriodInfo
+ *        Period information
+ * @param team
+ *        Name of the team (to include in the text file contents for the play-by-play)
+ * @param Score
+ *        Score for the event (to include in the text file contents for the play-by-play)
+ * @param play
+ *        Trimmed text of the play (to include in the file contents for the play-by-play)
  *
  * @author andrewstellman
  */
-case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, description: String)(val gamePeriodInfo: GamePeriodInfo)
+case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, description: String)(val gamePeriodInfo: GamePeriodInfo, val team: String, val score: String, play: String)
   extends LazyLogging {
 
   override def toString = "Period " + period + " " + time + " - " + description
@@ -52,7 +58,7 @@ case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, desc
     rep.addTriples(secondsIntoGameTriple(valueFactory))
   }
 
-  /** Generate the type, period, time, and label triples that every event must have */
+  /** Generates the type, period, time, and label triples that every event must have */
   private def eventTriples(valueFactory: ValueFactory): Set[(Resource, URI, Value)] = {
     Set(
       (eventUri, RDF.TYPE, Ontology.EVENT),
@@ -72,6 +78,11 @@ case class Event(gameUri: URI, eventNumber: Int, period: Int, time: String, desc
 
     })
       .getOrElse(Set[(Resource, URI, Value)]())
+  }
+
+  /** Returns a text description of this event */
+  def getText: String = {
+    s"$team\t$period\t$time\t$score\t${play.replaceAll("\t", "    ")}"
   }
 }
 
@@ -124,7 +135,7 @@ object Event extends LazyLogging {
       case trimmedPlay if EjectionPlay.matches(trimmedPlay)             => new EjectionPlay(gameUri, eventNumber, period, time, team, trimmedPlay, score, gamePeriodInfo)
       case trimmedPlay => {
         logger.warn(s"Could not match play description in ${filename}: ${trimmedPlay}")
-        new Event(gameUri, eventNumber, period, time, trimmedPlay)(gamePeriodInfo)
+        Event(gameUri, eventNumber, period, time, trimmedPlay)(gamePeriodInfo, team, score, play)
       }
     }
   }

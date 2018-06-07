@@ -32,7 +32,7 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers {
     wnbaPlayByPlay.awayScore should be("73")
     wnbaPlayByPlay.gameLocation should be(Some("Mohegan Sun Arena"))
     wnbaPlayByPlay.gameTime should equal(new DateTime("2015-06-05T19:00:00.000-04:00"))
-    wnbaPlayByPlay.toString should be("Mystics (73) at Sun (68) on 2015-06-05: 391 events")
+    wnbaPlayByPlay.toString should be("WNBA game: Mystics (73) at Sun (68) on 2015-06-05 - 391 events")
   }
 
   it should "read information about an NBA game" in {
@@ -42,7 +42,7 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers {
     nbaPlayByPlay.awayScore should be("98")
     nbaPlayByPlay.gameLocation should be(Some("Quicken Loans Arena"))
     nbaPlayByPlay.gameTime should equal(new DateTime("2018-04-15T14:30:00.000-05:00"))
-    nbaPlayByPlay.toString should be("Pacers (98) at Cavaliers (80) on 2018-04-15: 458 events")
+    nbaPlayByPlay.toString should be("NBA game: Pacers (98) at Cavaliers (80) on 2018-04-15 - 458 events")
   }
 
   it should "read the events from the game" in {
@@ -91,7 +91,7 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers {
           "http://stellman-greene.com/pbprdf#homeTeam -> http://stellman-greene.com/pbprdf/teams/Sun",
           "http://stellman-greene.com/pbprdf#awayTeam -> http://stellman-greene.com/pbprdf/teams/Mystics",
           "http://stellman-greene.com/pbprdf#gameLocation -> Mohegan Sun Arena",
-          "http://www.w3.org/2000/01/rdf-schema#label -> Mystics (73) at Sun (68) on 2015-06-05: 391 events"))
+          "http://www.w3.org/2000/01/rdf-schema#label -> WNBA game: Mystics (73) at Sun (68) on 2015-06-05 - 391 events"))
 
     rep.executeQuery("""
 BASE <http://stellman-greene.com>
@@ -217,7 +217,25 @@ SELECT * {
           "http://stellman-greene.com/pbprdf#timeoutDuration -> Full",
           "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Sun",
           "http://www.w3.org/2000/01/rdf-schema#label -> Sun: Connecticut Full timeout"))
+  }
 
+  it should "generate a text file representation of the play-by-play" in {
+    val wnbaLines = wnbaPlayByPlay.textFileContents.get
+    wnbaLines.size should be(393)
+    wnbaLines.head should be("WNBA game: Mystics (73) at Sun (68) on 2015-06-05 - 391 events")
+    wnbaLines.drop(1).head should be("Mohegan Sun Arena\t2015-06-05T18:00:00.000-05:00")
+    wnbaLines.drop(2).head should be("Sun\t1\t10:00\t0-0\tStefanie Dolson vs. Kelsey Bone (Jasmine Thomas gains possession)")
+    wnbaLines.drop(50).head should be("Sun\t1\t3:32\t12-11\tJasmine Thomas defensive rebound")
+    wnbaLines.drop(260).head should be("Mystics\t3\t1:32\t55-49\tAlly Malott enters the game for Kayla Thornton")
+    wnbaLines.last should be("Sun\t4\t0.0\t73-68\tEnd of Game")
+
+    val nbaLines = nbaPlayByPlay.textFileContents.get
+    nbaLines.size should be(460)
+    nbaLines.head should be("NBA game: Pacers (98) at Cavaliers (80) on 2018-04-15 - 458 events")
+    nbaLines.drop(1).head should be("Quicken Loans Arena\t2018-04-15T14:30:00.000-05:00")
+    nbaLines.drop(2).head should be("Pacers\t1\t12:00\t0-0\tMyles Turner vs. Jeff Green (Thaddeus Young gains possession)")
+    nbaLines.drop(311).head should be("Cavaliers\t3\t4:01\t68-50\tKevin Love defensive rebound")
+    nbaLines.last should be("Cavaliers\t4\t0.0\t98-80\tEnd of Game")
   }
 
 }

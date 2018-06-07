@@ -43,8 +43,8 @@ class EjectionPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, te
       play match {
         case EjectionPlay.playByPlayRegex(playerEjected) => {
           Set(
-              (eventUri, RDF.TYPE, Ontology.EJECTION),
-              (eventUri, Ontology.PLAYER_EJECTED, EntityUriFactory.getPlayerUri(playerEjected)))
+            (eventUri, RDF.TYPE, Ontology.EJECTION),
+            (eventUri, Ontology.PLAYER_EJECTED, EntityUriFactory.getPlayerUri(playerEjected)))
         }
 
         case _ => { logger.warn(s"Unrecognized ejection play: ${play}"); Set() }

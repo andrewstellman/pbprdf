@@ -17,8 +17,8 @@ class GamePeriodInfoSpec extends FlatSpec with Matchers {
     GamePeriodInfo.WNBAPeriodInfo.clockToSecondsLeft(4, "8:04") should be(Some(EventTimes(1916, 484)))
     GamePeriodInfo.WNBAPeriodInfo.clockToSecondsLeft(4, "3.6") should be(Some(EventTimes(2397, 3)))
   }
-  
-    it should "convert a clock to seconds left in NBA regulation" in {
+
+  it should "convert a clock to seconds left in NBA regulation" in {
     GamePeriodInfo.NBAPeriodInfo.clockToSecondsLeft(1, "12:00") should be(Some(EventTimes(0, 720)))
     GamePeriodInfo.NBAPeriodInfo.clockToSecondsLeft(1, "10:00") should be(Some(EventTimes(120, 600)))
     GamePeriodInfo.NBAPeriodInfo.clockToSecondsLeft(1, "8:28") should be(Some(EventTimes(212, 508)))

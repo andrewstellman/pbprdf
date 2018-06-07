@@ -26,6 +26,18 @@ public class OntologyAnnotationHelper {
 		return field.getAnnotation(OntologyObjectProperty.class) != null;
 	}
 
+	public static OntologyPrefix getOntologyPrefixAnnotation(Field field) {
+		return field.getAnnotation(OntologyPrefix.class);
+	}
+
+	public static String getPrefix(Field field) {
+		OntologyPrefix ontologyPrefix = field.getAnnotation(OntologyPrefix.class);
+		if (ontologyPrefix == null)
+			return null;
+		else
+			return ontologyPrefix.prefix();
+	}
+
 	public static String getComment(Field field) {
 		OntologyComment ontologyComment = field.getAnnotation(OntologyComment.class);
 		if (ontologyComment == null)

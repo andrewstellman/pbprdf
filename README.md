@@ -1,9 +1,9 @@
 # pbprdf
 Generate RDF for NBA or WNBA basketball play-by-play data by reading a folder full of ESPN-style play-by-play HTML pages (eg. [Pacers vs. Cavaliers, April 15, 2018](http://tv5.espn.com/nba/playbyplay?gameId=401029417) or [Mystics vs. Sun, June 5, 2015](http://scores.espn.go.com/wnba/playbyplay?gameId=400610636)), processing each play in each game file, and generating a Turtle file that contains all of the plays from each game.
 
-Here's an article by that explains gives some more detail about the project: [NBA analytics and RDF graphs: Game, data, and metadata evolution, and Occam's razor](https://www.zdnet.com/article/nba-analytics-and-rdf-graphs-game-data-and-metadata-evolution-and-occams-razor/)
+Here's an article by that explains gives some more detail about the project: *[NBA analytics and RDF graphs: Game, data, and metadata evolution, and Occam's razor](https://www.zdnet.com/article/nba-analytics-and-rdf-graphs-game-data-and-metadata-evolution-and-occams-razor/)*
 
-Here's an example of an analysis that you can do with pbprdf: [Analysis: 3-point shot percentage after other team makes or misses](https://gist.github.com/andrewstellman/4872dbb9dc7593e56abddbe8b998b509)
+Here's an example of an analysis that you can do with pbprdf: *[Analysis: 3-point shot percentage after other team makes or misses](https://gist.github.com/andrewstellman/4872dbb9dc7593e56abddbe8b998b509)*
 
 
 Install and run

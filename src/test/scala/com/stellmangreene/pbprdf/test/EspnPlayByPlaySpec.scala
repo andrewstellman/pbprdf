@@ -22,8 +22,9 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers {
 
   behavior of "EspnPlayByPlay"
 
-  var wnbaPlayByPlay = new EspnPlayByPlay(path, "400610636.html", "400610636-gameinfo.html")
-  var nbaPlayByPlay = new EspnPlayByPlay(path, "401029417.html", "401029417-gameinfo.html")
+  lazy val wnbaPlayByPlay = new EspnPlayByPlay(path, "400610636.html", "400610636-gameinfo.html")
+  lazy val nbaPlayByPlay = new EspnPlayByPlay(path, "401029417.html", "401029417-gameinfo.html")
+  lazy val wnbaPlayByPlay_malformedTeamContainer = new EspnPlayByPlay(path, "400927553.html", "400927553-gameinfo.html")
 
   it should "read information about a WNBA game" in {
     wnbaPlayByPlay.homeTeam should be("Sun")
@@ -43,6 +44,17 @@ class EspnPlayByPlaySpec extends FlatSpec with Matchers {
     nbaPlayByPlay.gameLocation should be(Some("Quicken Loans Arena"))
     nbaPlayByPlay.gameTime should equal(new DateTime("2018-04-15T14:30:00.000-05:00"))
     nbaPlayByPlay.toString should be("NBA game: Pacers (98) at Cavaliers (80) on 2018-04-15 - 458 events")
+  }
+
+  it should "read information about a WNBA game with a malformed team-container" in {
+    // 400927553.html contains a team-container for San Antonio that doesn't have an href, just an img
+    wnbaPlayByPlay_malformedTeamContainer.homeTeam should be("Stars")
+    wnbaPlayByPlay_malformedTeamContainer.homeScore should be("84")
+    wnbaPlayByPlay_malformedTeamContainer.awayTeam should be("Dream")
+    wnbaPlayByPlay_malformedTeamContainer.awayScore should be("68")
+    wnbaPlayByPlay_malformedTeamContainer.gameLocation should be(Some("AT&T Center"))
+    wnbaPlayByPlay_malformedTeamContainer.gameTime should equal(new DateTime("2017-08-12T19:00:00.000-05:00"))
+    wnbaPlayByPlay_malformedTeamContainer.toString should be("WNBA game: Dream (68) at Stars (84) on 2017-08-12 - 350 events")
   }
 
   it should "read the events from the game" in {

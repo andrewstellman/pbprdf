@@ -1,7 +1,7 @@
 package com.stellmangreene.pbprdf
 
 import scala.language.postfixOps
-import scala.util.{Try, Success, Failure}
+import scala.util.{ Try, Success, Failure }
 
 import org.joda.time._
 import org.joda.time.format._
@@ -59,48 +59,64 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
     }
   }
 
-  def getTeamNameAndScore(teamType: String) = {
+  /** returned by getTeamNameAndScore */
+  private case class TeamNameAndScoreInfo(name: String, score: String, pngFilename: String, isWnba: Boolean)
+
+  /** extracts the team name, score, and image filename (*.png) for a team */
+  private def getTeamNameAndScore(teamType: String): TeamNameAndScoreInfo = {
     val teamNode = XmlHelper.getElemByClassAndTag(divs, s"team $teamType", "div")
     if (teamNode.isEmpty) logMessageAndThrowException(s"Unable to find ${teamType} team name in ${playByPlayFilename}")
 
     val teamContainer = teamNode.get.find(_.attribute("class").mkString == "team-container")
     if (teamContainer.isEmpty) logMessageAndThrowException(s"Unable to find team-container for ${teamType} team name in ${playByPlayFilename}")
 
-    val nameContainer = teamContainer.get \ "div" \ "div" \ "a"
+    val foundWnba = teamContainer.mkString.toLowerCase.contains("wnba")
 
-    val teamHref = nameContainer.head.attribute("href")
-    if (teamHref.isEmpty) logMessageAndThrowException(s"Unable to find team href for ${teamType} team name in ${playByPlayFilename}")
-
-    val nameSpan = nameContainer \ "span"
+    val nameSpan = teamContainer.get \\ "span"
     val name = nameSpan.find(_.attribute("class").mkString == "short-name").get.text
+    val pngRegex = ".*/([A-Za-z]+\\.png).*".r
+    val img = (teamContainer.get \\ "img")
+      .find(_.attribute("src").isDefined)
+      .map(_.attribute("src").mkString)
+
+    val pngFilename = img match {
+      case Some(s) if pngRegex.pattern.matcher(s).matches => {
+        pngRegex.findAllIn(s).group(1)
+      }
+      case _ => logMessageAndThrowException(s"Unable to find name container for ${teamType} team name in ${playByPlayFilename}")
+    }
 
     val scoreContainer = teamNode.get.find(_.attribute("class").mkString == "score-container")
     if (teamContainer.isEmpty) logMessageAndThrowException(s"Unable to find score-container for ${teamType} team name in ${playByPlayFilename}")
 
     val score = (scoreContainer.get \ "div").text
 
-    (name, score, teamHref.get.mkString)
+    TeamNameAndScoreInfo(name, score, pngFilename, foundWnba)
   }
 
   private val away = getTeamNameAndScore("away")
 
   /** Away team name */
-  override val awayTeam = away._1
+  override val awayTeam = away.name
 
   /** Away team score */
-  override val awayScore = away._2
+  override val awayScore = away.score
+
+  private val awayImageFilename = away.pngFilename
 
   private val home = getTeamNameAndScore("home")
 
-  private val isWnba = home._3.toLowerCase.contains("wnba")
+  private val isWnba = home.isWnba
 
   override val gamePeriodInfo = if (isWnba) GamePeriodInfo.WNBAPeriodInfo else GamePeriodInfo.NBAPeriodInfo
 
   /** Home team name */
-  override val homeTeam = home._1
+  override val homeTeam = home.name
 
   /** Home team score */
-  override val homeScore = home._2
+  override val homeScore = home.score
+
+  private val homeImageFilename = home.pngFilename
 
   private val dataDateSpan = XmlHelper.getElemByClassAndTag(gameinfoDivs, "game-date-time", "span")
   if (dataDateSpan.isEmpty || dataDateSpan.get.isEmpty || dataDateSpan.get.head.attribute("data-date").isEmpty)
@@ -143,30 +159,6 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
 
   private def readEvents(): Seq[Event] = {
     logger.debug("Reading game: " + (awayTeam, awayScore, homeTeam, homeScore).toString)
-
-    val pngRegex = """/[a-z]+\.png""".r
-
-    /** find the image filename, needed to identify the team for each play */
-    def findImageFilename(href: String): String = {
-      val imgSrcs =
-        (gameinfoDivs \\ "a").
-          filter(_.attribute("href").mkString == href)
-          .map(_ \ "img").filter(!_.isEmpty)
-          .flatten
-          .map(_.attribute("src").mkString)
-
-      val matches = imgSrcs
-        .map(pngRegex.findFirstIn(_))
-        .filter(_.isDefined)
-        .map(_.get)
-
-      if (matches.isEmpty) logMessageAndThrowException(s"Unable to find image for $href in ${playByPlayFilename}")
-
-      matches.head
-    }
-
-    val homeImageFilename = findImageFilename(home._3)
-    val awayImageFilename = findImageFilename(away._3)
 
     val quarterDivs = (playByPlayRootElem \\ "li" \ "div").filter(_.attribute("id").map(_.text).getOrElse("").startsWith("gp-quarter-"))
     if (quarterDivs.size < 4) logMessageAndThrowException(s"Unable find play-by-play events (only found ${quarterDivs.size} quarters) in ${playByPlayFilename}")

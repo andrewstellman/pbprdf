@@ -12,7 +12,6 @@ import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import org.eclipse.rdf4j.model.vocabulary.RDF
 
-
 /**
  * A play that represents a block
  * <p>

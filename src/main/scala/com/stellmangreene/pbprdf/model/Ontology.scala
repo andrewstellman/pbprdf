@@ -9,7 +9,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory
  */
 object Ontology {
 
-  private val valueFactory = SimpleValueFactory.getInstance  
+  private val valueFactory = SimpleValueFactory.getInstance
 
   val NAMESPACE = "http://stellman-greene.com/pbprdf#"
 

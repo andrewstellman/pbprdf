@@ -19,13 +19,13 @@ class EventSpec extends FlatSpec with Matchers {
 
   behavior of "an instance of Event"
 
-  it should "generate the event URI" in {
-    val event = Event(TestUri.create("400610636"), 38, 1, "4:56", "Official timeout")(GamePeriodInfo.WNBAPeriodInfo, "", "", "")
-    event.eventUri.stringValue should be("http://stellman-greene.com/pbprdf/400610636/38")
+  it should "generate the event IRI" in {
+    val event = Event(TestIri.create("400610636"), 38, 1, "4:56", "Official timeout")(GamePeriodInfo.WNBAPeriodInfo, "", "", "")
+    event.eventIri.stringValue should be("http://stellman-greene.com/pbprdf/400610636/38")
   }
 
   it should "populate the event fields" in {
-    val event = Event(TestUri.create("400610636"), 38, 1, "4:56", "Official timeout")(GamePeriodInfo.WNBAPeriodInfo, "", "", "")
+    val event = Event(TestIri.create("400610636"), 38, 1, "4:56", "Official timeout")(GamePeriodInfo.WNBAPeriodInfo, "", "", "")
     event.eventNumber should be(38)
     event.period should be(1)
     event.time should be("4:56")
@@ -35,9 +35,9 @@ class EventSpec extends FlatSpec with Matchers {
     var rep = new SailRepository(new MemoryStore)
     rep.initialize
 
-    val testUri = TestUri.create("400610636")
-    Event(testUri, 38, 1, "4:56", "Unmatched event")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(testUri, 119, 2, "7:05", "Unmatched event 2")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    val testIri = TestIri.create("400610636")
+    Event(testIri, 38, 1, "4:56", "Unmatched event")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(testIri, 119, 2, "7:05", "Unmatched event 2")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
 
     rep
       .executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/38> ?p ?o }")
@@ -45,7 +45,7 @@ class EventSpec extends FlatSpec with Matchers {
       .toSet should be(
         Set(
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 1",
           "http://stellman-greene.com/pbprdf#time -> 4:56",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 304",
@@ -58,7 +58,7 @@ class EventSpec extends FlatSpec with Matchers {
       .toSet should be(
         Set(
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 2",
           "http://stellman-greene.com/pbprdf#time -> 7:05",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 775",
@@ -70,19 +70,19 @@ class EventSpec extends FlatSpec with Matchers {
     var rep = new SailRepository(new MemoryStore)
     rep.initialize
 
-    Event(TestUri.create("X"), 1, 1, "10:00", "1st quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 25, 1, "0:00", "end of 1st quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 50, 2, "10:00", "2nd quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 75, 2, "5:00", "halfway through 2nd quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 100, 3, "10:00", "3rd quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 150, 4, "10:00", "4th quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 175, 4, "0:00", "end of 4th quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 200, 5, "5:00", "first overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 225, 5, "0:00", "end of first overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 250, 6, "5:00", "second overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 275, 6, "2:30", "halfway through second overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 300, 7, "5:00", "third overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
-    Event(TestUri.create("X"), 350, 7, "0:00", "end of third overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 1, 1, "10:00", "1st quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 25, 1, "0:00", "end of 1st quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 50, 2, "10:00", "2nd quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 75, 2, "5:00", "halfway through 2nd quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 100, 3, "10:00", "3rd quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 150, 4, "10:00", "4th quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 175, 4, "0:00", "end of 4th quarter")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 200, 5, "5:00", "first overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 225, 5, "0:00", "end of first overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 250, 6, "5:00", "second overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 275, 6, "2:30", "halfway through second overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 300, 7, "5:00", "third overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
+    Event(TestIri.create("X"), 350, 7, "0:00", "end of third overtime")(GamePeriodInfo.WNBAPeriodInfo, "", "", "").addRdf(rep)
 
     rep
       .executeQuery("""
@@ -112,14 +112,14 @@ SELECT * {
     val rep = new SailRepository(new MemoryStore)
     rep.initialize
 
-    val testUri = TestUri.create("12345678")
+    val testIri = TestIri.create("12345678")
 
     val events = Seq(
-      Event(testUri, 1, 1, "9:59", "First event Q1")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 2, 2, "7:30", "Second event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 3, 3, "5:00", "Third event Q3")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 4, 4, "2:30", "Fourth event Q4")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 5, 5, "1.0", "Last event Q5")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""))
+      Event(testIri, 1, 1, "9:59", "First event Q1")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 2, 2, "7:30", "Second event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 3, 3, "5:00", "Third event Q3")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 4, 4, "2:30", "Fourth event Q4")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 5, 5, "1.0", "Last event Q5")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""))
 
     Event.addPreviousAndNextTriples(rep, events)
 
@@ -151,20 +151,20 @@ SELECT * {
     val rep = new SailRepository(new MemoryStore)
     rep.initialize
 
-    val testUri = TestUri.create("12345678")
+    val testIri = TestIri.create("12345678")
 
     val events = Seq(
-      Event(testUri, 1, 1, "2:00", "First event Q1")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 2, 1, "1:43", "Second event Q1")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 3, 1, "1:25", "Third event Q1")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 4, 2, "3:15", "First event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 5, 2, "3:01", "Second event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 6, 2, "2:59", "Third event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 7, 2, "2:59", "Fourth event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 8, 2, "1:01", "Fifth event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 9, 2, "59.7", "Sixth event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 10, 2, "37.2", "Seventh event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
-      Event(testUri, 11, 2, "0.0", "Eighth event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""))
+      Event(testIri, 1, 1, "2:00", "First event Q1")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 2, 1, "1:43", "Second event Q1")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 3, 1, "1:25", "Third event Q1")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 4, 2, "3:15", "First event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 5, 2, "3:01", "Second event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 6, 2, "2:59", "Third event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 7, 2, "2:59", "Fourth event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 8, 2, "1:01", "Fifth event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 9, 2, "59.7", "Sixth event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 10, 2, "37.2", "Seventh event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""),
+      Event(testIri, 11, 2, "0.0", "Eighth event Q2")(GamePeriodInfo.WNBAPeriodInfo, "", "", ""))
 
     Event.addPreviousAndNextTriples(rep, events)
 

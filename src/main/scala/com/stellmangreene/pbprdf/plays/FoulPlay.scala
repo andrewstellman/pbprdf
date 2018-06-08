@@ -1,13 +1,13 @@
 package com.stellmangreene.pbprdf.plays
 
 import org.eclipse.rdf4j.model.Resource
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.repository.Repository
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
@@ -41,54 +41,54 @@ import com.typesafe.scalalogging.LazyLogging
  *
  * @author andrewstellman
  */
-class FoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+class FoulPlay(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {
-    val triples: Set[(Resource, URI, Value)] =
+    val triples: Set[(Resource, IRI, Value)] =
       play match {
         case FoulPlay.playByPlayRegex(committedBy, foulType, drawnByGroup) => {
 
           val drawnByRegex = """ +\((.*) draws the foul\)""".r
 
-          val drawnByTriple: Set[(Resource, URI, Value)] =
+          val drawnByTriple: Set[(Resource, IRI, Value)] =
             drawnByGroup match {
-              case drawnByRegex(drawnBy) => Set((eventUri, Ontology.FOUL_DRAWN_BY, EntityUriFactory.getPlayerUri(drawnBy)))
+              case drawnByRegex(drawnBy) => Set((eventIri, Ontology.FOUL_DRAWN_BY, EntityIriFactory.getPlayerIri(drawnBy)))
               case _                     => Set()
             }
 
-          val isShootingFoulTriple: Set[(Resource, URI, Value)] =
+          val isShootingFoulTriple: Set[(Resource, IRI, Value)] =
             if (foulType.trim == "shooting foul")
-              Set((eventUri, Ontology.IS_SHOOTING_FOUL, rep.getValueFactory.createLiteral(true)))
+              Set((eventIri, Ontology.IS_SHOOTING_FOUL, rep.getValueFactory.createLiteral(true)))
             else
               Set()
 
-          val isPersonalBlockingFoulTriple: Set[(Resource, URI, Value)] =
+          val isPersonalBlockingFoulTriple: Set[(Resource, IRI, Value)] =
             if (foulType.trim == "personal blocking foul")
-              Set((eventUri, Ontology.IS_PERSONAL_BLOCKING_FOUL, rep.getValueFactory.createLiteral(true)))
+              Set((eventIri, Ontology.IS_PERSONAL_BLOCKING_FOUL, rep.getValueFactory.createLiteral(true)))
             else
               Set()
 
-          val offensiveTriples: Set[(Resource, URI, Value)] =
+          val offensiveTriples: Set[(Resource, IRI, Value)] =
             if (foulType.trim == "offensive foul")
-              Set((eventUri, Ontology.IS_OFFENSIVE, rep.getValueFactory.createLiteral(true)))
+              Set((eventIri, Ontology.IS_OFFENSIVE, rep.getValueFactory.createLiteral(true)))
             else if (foulType.trim.toLowerCase == "offensive charge") {
               Set(
-                (eventUri, Ontology.IS_OFFENSIVE, rep.getValueFactory.createLiteral(true)),
-                (eventUri, Ontology.IS_CHARGE, rep.getValueFactory.createLiteral(true)))
+                (eventIri, Ontology.IS_OFFENSIVE, rep.getValueFactory.createLiteral(true)),
+                (eventIri, Ontology.IS_CHARGE, rep.getValueFactory.createLiteral(true)))
             } else
               Set()
 
-          val looseBallTriple: Set[(Resource, URI, Value)] =
+          val looseBallTriple: Set[(Resource, IRI, Value)] =
             if (foulType.trim == "loose ball foul")
-              Set((eventUri, Ontology.IS_LOOSE_BALL_FOUL, rep.getValueFactory.createLiteral(true)))
+              Set((eventIri, Ontology.IS_LOOSE_BALL_FOUL, rep.getValueFactory.createLiteral(true)))
             else
               Set()
 
           Set(
-            (eventUri, RDF.TYPE, Ontology.FOUL),
-            (eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy))) ++
+            (eventIri, RDF.TYPE, Ontology.FOUL),
+            (eventIri, Ontology.FOUL_COMMITTED_BY, EntityIriFactory.getPlayerIri(committedBy))) ++
             drawnByTriple ++ isShootingFoulTriple ++ isPersonalBlockingFoulTriple ++ offensiveTriples ++ looseBallTriple
         }
         case _ => { logger.warn(s"Unrecognized foul play: ${play}"); Set() }

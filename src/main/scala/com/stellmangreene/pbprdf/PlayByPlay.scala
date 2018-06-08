@@ -1,12 +1,12 @@
 package com.stellmangreene.pbprdf
 
 import org.joda.time.DateTime
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.model.vocabulary.RDFS
 import org.eclipse.rdf4j.repository.Repository
 
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.stellmangreene.pbprdf.plays.EnterPlay
 
@@ -33,8 +33,8 @@ abstract class PlayByPlay extends LazyLogging {
   /** Events from the play-by-play */
   val events: Seq[Event]
 
-  /** URI of this game */
-  val gameUri: URI
+  /** IRI of this game */
+  val gameIri: IRI
 
   /** Name of the home team */
   val homeTeam: String
@@ -78,15 +78,15 @@ abstract class PlayByPlay extends LazyLogging {
    * Add the events to an RDF repository
    *
    * @param rep
-   *            Sesame repository to add the events to
+   *            rdf4j repository to add the events to
    */
   def addRdf(rep: Repository) = {
-    rep.addTriple(gameUri, RDF.TYPE, Ontology.GAME)
+    rep.addTriple(gameIri, RDF.TYPE, Ontology.GAME)
     gameLocation.foreach(location =>
-      rep.addTriple(gameUri, Ontology.GAME_LOCATION, rep.getValueFactory.createLiteral(location)))
-    rep.addTriple(gameUri, RDFS.LABEL, rep.getValueFactory.createLiteral(this.toString))
+      rep.addTriple(gameIri, Ontology.GAME_LOCATION, rep.getValueFactory.createLiteral(location)))
+    rep.addTriple(gameIri, RDFS.LABEL, rep.getValueFactory.createLiteral(this.toString))
     val gregorianGameTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(gameTime.toGregorianCalendar())
-    rep.addTriple(gameUri, Ontology.GAME_TIME, rep.getValueFactory.createLiteral(gregorianGameTime))
+    rep.addTriple(gameIri, Ontology.GAME_TIME, rep.getValueFactory.createLiteral(gregorianGameTime))
     events.foreach(_.addRdf(rep))
     Event.addPreviousAndNextTriples(rep, events)
     addRosterBnodes(rep)
@@ -97,25 +97,25 @@ abstract class PlayByPlay extends LazyLogging {
    * add a bnode for each roster
    *
    * @param rep
-   *            Sesame repository to add the events to
+   *            rdf4j repository to add the events to
    */
   protected def addRosterBnodes(rep: Repository) = {
 
     val homeTeamRosterBnode = rep.getValueFactory.createBNode
     val awayTeamRosterBnode = rep.getValueFactory.createBNode
 
-    rep.addTriple(EntityUriFactory.getTeamUri(homeTeam), RDF.TYPE, Ontology.TEAM)
-    rep.addTriple(gameUri, Ontology.HOME_TEAM, EntityUriFactory.getTeamUri(homeTeam))
-    rep.addTriple(gameUri, Ontology.HAS_HOME_TEAM_ROSTER, homeTeamRosterBnode)
+    rep.addTriple(EntityIriFactory.getTeamIri(homeTeam), RDF.TYPE, Ontology.TEAM)
+    rep.addTriple(gameIri, Ontology.HOME_TEAM, EntityIriFactory.getTeamIri(homeTeam))
+    rep.addTriple(gameIri, Ontology.HAS_HOME_TEAM_ROSTER, homeTeamRosterBnode)
     rep.addTriple(homeTeamRosterBnode, RDF.TYPE, Ontology.ROSTER)
-    rep.addTriple(homeTeamRosterBnode, Ontology.ROSTER_TEAM, EntityUriFactory.getTeamUri(homeTeam))
+    rep.addTriple(homeTeamRosterBnode, Ontology.ROSTER_TEAM, EntityIriFactory.getTeamIri(homeTeam))
     rep.addTriple(homeTeamRosterBnode, RDFS.LABEL, rep.getValueFactory.createLiteral(homeTeam))
 
-    rep.addTriple(EntityUriFactory.getTeamUri(awayTeam), RDF.TYPE, Ontology.TEAM)
-    rep.addTriple(gameUri, Ontology.AWAY_TEAM, EntityUriFactory.getTeamUri(awayTeam))
-    rep.addTriple(gameUri, Ontology.HAS_AWAY_TEAM_ROSTER, awayTeamRosterBnode)
+    rep.addTriple(EntityIriFactory.getTeamIri(awayTeam), RDF.TYPE, Ontology.TEAM)
+    rep.addTriple(gameIri, Ontology.AWAY_TEAM, EntityIriFactory.getTeamIri(awayTeam))
+    rep.addTriple(gameIri, Ontology.HAS_AWAY_TEAM_ROSTER, awayTeamRosterBnode)
     rep.addTriple(awayTeamRosterBnode, RDF.TYPE, Ontology.ROSTER)
-    rep.addTriple(awayTeamRosterBnode, Ontology.ROSTER_TEAM, EntityUriFactory.getTeamUri(awayTeam))
+    rep.addTriple(awayTeamRosterBnode, Ontology.ROSTER_TEAM, EntityIriFactory.getTeamIri(awayTeam))
     rep.addTriple(awayTeamRosterBnode, RDFS.LABEL, rep.getValueFactory.createLiteral(awayTeam))
 
     val playerTeamMap: Map[String, String] = events
@@ -127,19 +127,19 @@ abstract class PlayByPlay extends LazyLogging {
 
     val teams = playerTeamMap.values.toSeq.distinct
     if (teams.size != 2)
-      logger.warn(s"Found entry plays with invalid number of teams ${teams.size} for game <${gameUri}> in ${gameSource}")
+      logger.warn(s"Found entry plays with invalid number of teams ${teams.size} for game <${gameIri}> in ${gameSource}")
 
     val players = playerTeamMap.keys.toSeq.distinct
     players.foreach(player => {
-      rep.addTriple(EntityUriFactory.getPlayerUri(player), RDFS.LABEL, rep.getValueFactory.createLiteral(player.trim))
+      rep.addTriple(EntityIriFactory.getPlayerIri(player), RDFS.LABEL, rep.getValueFactory.createLiteral(player.trim))
 
       val playerTeam = playerTeamMap.get(player).get
-      val playerUri = EntityUriFactory.getPlayerUri(player)
-      rep.addTriple(playerUri, RDF.TYPE, Ontology.PLAYER)
+      val playerIri = EntityIriFactory.getPlayerIri(player)
+      rep.addTriple(playerIri, RDF.TYPE, Ontology.PLAYER)
       if (playerTeam == homeTeam) {
-        rep.addTriple(homeTeamRosterBnode, Ontology.HAS_PLAYER, playerUri)
+        rep.addTriple(homeTeamRosterBnode, Ontology.HAS_PLAYER, playerIri)
       } else if (playerTeam == awayTeam) {
-        rep.addTriple(awayTeamRosterBnode, Ontology.HAS_PLAYER, playerUri)
+        rep.addTriple(awayTeamRosterBnode, Ontology.HAS_PLAYER, playerIri)
       } else {
         logger.warn(s"Entry plays contain team ${playerTeam} that does match home team ${homeTeam} or away team ${awayTeam} in ${gameSource}")
       }

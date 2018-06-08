@@ -1,13 +1,13 @@
 package com.stellmangreene.pbprdf.plays
 
 import org.eclipse.rdf4j.model.Resource
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.repository.Repository
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.typesafe.scalalogging.LazyLogging
 
@@ -42,12 +42,12 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  *
  * @author andrewstellman
  */
-class ShotPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+class ShotPlay(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {
-    val triples: Set[(Resource, URI, Value)] =
+    val triples: Set[(Resource, IRI, Value)] =
       play match {
         case ShotPlay.playByPlayRegex(player, makesMisses, shotType, assists) => {
           logger.debug(s"Parsing shot from play: ${play}")
@@ -58,33 +58,33 @@ class ShotPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: 
             else
               false
 
-          val pointsTriple: Set[(Resource, URI, Value)] =
+          val pointsTriple: Set[(Resource, IRI, Value)] =
             if (shotType.contains("free throw"))
-              Set((eventUri, Ontology.SHOT_POINTS, rep.getValueFactory.createLiteral(1)))
+              Set((eventIri, Ontology.SHOT_POINTS, rep.getValueFactory.createLiteral(1)))
             else if (shotType.contains("three point"))
-              Set((eventUri, Ontology.SHOT_POINTS, rep.getValueFactory.createLiteral(3)))
+              Set((eventIri, Ontology.SHOT_POINTS, rep.getValueFactory.createLiteral(3)))
             else
-              Set((eventUri, Ontology.SHOT_POINTS, rep.getValueFactory.createLiteral(2)))
+              Set((eventIri, Ontology.SHOT_POINTS, rep.getValueFactory.createLiteral(2)))
 
           val assistsRegex = """ *\( *(.*) assists\)""".r
 
-          val assistedByTriple: Set[(Resource, URI, Value)] =
+          val assistedByTriple: Set[(Resource, IRI, Value)] =
             assists match {
               case assistsRegex(assistedBy) =>
-                Set((eventUri, Ontology.SHOT_ASSISTED_BY, EntityUriFactory.getPlayerUri(assistedBy)))
+                Set((eventIri, Ontology.SHOT_ASSISTED_BY, EntityIriFactory.getPlayerIri(assistedBy)))
               case _ => Set()
             }
 
-          val shotTypeTriple: Set[(Resource, URI, Value)] =
+          val shotTypeTriple: Set[(Resource, IRI, Value)] =
             if (!shotType.trim.isEmpty)
-              Set((eventUri, Ontology.SHOT_TYPE, rep.getValueFactory.createLiteral(shotType.trim)))
+              Set((eventIri, Ontology.SHOT_TYPE, rep.getValueFactory.createLiteral(shotType.trim)))
             else
               Set()
 
           Set(
-            (eventUri, RDF.TYPE, Ontology.SHOT),
-            (eventUri, Ontology.SHOT_BY, EntityUriFactory.getPlayerUri(player)),
-            (eventUri, Ontology.SHOT_MADE, rep.getValueFactory.createLiteral(made))) ++
+            (eventIri, RDF.TYPE, Ontology.SHOT),
+            (eventIri, Ontology.SHOT_BY, EntityIriFactory.getPlayerIri(player)),
+            (eventIri, Ontology.SHOT_MADE, rep.getValueFactory.createLiteral(made))) ++
             pointsTriple ++
             shotTypeTriple ++
             assistedByTriple

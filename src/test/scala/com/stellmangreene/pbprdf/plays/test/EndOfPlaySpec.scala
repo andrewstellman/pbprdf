@@ -6,7 +6,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
 import com.stellmangreene.pbprdf.plays.EndOfPlay
-import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.test.TestIri
 import com.stellmangreene.pbprdf.GamePeriodInfo
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
@@ -25,8 +25,8 @@ class EndOfPlaySpec extends FlatSpec with Matchers {
   rep.initialize
 
   it should "parse an official timeout" in {
-    val testUri = TestUri.create("400610636")
-    val play = new EndOfPlay(testUri, 125, 2, "0.0", "Mystics", "End of the 2nd Quarter", "44-40", GamePeriodInfo.WNBAPeriodInfo)
+    val testIri = TestIri.create("400610636")
+    val play = new EndOfPlay(testIri, 125, 2, "0.0", "Mystics", "End of the 2nd Quarter", "44-40", GamePeriodInfo.WNBAPeriodInfo)
     play.addRdf(rep)
 
     val statements = rep
@@ -39,7 +39,7 @@ class EndOfPlaySpec extends FlatSpec with Matchers {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#EndOfPeriod",
-        s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+        s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
         "http://stellman-greene.com/pbprdf#period -> 2",
         "http://stellman-greene.com/pbprdf#time -> 0.0",
         "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1200",
@@ -50,8 +50,8 @@ class EndOfPlaySpec extends FlatSpec with Matchers {
   }
 
   it should "parse a full timeout" in {
-    val testUri = TestUri.create("400610636")
-    val play = new EndOfPlay(testUri, 391, 4, "0.0", "Mystics", "End of Game", "73-68", GamePeriodInfo.WNBAPeriodInfo)
+    val testIri = TestIri.create("400610636")
+    val play = new EndOfPlay(testIri, 391, 4, "0.0", "Mystics", "End of Game", "73-68", GamePeriodInfo.WNBAPeriodInfo)
     play.addRdf(rep)
 
     val statements = rep
@@ -64,7 +64,7 @@ class EndOfPlaySpec extends FlatSpec with Matchers {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#EndOfGame",
-        s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+        s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
         "http://stellman-greene.com/pbprdf#period -> 4",
         "http://stellman-greene.com/pbprdf#time -> 0.0",
         "http://stellman-greene.com/pbprdf#secondsIntoGame -> 2400",

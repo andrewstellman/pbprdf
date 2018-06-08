@@ -8,9 +8,9 @@ import org.joda.time.format._
 
 import better.files._
 
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.util.XmlHelper
 
 import com.typesafe.scalalogging.LazyLogging
@@ -151,8 +151,8 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
     }
   }
 
-  /** URI of this game */
-  val gameUri: URI = EntityUriFactory.getGameUri(homeTeam, awayTeam, gameTime)
+  /** IRI of this game */
+  val gameIri: IRI = EntityIriFactory.getGameIri(homeTeam, awayTeam, gameTime)
 
   /** Events from the play-by-play */
   override val events: Seq[Event] = readEvents()
@@ -208,7 +208,7 @@ class EspnPlayByPlay(path: String, playByPlayFilename: String, gameInfoFilename:
 
     val eventData: Seq[Event] = eventsAndPeriods.zipWithIndex.map(e => {
       val ((period, play, timeStamp, teamName, score), eventIndex) = e
-      Event(gameUri, playByPlayFilename, eventIndex + 1, period, timeStamp, teamName, play, score, gamePeriodInfo)
+      Event(gameIri, playByPlayFilename, eventIndex + 1, period, timeStamp, teamName, play, score, gamePeriodInfo)
     })
 
     if (eventData.isEmpty)

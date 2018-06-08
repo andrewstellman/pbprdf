@@ -1,7 +1,7 @@
 package com.stellmangreene.pbprdf.plays
 
 import org.eclipse.rdf4j.model.Resource
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.repository.Repository
 import org.eclipse.rdf4j.model.vocabulary.RDF
@@ -33,17 +33,17 @@ import com.stellmangreene.pbprdf.model.Ontology
  *
  * @author andrewstellman
  */
-class DelayOfGamePlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+class DelayOfGamePlay(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {
-    val triples: Set[(Resource, URI, Value)] =
+    val triples: Set[(Resource, IRI, Value)] =
       play match {
         case DelayOfGamePlay.playByPlayRegex(matchingText) => {
           Set(
-            (eventUri, RDF.TYPE, Ontology.TECHNICAL_FOUL),
-            (eventUri, Ontology.IS_DELAY_OF_GAME, rep.getValueFactory.createLiteral(true)))
+            (eventIri, RDF.TYPE, Ontology.TECHNICAL_FOUL),
+            (eventIri, Ontology.IS_DELAY_OF_GAME, rep.getValueFactory.createLiteral(true)))
         }
 
         case _ => { logger.warn(s"Unrecognized delay of game play: ${play}"); Set() }

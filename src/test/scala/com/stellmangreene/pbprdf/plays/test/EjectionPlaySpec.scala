@@ -7,7 +7,7 @@ import org.scalatest.Matchers
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.plays.EjectionPlay
-import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.test.TestIri
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
 
@@ -26,8 +26,8 @@ class EjectionPlaySpec extends FlatSpec with Matchers {
 
   it should "parse a five-second violation" in {
 
-    val testUri = TestUri.create("400981090")
-    new EjectionPlay(testUri, 367, 4, "1:10", "Wings", "Aerial Powers ejected", "71-76", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    val testIri = TestIri.create("400981090")
+    new EjectionPlay(testIri, 367, 4, "1:10", "Wings", "Aerial Powers ejected", "71-76", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400981090/367> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -36,7 +36,7 @@ class EjectionPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Ejection",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 4",
           "http://stellman-greene.com/pbprdf#time -> 1:10",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 2330",

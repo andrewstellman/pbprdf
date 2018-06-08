@@ -1,13 +1,13 @@
 package com.stellmangreene.pbprdf.plays
 
 import org.eclipse.rdf4j.model.Resource
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.repository.Repository
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
@@ -35,12 +35,12 @@ import com.typesafe.scalalogging.LazyLogging
  *
  * @author andrewstellman
  */
-class JumpBallPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+class JumpBallPlay(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {
-    val triples: Set[(Resource, URI, Value)] =
+    val triples: Set[(Resource, IRI, Value)] =
       play match {
         case JumpBallPlay.playByPlayRegex(awayPlayer, homePlayerAndGainsPossession) => {
           logger.debug(s"Parsing jump ball from play: ${play}")
@@ -50,15 +50,15 @@ class JumpBallPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, te
           homePlayerAndGainsPossession match {
             case gainsPossessionRegex(homePlayer, gainedPossessionPlayer) =>
               Set(
-                (eventUri, RDF.TYPE, Ontology.JUMP_BALL),
-                (eventUri, Ontology.JUMP_BALL_HOME_PLAYER, EntityUriFactory.getPlayerUri(homePlayer)),
-                (eventUri, Ontology.JUMP_BALL_AWAY_PLAYER, EntityUriFactory.getPlayerUri(awayPlayer)),
-                (eventUri, Ontology.JUMP_BALL_GAINED_POSSESSION, EntityUriFactory.getPlayerUri(gainedPossessionPlayer)))
+                (eventIri, RDF.TYPE, Ontology.JUMP_BALL),
+                (eventIri, Ontology.JUMP_BALL_HOME_PLAYER, EntityIriFactory.getPlayerIri(homePlayer)),
+                (eventIri, Ontology.JUMP_BALL_AWAY_PLAYER, EntityIriFactory.getPlayerIri(awayPlayer)),
+                (eventIri, Ontology.JUMP_BALL_GAINED_POSSESSION, EntityIriFactory.getPlayerIri(gainedPossessionPlayer)))
 
             case _ => Set(
-              (eventUri, RDF.TYPE, Ontology.JUMP_BALL),
-              (eventUri, Ontology.JUMP_BALL_HOME_PLAYER, EntityUriFactory.getPlayerUri(homePlayerAndGainsPossession)),
-              (eventUri, Ontology.JUMP_BALL_AWAY_PLAYER, EntityUriFactory.getPlayerUri(awayPlayer)))
+              (eventIri, RDF.TYPE, Ontology.JUMP_BALL),
+              (eventIri, Ontology.JUMP_BALL_HOME_PLAYER, EntityIriFactory.getPlayerIri(homePlayerAndGainsPossession)),
+              (eventIri, Ontology.JUMP_BALL_AWAY_PLAYER, EntityIriFactory.getPlayerIri(awayPlayer)))
           }
         }
 

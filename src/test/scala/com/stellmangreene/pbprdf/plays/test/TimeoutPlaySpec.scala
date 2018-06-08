@@ -7,7 +7,7 @@ import org.scalatest.Matchers
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.plays.TimeoutPlay
-import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.test.TestIri
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
 
@@ -25,8 +25,8 @@ class TimeoutPlaySpec extends FlatSpec with Matchers {
   rep.initialize
 
   it should "parse an official timeout" in {
-    val testUri = TestUri.create("400610636")
-    val play = new TimeoutPlay(testUri, 125, 2, "4:56", "Mystics", "Official timeout", "10-9", GamePeriodInfo.WNBAPeriodInfo)
+    val testIri = TestIri.create("400610636")
+    val play = new TimeoutPlay(testIri, 125, 2, "4:56", "Mystics", "Official timeout", "10-9", GamePeriodInfo.WNBAPeriodInfo)
     play.addRdf(rep)
 
     val statements = rep
@@ -39,7 +39,7 @@ class TimeoutPlaySpec extends FlatSpec with Matchers {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Timeout",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
-        s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+        s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
         "http://stellman-greene.com/pbprdf#period -> 2",
         "http://stellman-greene.com/pbprdf#time -> 4:56",
         "http://stellman-greene.com/pbprdf#secondsIntoGame -> 904",
@@ -50,8 +50,8 @@ class TimeoutPlaySpec extends FlatSpec with Matchers {
   }
 
   it should "parse a full timeout" in {
-    val testUri = TestUri.create("400610636")
-    val play = new TimeoutPlay(testUri, 327, 2, "7:05", "Sun", "Connecticut Full timeout", "25-26", GamePeriodInfo.WNBAPeriodInfo)
+    val testIri = TestIri.create("400610636")
+    val play = new TimeoutPlay(testIri, 327, 2, "7:05", "Sun", "Connecticut Full timeout", "25-26", GamePeriodInfo.WNBAPeriodInfo)
     play.addRdf(rep)
 
     val statements = rep
@@ -64,7 +64,7 @@ class TimeoutPlaySpec extends FlatSpec with Matchers {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Timeout",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
-        s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+        s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
         "http://stellman-greene.com/pbprdf#period -> 2",
         "http://stellman-greene.com/pbprdf#time -> 7:05",
         "http://stellman-greene.com/pbprdf#secondsIntoGame -> 775",

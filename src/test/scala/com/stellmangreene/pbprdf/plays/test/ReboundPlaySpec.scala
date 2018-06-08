@@ -7,7 +7,7 @@ import org.scalatest.Matchers
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.plays.ReboundPlay
-import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.test.TestIri
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
 
@@ -25,8 +25,8 @@ class ReboundPlaySpec extends FlatSpec with Matchers {
   rep.initialize
 
   it should "parse rebound triples" in {
-    val testUri = TestUri.create("400610636")
-    val play = new ReboundPlay(testUri, 125, 2, "4:02", "Mystics", "Emma Meesseman offensive rebound", "31-30", GamePeriodInfo.WNBAPeriodInfo)
+    val testIri = TestIri.create("400610636")
+    val play = new ReboundPlay(testIri, 125, 2, "4:02", "Mystics", "Emma Meesseman offensive rebound", "31-30", GamePeriodInfo.WNBAPeriodInfo)
     play.addRdf(rep)
 
     val statements = rep
@@ -39,7 +39,7 @@ class ReboundPlaySpec extends FlatSpec with Matchers {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Rebound",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
-        s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+        s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
         "http://stellman-greene.com/pbprdf#period -> 2",
         "http://stellman-greene.com/pbprdf#time -> 4:02",
         "http://stellman-greene.com/pbprdf#secondsIntoGame -> 958",

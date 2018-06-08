@@ -1,12 +1,12 @@
 package com.stellmangreene.pbprdf.plays
 
 import org.eclipse.rdf4j.model.Resource
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.repository.Repository
 
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.typesafe.scalalogging.LazyLogging
 import com.stellmangreene.pbprdf.GamePeriodInfo
@@ -34,23 +34,23 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  *
  * @author andrewstellman
  */
-class TechnicalFoulPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+class TechnicalFoulPlay(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {
-    val triples: Set[(Resource, URI, Value)] =
+    val triples: Set[(Resource, IRI, Value)] =
       play match {
         case TechnicalFoulPlay.playByPlayRegex(committedBy, foulNumber) => {
-          val committedByTriple: Set[(Resource, URI, Value)] =
+          val committedByTriple: Set[(Resource, IRI, Value)] =
             if (committedBy != null && !committedBy.isEmpty)
-              Set((eventUri, Ontology.FOUL_COMMITTED_BY, EntityUriFactory.getPlayerUri(committedBy)))
+              Set((eventIri, Ontology.FOUL_COMMITTED_BY, EntityIriFactory.getPlayerIri(committedBy)))
             else
               Set()
 
           Set(
-            (eventUri, RDF.TYPE, Ontology.TECHNICAL_FOUL),
-            (eventUri, Ontology.TECHNICAL_FOUL_NUMBER, rep.getValueFactory.createLiteral(foulNumber.toInt))) ++ committedByTriple
+            (eventIri, RDF.TYPE, Ontology.TECHNICAL_FOUL),
+            (eventIri, Ontology.TECHNICAL_FOUL_NUMBER, rep.getValueFactory.createLiteral(foulNumber.toInt))) ++ committedByTriple
         }
 
         case _ => { logger.warn(s"Unrecognized technical foul play: ${play}"); Set() }

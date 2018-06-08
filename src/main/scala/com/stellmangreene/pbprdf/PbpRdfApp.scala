@@ -12,13 +12,10 @@ import org.joda.time.format._
 
 import com.typesafe.scalalogging.LazyLogging
 import com.stellmangreene.pbprdf.model.OntologyRdfRepository
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import org.joda.time.format.DateTimeFormat
 import org.eclipse.rdf4j.repository.sail.SailRepository
 import org.eclipse.rdf4j.sail.memory.MemoryStore
-
-//TODO: Migrate to rdf4j - search comments for "Sesame"
-//TODO: Remove "www." from base IRI
 
 object PbpRdfApp extends App with LazyLogging {
 
@@ -123,7 +120,7 @@ pbprdf --ontology [filename.ttl]
     } else
 
       try {
-        val filename = EntityUriFactory.getGameIdentifierString(playByPlay.homeTeam, playByPlay.awayTeam, playByPlay.gameTime) + ".txt"
+        val filename = EntityIriFactory.getGameIdentifierString(playByPlay.homeTeam, playByPlay.awayTeam, playByPlay.gameTime) + ".txt"
         val file = folder / filename
         if (file.exists) {
           logger.info(s"Overwriting ${file.pathAsString}")

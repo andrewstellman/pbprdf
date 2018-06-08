@@ -20,7 +20,7 @@ import org.eclipse.rdf4j.rio.RDFFormat
 
 /**
  * Unit tests for the RdfOperations trait that provides implicit RDF operations
- * for Sesame repositories and Aduna Iterators such as TupleQueryResult objects
+ * for rdf4j repositories and Aduna Iterators such as TupleQueryResult objects
  *
  * @author andrewstellman
  */
@@ -36,20 +36,20 @@ class RdfOperationsSpec extends FlatSpec with Matchers with BeforeAndAfterEach {
 
     // Use the implicit functions to add triples
 
-    rep.addTriple(rep.getValueFactory.createURI("test:entity1"), RDF.TYPE, OWL.THING)
+    rep.addTriple(rep.getValueFactory.createIRI("test:entity1"), RDF.TYPE, OWL.THING)
     rep.addTriples(Set(
-      (rep.getValueFactory.createURI("test:entity1"), RDFS.LABEL, rep.getValueFactory.createLiteral("This is a label")),
-      (rep.getValueFactory.createURI("test:entity1"), RDFS.COMMENT, rep.getValueFactory.createLiteral("This is a comment"))))
+      (rep.getValueFactory.createIRI("test:entity1"), RDFS.LABEL, rep.getValueFactory.createLiteral("This is a label")),
+      (rep.getValueFactory.createIRI("test:entity1"), RDFS.COMMENT, rep.getValueFactory.createLiteral("This is a comment"))))
 
     // Use the implicit functions to add triples with a context
 
-    val context = rep.getValueFactory.createURI("test:context")
-    rep.addTriple(rep.getValueFactory.createURI("test:entity2"), RDF.TYPE, OWL.THING, context)
+    val context = rep.getValueFactory.createIRI("test:context")
+    rep.addTriple(rep.getValueFactory.createIRI("test:entity2"), RDF.TYPE, OWL.THING, context)
     rep.addTriples(
       Set(
-        (rep.getValueFactory.createURI("test:entity2"), rep.getValueFactory.createURI("test:predicate#is"), rep.getValueFactory.createLiteral(true)),
-        (rep.getValueFactory.createURI("test:entity2"), RDFS.LABEL, rep.getValueFactory.createLiteral("This is a second label")),
-        (rep.getValueFactory.createURI("test:entity2"), RDFS.COMMENT, rep.getValueFactory.createLiteral("This is a second comment"))),
+        (rep.getValueFactory.createIRI("test:entity2"), rep.getValueFactory.createIRI("test:predicate#is"), rep.getValueFactory.createLiteral(true)),
+        (rep.getValueFactory.createIRI("test:entity2"), RDFS.LABEL, rep.getValueFactory.createLiteral("This is a second label")),
+        (rep.getValueFactory.createIRI("test:entity2"), RDFS.COMMENT, rep.getValueFactory.createLiteral("This is a second comment"))),
       context)
   }
 

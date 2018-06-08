@@ -10,7 +10,7 @@ import org.eclipse.rdf4j.common.iteration.Iteration
 import org.eclipse.rdf4j.rio.Rio
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.common.iteration.Iterations
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.model.Resource
 import org.eclipse.rdf4j.repository.Repository
@@ -19,10 +19,10 @@ import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.query.QueryLanguage
 import org.eclipse.rdf4j.model.vocabulary.XMLSchema
 
-// TODO: Move this into a separate project, publish it to Maven Central, and add it as a dependency (including the ontology annotatins and ontology file generation)
+// TODO: Move this into a separate project, publish it to Maven Central, and add it as a dependency (including the ontology annotatins and ontology file generation
 
 /**
- * Define implicit operations to perform RDF functions on Sesame repositories and collections
+ * Define implicit operations to perform RDF functions on rdf4j repositories and collections
  *
  * @author andrewstellman
  */
@@ -107,7 +107,7 @@ object RdfOperations {
      *         If the data could not be added to the repository, for example
      *         because the repository is not writable.
      */
-    def addTriple(subject: Resource, predicate: URI, `object`: Value): Unit = {
+    def addTriple(subject: Resource, predicate: IRI, `object`: Value): Unit = {
       val connection = repository.getConnection
       connection.add(subject, predicate, `object`)
     }
@@ -127,7 +127,7 @@ object RdfOperations {
      *         If the data could not be added to the repository, for example
      *         because the repository is not writable.
      */
-    def addTriple(subject: Resource, predicate: URI, `object`: Value, context: Resource): Unit = {
+    def addTriple(subject: Resource, predicate: IRI, `object`: Value, context: Resource): Unit = {
       val connection = repository.getConnection
       connection.add(subject, predicate, `object`, context)
     }
@@ -141,7 +141,7 @@ object RdfOperations {
      *         If the data could not be added to the repository, for example
      *         because the repository is not writable.
      */
-    def addTriples(triples: Set[(Resource, URI, Value)]): Unit = {
+    def addTriples(triples: Set[(Resource, IRI, Value)]): Unit = {
       val connection = repository.getConnection
       triples.foreach(triple => connection.add(triple._1, triple._2, triple._3))
     }
@@ -157,7 +157,7 @@ object RdfOperations {
      *         If the data could not be added to the repository, for example
      *         because the repository is not writable.
      */
-    def addTriples(triples: Set[(Resource, URI, Value)], context: Resource): Unit = {
+    def addTriples(triples: Set[(Resource, IRI, Value)], context: Resource): Unit = {
       val connection = repository.getConnection
       triples.foreach(triple => connection.add(triple._1, triple._2, triple._3, context))
     }

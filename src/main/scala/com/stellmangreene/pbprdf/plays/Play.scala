@@ -1,12 +1,12 @@
 package com.stellmangreene.pbprdf.plays
 
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.repository.Repository
 
 import com.stellmangreene.pbprdf.Event
 import com.stellmangreene.pbprdf.GamePeriodInfo
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
@@ -17,15 +17,15 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  *
  * @author andrewstellman
  */
-abstract class Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Event(gameUri: URI, eventNumber, period, time, s"${team}: ${play}")(gamePeriodInfo, team, score, play) {
+abstract class Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Event(gameIri: IRI, eventNumber, period, time, s"${team}: ${play}")(gamePeriodInfo, team, score, play) {
 
   /**
    * Add the type and pbprdf:team triples that every Play event must have
    */
   override def addRdf(rep: Repository) {
-    rep.addTriple(eventUri, RDF.TYPE, Ontology.PLAY)
-    rep.addTriple(eventUri, Ontology.FOR_TEAM, EntityUriFactory.getTeamUri(team))
+    rep.addTriple(eventIri, RDF.TYPE, Ontology.PLAY)
+    rep.addTriple(eventIri, Ontology.FOR_TEAM, EntityIriFactory.getTeamIri(team))
     super.addRdf(rep)
   }
 

@@ -2,7 +2,7 @@ package com.stellmangreene.pbprdf.model
 
 import java.lang.reflect.Field
 
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.vocabulary.OWL
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.model.vocabulary.RDFS
@@ -58,20 +58,20 @@ object OntologyRdfRepository {
 
     ontologyClasses.foreach(e => {
       val (field, ontologyClassAnnotation) = e
-      val classUri: URI = field.get(Ontology).asInstanceOf[URI]
+      val classIri: IRI = field.get(Ontology).asInstanceOf[IRI]
 
-      rep.addTriple(classUri, RDF.TYPE, OWL.CLASS)
-      rep.addTriple(classUri, RDFS.LABEL, rep.getValueFactory.createLiteral(ontologyClassAnnotation.label))
+      rep.addTriple(classIri, RDF.TYPE, OWL.CLASS)
+      rep.addTriple(classIri, RDFS.LABEL, rep.getValueFactory.createLiteral(ontologyClassAnnotation.label))
 
       val ontologySubClassOfAnnotation = OntologyAnnotationHelper.getOntologySubClassOfAnnotation(field)
       if (ontologySubClassOfAnnotation != null)
         ontologySubClassOfAnnotation.subClassOf.foreach(superClass => {
-          rep.addTriple(classUri, RDFS.SUBCLASSOF, rep.getValueFactory.createURI(superClass))
+          rep.addTriple(classIri, RDFS.SUBCLASSOF, rep.getValueFactory.createIRI(superClass))
         })
 
       val comment = OntologyAnnotationHelper.getComment(field)
       if (comment != null)
-        rep.addTriple(classUri, RDFS.COMMENT, rep.getValueFactory.createLiteral(comment))
+        rep.addTriple(classIri, RDFS.COMMENT, rep.getValueFactory.createLiteral(comment))
     })
 
   }
@@ -88,27 +88,27 @@ object OntologyRdfRepository {
 
     ontologyProperties.foreach(e => {
       val (field, ontologyPropertyAnnotation) = e
-      val classUri: URI = field.get(Ontology).asInstanceOf[URI]
+      val classIri: IRI = field.get(Ontology).asInstanceOf[IRI]
 
-      rep.addTriple(classUri, RDFS.LABEL, rep.getValueFactory.createLiteral(ontologyPropertyAnnotation.label))
-      rep.addTriple(classUri, RDFS.RANGE, rep.getValueFactory.createURI(ontologyPropertyAnnotation.range))
+      rep.addTriple(classIri, RDFS.LABEL, rep.getValueFactory.createLiteral(ontologyPropertyAnnotation.label))
+      rep.addTriple(classIri, RDFS.RANGE, rep.getValueFactory.createIRI(ontologyPropertyAnnotation.range))
 
       if (ontologyPropertyAnnotation.domain != "")
-        rep.addTriple(classUri, RDFS.DOMAIN, rep.getValueFactory.createURI(ontologyPropertyAnnotation.domain))
+        rep.addTriple(classIri, RDFS.DOMAIN, rep.getValueFactory.createIRI(ontologyPropertyAnnotation.domain))
 
       if (!ontologyPropertyAnnotation.domains.isEmpty)
         ontologyPropertyAnnotation.domains.foreach(domain => {
-          rep.addTriple(classUri, RDFS.DOMAIN, rep.getValueFactory.createURI(domain))
+          rep.addTriple(classIri, RDFS.DOMAIN, rep.getValueFactory.createIRI(domain))
         })
 
       if (OntologyAnnotationHelper.isObjectProperty(field))
-        rep.addTriple(classUri, RDF.TYPE, OWL.OBJECTPROPERTY)
+        rep.addTriple(classIri, RDF.TYPE, OWL.OBJECTPROPERTY)
       else
-        rep.addTriple(classUri, RDF.TYPE, OWL.DATATYPEPROPERTY)
+        rep.addTriple(classIri, RDF.TYPE, OWL.DATATYPEPROPERTY)
 
       val comment = OntologyAnnotationHelper.getComment(field)
       if (comment != null)
-        rep.addTriple(classUri, RDFS.COMMENT, rep.getValueFactory.createLiteral(comment))
+        rep.addTriple(classIri, RDFS.COMMENT, rep.getValueFactory.createLiteral(comment))
     })
 
   }

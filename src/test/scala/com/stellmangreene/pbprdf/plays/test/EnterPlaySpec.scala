@@ -5,7 +5,7 @@ import org.eclipse.rdf4j.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
-import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.test.TestIri
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.plays.EnterPlay
 
@@ -29,8 +29,8 @@ class EnterPlaySpec extends FlatSpec with Matchers {
     var rep = new SailRepository(new MemoryStore)
     rep.initialize
 
-    var testUri = TestUri.create("400610636")
-    new EnterPlay(testUri, 101, 1, "8:00", "Sun", "Kelly Faris enters the game for Alyssa Thomas", "21-26", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    var testIri = TestIri.create("400610636")
+    new EnterPlay(testIri, 101, 1, "8:00", "Sun", "Kelly Faris enters the game for Alyssa Thomas", "21-26", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/101> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -39,7 +39,7 @@ class EnterPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Enters",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 1",
           "http://stellman-greene.com/pbprdf#time -> 8:00",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 120",

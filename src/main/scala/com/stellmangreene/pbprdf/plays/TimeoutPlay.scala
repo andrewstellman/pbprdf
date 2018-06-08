@@ -1,12 +1,12 @@
 package com.stellmangreene.pbprdf.plays
 
 import org.eclipse.rdf4j.model.Resource
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.repository.Repository
 
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.typesafe.scalalogging.LazyLogging
 import com.stellmangreene.pbprdf.GamePeriodInfo
@@ -36,29 +36,29 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  *
  * @author andrewstellman
  */
-class TimeoutPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+class TimeoutPlay(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {
     logger.debug(s"Parsing timeout from play: ${play}")
 
-    val triples: Set[(Resource, URI, Value)] =
+    val triples: Set[(Resource, IRI, Value)] =
       play match {
         case TimeoutPlay.playByPlayRegex("Official") => {
           Set(
-            (eventUri, RDF.TYPE, Ontology.TIMEOUT),
-            (eventUri, Ontology.IS_OFFICIAL, rep.getValueFactory.createLiteral(true)))
+            (eventIri, RDF.TYPE, Ontology.TIMEOUT),
+            (eventIri, Ontology.IS_OFFICIAL, rep.getValueFactory.createLiteral(true)))
         }
         case TimeoutPlay.playByPlayRegex(description) if (description.endsWith("Full")) => {
           Set(
-            (eventUri, RDF.TYPE, Ontology.TIMEOUT),
-            (eventUri, Ontology.TIMEOUT_DURATION, rep.getValueFactory.createLiteral("Full")))
+            (eventIri, RDF.TYPE, Ontology.TIMEOUT),
+            (eventIri, Ontology.TIMEOUT_DURATION, rep.getValueFactory.createLiteral("Full")))
         }
         case TimeoutPlay.playByPlayRegex(description) if (description.endsWith("20 Sec.")) => {
           Set(
-            (eventUri, RDF.TYPE, Ontology.TIMEOUT),
-            (eventUri, Ontology.TIMEOUT_DURATION, rep.getValueFactory.createLiteral("20 Sec.")))
+            (eventIri, RDF.TYPE, Ontology.TIMEOUT),
+            (eventIri, Ontology.TIMEOUT_DURATION, rep.getValueFactory.createLiteral("20 Sec.")))
         }
         case _ => { logger.warn(s"Unrecognized timeout play: ${play}"); Set() }
       }

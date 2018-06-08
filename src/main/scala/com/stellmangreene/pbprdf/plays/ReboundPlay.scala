@@ -1,13 +1,13 @@
 package com.stellmangreene.pbprdf.plays
 
 import org.eclipse.rdf4j.model.Resource
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.repository.Repository
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
@@ -38,25 +38,25 @@ import com.typesafe.scalalogging.LazyLogging
  *
  * @author andrewstellman
  */
-class ReboundPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+class ReboundPlay(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {
-    val triples: Set[(Resource, URI, Value)] =
+    val triples: Set[(Resource, IRI, Value)] =
       play match {
         case ReboundPlay.playByPlayRegex(reboundedBy, reboundType, isTeam) => {
           logger.debug(s"Parsing rebound from play: ${play}")
 
-          val offensiveReboundTriples: Set[(Resource, URI, Value)] =
+          val offensiveReboundTriples: Set[(Resource, IRI, Value)] =
             if (reboundType.trim == "offensive")
-              Set((eventUri, Ontology.IS_OFFENSIVE, rep.getValueFactory.createLiteral(true)))
+              Set((eventIri, Ontology.IS_OFFENSIVE, rep.getValueFactory.createLiteral(true)))
             else
               Set()
 
           Set(
-            (eventUri, RDF.TYPE, Ontology.REBOUND),
-            (eventUri, Ontology.REBOUNDED_BY, EntityUriFactory.getPlayerUri(reboundedBy))) ++
+            (eventIri, RDF.TYPE, Ontology.REBOUND),
+            (eventIri, Ontology.REBOUNDED_BY, EntityIriFactory.getPlayerIri(reboundedBy))) ++
             offensiveReboundTriples
         }
         case _ => { logger.warn(s"Unrecognized rebound play: ${play}"); Set() }

@@ -1,12 +1,12 @@
 package com.stellmangreene.pbprdf.plays
 
 import org.eclipse.rdf4j.model.Resource
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.repository.Repository
 
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import com.typesafe.scalalogging.LazyLogging
 import com.stellmangreene.pbprdf.GamePeriodInfo
@@ -41,36 +41,36 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  *
  * @author andrewstellman
  */
-class TurnoverPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+class TurnoverPlay(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {
-    val triples: Set[(Resource, URI, Value)] =
+    val triples: Set[(Resource, IRI, Value)] =
       play match {
         case TurnoverPlay.playByPlayRegex(player, turnoverType, steals) => {
 
-          val turnoverPlayerTriple: Set[(Resource, URI, Value)] =
+          val turnoverPlayerTriple: Set[(Resource, IRI, Value)] =
             if (!player.trim.isEmpty)
               if (player.trim == "shot clock")
-                Set((eventUri, Ontology.TURNOVER_TYPE, rep.getValueFactory.createLiteral("shot clock")))
+                Set((eventIri, Ontology.TURNOVER_TYPE, rep.getValueFactory.createLiteral("shot clock")))
               else
                 Set(
-                  (eventUri, Ontology.TURNED_OVER_BY, EntityUriFactory.getPlayerUri(player)),
-                  (eventUri, Ontology.TURNOVER_TYPE, rep.getValueFactory.createLiteral(turnoverType.trim.toLowerCase)))
+                  (eventIri, Ontology.TURNED_OVER_BY, EntityIriFactory.getPlayerIri(player)),
+                  (eventIri, Ontology.TURNOVER_TYPE, rep.getValueFactory.createLiteral(turnoverType.trim.toLowerCase)))
             else
               Set()
 
           val stealsRegex = """ ?\((.*) steals\)""".r
 
-          val stolenByTriple: Set[(Resource, URI, Value)] =
+          val stolenByTriple: Set[(Resource, IRI, Value)] =
             steals match {
               case stealsRegex(stolenByPlayer) =>
-                Set((eventUri, Ontology.STOLEN_BY, EntityUriFactory.getPlayerUri(stolenByPlayer)))
+                Set((eventIri, Ontology.STOLEN_BY, EntityIriFactory.getPlayerIri(stolenByPlayer)))
               case _ => Set()
             }
 
-          Set((eventUri, RDF.TYPE, Ontology.TURNOVER)) ++ turnoverPlayerTriple ++ stolenByTriple
+          Set((eventIri, RDF.TYPE, Ontology.TURNOVER)) ++ turnoverPlayerTriple ++ stolenByTriple
         }
 
         case _ => { logger.warn(s"Unrecognized turnover play: ${play}"); Set() }

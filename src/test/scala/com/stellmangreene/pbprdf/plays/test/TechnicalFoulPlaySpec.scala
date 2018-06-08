@@ -8,7 +8,7 @@ import org.scalatest.Matchers
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.plays.DoubleTechnicalFoulPlay
 import com.stellmangreene.pbprdf.plays.TechnicalFoulPlay
-import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.test.TestIri
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
 
@@ -26,8 +26,8 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers {
   rep.initialize
 
   it should "parse a technical foul" in {
-    val testUri = TestUri.create("400496779")
-    new TechnicalFoulPlay(testUri, 93, 2, "7:37", "Mercury", "Diana Taurasi technical foul(1st technical foul)", "21-28", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    val testIri = TestIri.create("400496779")
+    new TechnicalFoulPlay(testIri, 93, 2, "7:37", "Mercury", "Diana Taurasi technical foul(1st technical foul)", "21-28", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400496779/93> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -36,7 +36,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#TechnicalFoul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 2",
           "http://stellman-greene.com/pbprdf#time -> 7:37",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 743",
@@ -49,8 +49,8 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers {
   }
 
   it should "parse a technical foul with no player specified" in {
-    val testUri = TestUri.create("400496779")
-    new TechnicalFoulPlay(testUri, 152, 2, "1:03", "Mercury", "technical foul(2nd technical foul)", "37-32", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    val testIri = TestIri.create("400496779")
+    new TechnicalFoulPlay(testIri, 152, 2, "1:03", "Mercury", "technical foul(2nd technical foul)", "37-32", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400496779/152> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -59,7 +59,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#TechnicalFoul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 2",
           "http://stellman-greene.com/pbprdf#time -> 1:03",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1137",
@@ -71,8 +71,8 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers {
   }
 
   it should "parse a double technical foul" in {
-    val testUri = TestUri.create("400445797")
-    new DoubleTechnicalFoulPlay(testUri, 231, 3, "4:22", "Shock", "Double technical foul: Marissa Coleman and Glory Johnson", "47-41", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    val testIri = TestIri.create("400445797")
+    new DoubleTechnicalFoulPlay(testIri, 231, 3, "4:22", "Shock", "Double technical foul: Marissa Coleman and Glory Johnson", "47-41", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400445797/231> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -81,7 +81,7 @@ class TechnicalFoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#TechnicalFoul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 3",
           "http://stellman-greene.com/pbprdf#time -> 4:22",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1538",

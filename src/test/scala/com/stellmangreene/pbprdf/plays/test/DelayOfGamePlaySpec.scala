@@ -6,7 +6,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
 import com.stellmangreene.pbprdf.plays.DelayOfGamePlay
-import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.test.TestIri
 import com.stellmangreene.pbprdf.GamePeriodInfo
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
@@ -25,10 +25,10 @@ class DelayOfGamePlaySpec extends FlatSpec with Matchers {
   rep.initialize
 
   it should "parse a delay of game violation" in {
-    val testUri = TestUri.create("400610739")
+    val testIri = TestIri.create("400610739")
 
-    new DelayOfGamePlay(testUri, 86, 2, "10:00", "Sparks", "Los Angeles delay of game violation", "15-22", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
-    new DelayOfGamePlay(testUri, 295, 3, "1:39", "Sparks", "delay techfoul", "54-56", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new DelayOfGamePlay(testIri, 86, 2, "10:00", "Sparks", "Los Angeles delay of game violation", "15-22", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new DelayOfGamePlay(testIri, 295, 3, "1:39", "Sparks", "delay techfoul", "54-56", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610739/86> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -37,7 +37,7 @@ class DelayOfGamePlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#TechnicalFoul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 2",
           "http://stellman-greene.com/pbprdf#time -> 10:00",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 600",
@@ -53,7 +53,7 @@ class DelayOfGamePlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#TechnicalFoul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 3",
           "http://stellman-greene.com/pbprdf#time -> 1:39",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1701",

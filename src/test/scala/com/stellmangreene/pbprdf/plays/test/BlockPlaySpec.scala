@@ -8,7 +8,7 @@ import org.scalatest.Matchers
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.plays.BlockPlay
-import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.test.TestIri
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
 
@@ -26,8 +26,8 @@ class BlockPlaySpec extends FlatSpec with Matchers {
   rep.initialize
 
   it should "parse block triples" in {
-    var testUri = TestUri.create("400610636")
-    new BlockPlay(testUri, 108, 2, "7:48", "Mystics", "Tayler Hill blocks Jasmine Thomas's layup", "23-26", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    var testIri = TestIri.create("400610636")
+    new BlockPlay(testIri, 108, 2, "7:48", "Mystics", "Tayler Hill blocks Jasmine Thomas's layup", "23-26", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/108> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -37,7 +37,7 @@ class BlockPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Shot",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Block",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 2",
           "http://stellman-greene.com/pbprdf#time -> 7:48",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 732",
@@ -47,8 +47,8 @@ class BlockPlaySpec extends FlatSpec with Matchers {
           "http://stellman-greene.com/pbprdf#shotBlockedBy -> http://stellman-greene.com/pbprdf/players/Tayler_Hill",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Tayler Hill blocks Jasmine Thomas's layup"))
 
-    var testUri2 = TestUri.create("400610636")
-    new BlockPlay(testUri, 53, 1, "2:37", "Mercury", "Krystal Thomas blocks Erin Phillips' 3-foot  layup", "19-23", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    var testIri2 = TestIri.create("400610636")
+    new BlockPlay(testIri, 53, 1, "2:37", "Mercury", "Krystal Thomas blocks Erin Phillips' 3-foot  layup", "19-23", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/53> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -58,7 +58,7 @@ class BlockPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Shot",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Block",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri2.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri2.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 1",
           "http://stellman-greene.com/pbprdf#time -> 2:37",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 443",

@@ -7,7 +7,7 @@ import org.scalatest.Matchers
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.plays.FoulPlay
-import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.test.TestIri
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
 
@@ -24,11 +24,11 @@ class FoulPlaySpec extends FlatSpec with Matchers {
   val rep = new SailRepository(new MemoryStore)
   rep.initialize
 
-  val testUri = TestUri.create("400610636")
-  val testUriNba = TestUri.create("401031716")
+  val testIri = TestIri.create("400610636")
+  val testIriNba = TestIri.create("401031716")
 
   it should "parse fouls" in {
-    new FoulPlay(testUri, 37, 1, "4:56", "Sun", "Camille Little personal foul  (Stefanie Dolson draws the foul)", "10-9", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new FoulPlay(testIri, 37, 1, "4:56", "Sun", "Camille Little personal foul  (Stefanie Dolson draws the foul)", "10-9", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/37> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -37,7 +37,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Foul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 1",
           "http://stellman-greene.com/pbprdf#time -> 4:56",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 304",
@@ -49,7 +49,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
   }
 
   it should "parse personal blocking fouls" in {
-    new FoulPlay(testUriNba, 47, 2, "5:16", "Cavaliers", "Kevin Love personal blocking foul", "40-47", GamePeriodInfo.NBAPeriodInfo).addRdf(rep)
+    new FoulPlay(testIriNba, 47, 2, "5:16", "Cavaliers", "Kevin Love personal blocking foul", "40-47", GamePeriodInfo.NBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/401031716/47> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -58,7 +58,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Foul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUriNba.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIriNba.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 2",
           "http://stellman-greene.com/pbprdf#time -> 5:16",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1124",
@@ -70,7 +70,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
   }
 
   it should "parse offensive fouls" in {
-    new FoulPlay(testUri, 46, 1, "3:51", "Sun", "Kelsey Bone offensive foul  (Stefanie Dolson draws the foul)", "12-11", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new FoulPlay(testIri, 46, 1, "3:51", "Sun", "Kelsey Bone offensive foul  (Stefanie Dolson draws the foul)", "12-11", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/46> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -79,7 +79,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Foul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 1",
           "http://stellman-greene.com/pbprdf#time -> 3:51",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 369",
@@ -92,7 +92,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
   }
 
   it should "parse shooting fouls" in {
-    new FoulPlay(testUri, 85, 2, "9:15", "Mystics", "Kayla Thornton shooting foul  (Alyssa Thomas draws the foul)", "18-26", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new FoulPlay(testIri, 85, 2, "9:15", "Mystics", "Kayla Thornton shooting foul  (Alyssa Thomas draws the foul)", "18-26", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/85> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -101,7 +101,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Foul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 2",
           "http://stellman-greene.com/pbprdf#time -> 9:15",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 645",
@@ -114,7 +114,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
   }
 
   it should "parse offensive charges" in {
-    new FoulPlay(testUri, 166, 2, "1:05", "Mystics", "Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)", "40-38", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    new FoulPlay(testIri, 166, 2, "1:05", "Mystics", "Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)", "40-38", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610636/166> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -123,7 +123,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Foul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 2",
           "http://stellman-greene.com/pbprdf#time -> 1:05",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1135",
@@ -135,7 +135,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://stellman-greene.com/pbprdf#isCharge -> true",
           "http://www.w3.org/2000/01/rdf-schema#label -> Mystics: Kayla Thornton offensive Charge  (Jasmine Thomas draws the foul)"))
 
-    new FoulPlay(testUriNba, 68, 2, "2:44", "Raptors", "Serge Ibaka offensive charge", "47-51", GamePeriodInfo.NBAPeriodInfo).addRdf(rep)
+    new FoulPlay(testIriNba, 68, 2, "2:44", "Raptors", "Serge Ibaka offensive charge", "47-51", GamePeriodInfo.NBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/401031716/68> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -144,7 +144,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Foul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUriNba.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIriNba.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 2",
           "http://stellman-greene.com/pbprdf#time -> 2:44",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1276",
@@ -157,8 +157,8 @@ class FoulPlaySpec extends FlatSpec with Matchers {
   }
 
   it should "parse loose ball fouls" in {
-    val testUri2 = TestUri.create("400610739")
-    new FoulPlay(testUri2, 275, 3, "1:05", "Sparks", "Jantel Lavender loose ball foul (Sylvia Fowles draws the foul)", "54-59", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    val testIri2 = TestIri.create("400610739")
+    new FoulPlay(testIri2, 275, 3, "1:05", "Sparks", "Jantel Lavender loose ball foul (Sylvia Fowles draws the foul)", "54-59", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400610739/275> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -167,7 +167,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Foul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri2.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri2.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 3",
           "http://stellman-greene.com/pbprdf#time -> 1:05",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 1735",
@@ -180,8 +180,8 @@ class FoulPlaySpec extends FlatSpec with Matchers {
   }
 
   it should "parse fouls when no player draws the foul" in {
-    val testUri3 = TestUri.create("400539523")
-    new FoulPlay(testUri3, 13, 1, "8:12", "Sparks", "Jenna O'Hea offensive foul", "8-8", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
+    val testIri3 = TestIri.create("400539523")
+    new FoulPlay(testIri3, 13, 1, "8:12", "Sparks", "Jenna O'Hea offensive foul", "8-8", GamePeriodInfo.WNBAPeriodInfo).addRdf(rep)
 
     rep.executeQuery("SELECT * { <http://stellman-greene.com/pbprdf/400539523/13> ?p ?o }")
       .map(statement => (s"${statement.getValue("p").stringValue} -> ${statement.getValue("o").stringValue}"))
@@ -190,7 +190,7 @@ class FoulPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Foul",
-          s"http://stellman-greene.com/pbprdf#inGame -> ${testUri3.stringValue}",
+          s"http://stellman-greene.com/pbprdf#inGame -> ${testIri3.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 1",
           "http://stellman-greene.com/pbprdf#time -> 8:12",
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 108",

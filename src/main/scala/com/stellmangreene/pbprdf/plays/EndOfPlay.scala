@@ -1,7 +1,7 @@
 package com.stellmangreene.pbprdf.plays
 
 import org.eclipse.rdf4j.model.Resource
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.model.vocabulary.RDF
 import org.eclipse.rdf4j.repository.Repository
@@ -35,22 +35,22 @@ import com.typesafe.scalalogging.LazyLogging
  *
  * @author andrewstellman
  */
-class EndOfPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+class EndOfPlay(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {
     logger.debug(s"Parsing timeout from play: ${play}")
 
-    val triples: Set[(Resource, URI, Value)] =
+    val triples: Set[(Resource, IRI, Value)] =
       play match {
         case EndOfPlay.playByPlayRegex("Game") => {
           Set(
-            (eventUri, RDF.TYPE, Ontology.END_OF_GAME))
+            (eventIri, RDF.TYPE, Ontology.END_OF_GAME))
         }
         case _ => {
           Set(
-            (eventUri, RDF.TYPE, Ontology.END_OF_PERIOD))
+            (eventIri, RDF.TYPE, Ontology.END_OF_PERIOD))
         }
       }
 

@@ -1,14 +1,14 @@
 package com.stellmangreene.pbprdf.plays
 
 import org.eclipse.rdf4j.model.Resource
-import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.repository.Repository
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.util.RdfOperations.repositoryImplicitOperations
 import com.typesafe.scalalogging.LazyLogging
-import com.stellmangreene.pbprdf.model.EntityUriFactory
+import com.stellmangreene.pbprdf.model.EntityIriFactory
 import com.stellmangreene.pbprdf.model.Ontology
 import org.eclipse.rdf4j.model.vocabulary.RDF
 
@@ -35,19 +35,19 @@ import org.eclipse.rdf4j.model.vocabulary.RDF
  *
  * @author andrewstellman
  */
-class BlockPlay(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
-  extends Play(gameUri: URI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+class BlockPlay(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
+  extends Play(gameIri: IRI, eventNumber: Int, period: Int, time: String, team: String, play: String, score: String, gamePeriodInfo: GamePeriodInfo)
   with LazyLogging {
 
   override def addRdf(rep: Repository) = {
-    val triples: Set[(Resource, URI, Value)] =
+    val triples: Set[(Resource, IRI, Value)] =
       play match {
         case BlockPlay.playByPlayRegex(blockedBy, shotBy, shotType) => {
           Set(
-            (eventUri, RDF.TYPE, Ontology.SHOT),
-            (eventUri, RDF.TYPE, Ontology.BLOCK),
-            (eventUri, Ontology.SHOT_BY, EntityUriFactory.getPlayerUri(shotBy)),
-            (eventUri, Ontology.SHOT_BLOCKED_BY, EntityUriFactory.getPlayerUri(blockedBy)))
+            (eventIri, RDF.TYPE, Ontology.SHOT),
+            (eventIri, RDF.TYPE, Ontology.BLOCK),
+            (eventIri, Ontology.SHOT_BY, EntityIriFactory.getPlayerIri(shotBy)),
+            (eventIri, Ontology.SHOT_BLOCKED_BY, EntityIriFactory.getPlayerIri(blockedBy)))
         }
         case _ => { logger.warn(s"Unrecognized block play: ${play}"); Set() }
       }

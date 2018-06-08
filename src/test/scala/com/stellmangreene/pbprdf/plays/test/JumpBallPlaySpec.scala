@@ -7,7 +7,7 @@ import org.scalatest.Matchers
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.plays.JumpBallPlay
-import com.stellmangreene.pbprdf.test.TestUri
+import com.stellmangreene.pbprdf.test.TestIri
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
 
@@ -25,8 +25,8 @@ class JumpBallPlaySpec extends FlatSpec with Matchers {
   rep.initialize
 
   it should "parse jump ball triples" in {
-    val testUri = TestUri.create("400610736")
-    val play = new JumpBallPlay(testUri, 426, 5, "4:58", "Mercury", "Elena Delle Donne vs. Brittney Griner (DeWanna Bonner gains possession)", "78-78", GamePeriodInfo.WNBAPeriodInfo)
+    val testIri = TestIri.create("400610736")
+    val play = new JumpBallPlay(testIri, 426, 5, "4:58", "Mercury", "Elena Delle Donne vs. Brittney Griner (DeWanna Bonner gains possession)", "78-78", GamePeriodInfo.WNBAPeriodInfo)
     play.addRdf(rep)
 
     val statements = rep
@@ -39,7 +39,7 @@ class JumpBallPlaySpec extends FlatSpec with Matchers {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#JumpBall",
-        s"http://stellman-greene.com/pbprdf#inGame -> ${testUri.stringValue}",
+        s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
         "http://stellman-greene.com/pbprdf#period -> 5",
         "http://stellman-greene.com/pbprdf#time -> 4:58",
         "http://stellman-greene.com/pbprdf#secondsIntoGame -> 2402",
@@ -50,8 +50,8 @@ class JumpBallPlaySpec extends FlatSpec with Matchers {
         "http://stellman-greene.com/pbprdf#jumpBallGainedPossession -> http://stellman-greene.com/pbprdf/players/DeWanna_Bonner",
         "http://www.w3.org/2000/01/rdf-schema#label -> Mercury: Elena Delle Donne vs. Brittney Griner (DeWanna Bonner gains possession)"))
 
-    val testUri2 = TestUri.create("400610636")
-    val play2 = new JumpBallPlay(testUri2, 1, 1, "10:00", "Sun", "Stefanie Dolson vs. Kelsey Bone", "0-0", GamePeriodInfo.WNBAPeriodInfo)
+    val testIri2 = TestIri.create("400610636")
+    val play2 = new JumpBallPlay(testIri2, 1, 1, "10:00", "Sun", "Stefanie Dolson vs. Kelsey Bone", "0-0", GamePeriodInfo.WNBAPeriodInfo)
     play2.addRdf(rep)
 
     val statements2 = rep
@@ -64,7 +64,7 @@ class JumpBallPlaySpec extends FlatSpec with Matchers {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#JumpBall",
-        s"http://stellman-greene.com/pbprdf#inGame -> ${testUri2.stringValue}",
+        s"http://stellman-greene.com/pbprdf#inGame -> ${testIri2.stringValue}",
         "http://stellman-greene.com/pbprdf#period -> 1",
         "http://stellman-greene.com/pbprdf#time -> 10:00",
         "http://stellman-greene.com/pbprdf#secondsIntoGame -> 0",

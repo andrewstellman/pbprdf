@@ -1,7 +1,7 @@
 package com.stellmangreene.pbprdf.model
 
-import org.openrdf.model.impl.ValueFactoryImpl
-import org.openrdf.model.URI
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory
+import org.eclipse.rdf4j.model.URI
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -12,7 +12,7 @@ import org.joda.time.format.DateTimeFormat
  */
 object EntityUriFactory {
 
-  private val valueFactory = ValueFactoryImpl.getInstance()
+  private val valueFactory = SimpleValueFactory.getInstance()
 
   val NAMESPACE = "http://stellman-greene.com/pbprdf/"
 

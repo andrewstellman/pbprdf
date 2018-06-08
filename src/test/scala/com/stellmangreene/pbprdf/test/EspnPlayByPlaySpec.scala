@@ -1,8 +1,8 @@
 package com.stellmangreene.pbprdf.test
 
 import org.joda.time.DateTime
-import org.openrdf.repository.sail.SailRepository
-import org.openrdf.sail.memory.MemoryStore
+import org.eclipse.rdf4j.repository.sail.SailRepository
+import org.eclipse.rdf4j.sail.memory.MemoryStore
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 

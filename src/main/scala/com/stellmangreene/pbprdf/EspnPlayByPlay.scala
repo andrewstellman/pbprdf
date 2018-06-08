@@ -8,7 +8,7 @@ import org.joda.time.format._
 
 import better.files._
 
-import org.openrdf.model.URI
+import org.eclipse.rdf4j.model.URI
 
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.util.XmlHelper

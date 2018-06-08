@@ -1,7 +1,6 @@
 package com.stellmangreene.pbprdf.model
 
-import org.openrdf.model.impl.ValueFactoryImpl
-import org.openrdf.model.impl.URIImpl
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory
 
 /**
  * RDF types
@@ -10,7 +9,7 @@ import org.openrdf.model.impl.URIImpl
  */
 object Ontology {
 
-  private val valueFactory = ValueFactoryImpl.getInstance()
+  private val valueFactory = SimpleValueFactory.getInstance  
 
   val NAMESPACE = "http://stellman-greene.com/pbprdf#"
 

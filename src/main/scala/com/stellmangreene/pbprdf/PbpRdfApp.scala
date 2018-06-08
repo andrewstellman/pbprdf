@@ -2,9 +2,6 @@ package com.stellmangreene.pbprdf
 
 import java.io.File
 
-import org.openrdf.repository.sail.SailRepository
-import org.openrdf.sail.memory.MemoryStore
-
 import com.stellmangreene.pbprdf.model.OntologyRdfRepository
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
@@ -17,6 +14,8 @@ import com.typesafe.scalalogging.LazyLogging
 import com.stellmangreene.pbprdf.model.OntologyRdfRepository
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import org.joda.time.format.DateTimeFormat
+import org.eclipse.rdf4j.repository.sail.SailRepository
+import org.eclipse.rdf4j.sail.memory.MemoryStore
 
 //TODO: Migrate to rdf4j - search comments for "Sesame"
 //TODO: Remove "www." from base IRI

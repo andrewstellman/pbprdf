@@ -1,8 +1,8 @@
 package com.stellmangreene.pbprdf
 
-import org.openrdf.model._
-import org.openrdf.model.vocabulary._
-import org.openrdf.repository.Repository
+import org.eclipse.rdf4j.model._
+import org.eclipse.rdf4j.model.vocabulary._
+import org.eclipse.rdf4j.repository.Repository
 
 import better.files._
 

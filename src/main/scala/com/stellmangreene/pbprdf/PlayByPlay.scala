@@ -1,10 +1,10 @@
 package com.stellmangreene.pbprdf
 
 import org.joda.time.DateTime
-import org.openrdf.model.URI
-import org.openrdf.model.vocabulary.RDF
-import org.openrdf.model.vocabulary.RDFS
-import org.openrdf.repository.Repository
+import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.vocabulary.RDF
+import org.eclipse.rdf4j.model.vocabulary.RDFS
+import org.eclipse.rdf4j.repository.Repository
 
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology

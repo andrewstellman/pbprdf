@@ -2,15 +2,15 @@ package com.stellmangreene.pbprdf.model
 
 import java.lang.reflect.Field
 
-import org.openrdf.model.URI
-import org.openrdf.model.vocabulary.OWL
-import org.openrdf.model.vocabulary.RDF
-import org.openrdf.model.vocabulary.RDFS
-import org.openrdf.repository.sail.SailRepository
-import org.openrdf.sail.memory.MemoryStore
+import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.vocabulary.OWL
+import org.eclipse.rdf4j.model.vocabulary.RDF
+import org.eclipse.rdf4j.model.vocabulary.RDFS
+import org.eclipse.rdf4j.repository.Repository
+import org.eclipse.rdf4j.repository.sail.SailRepository
+import org.eclipse.rdf4j.sail.memory.MemoryStore
 
-import com.stellmangreene.pbprdf.util.RdfOperations._
-import org.openrdf.repository.Repository
+import com.stellmangreene.pbprdf.util.RdfOperations.repositoryImplicitOperations
 
 /**
  * Object that uses the Java annotations in Ontology to build an RDF repository

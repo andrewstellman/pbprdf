@@ -1,17 +1,15 @@
 package com.stellmangreene.pbprdf.plays
 
-import org.openrdf.model.Resource
-import org.openrdf.model.URI
-import org.openrdf.model.Value
-import org.openrdf.model.vocabulary.RDF
-import org.openrdf.repository.Repository
+import org.eclipse.rdf4j.model.Resource
+import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.Value
+import org.eclipse.rdf4j.model.vocabulary.RDF
+import org.eclipse.rdf4j.repository.Repository
 
 import com.stellmangreene.pbprdf.GamePeriodInfo
 import com.stellmangreene.pbprdf.model.EntityUriFactory
 import com.stellmangreene.pbprdf.model.Ontology
-
-import com.stellmangreene.pbprdf.util.RdfOperations._
-
+import com.stellmangreene.pbprdf.util.RdfOperations.repositoryImplicitOperations
 import com.typesafe.scalalogging.LazyLogging
 
 /**

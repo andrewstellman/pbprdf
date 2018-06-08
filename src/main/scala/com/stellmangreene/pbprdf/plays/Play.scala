@@ -1,8 +1,8 @@
 package com.stellmangreene.pbprdf.plays
 
-import org.openrdf.model.URI
-import org.openrdf.model.vocabulary.RDF
-import org.openrdf.repository.Repository
+import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.vocabulary.RDF
+import org.eclipse.rdf4j.repository.Repository
 
 import com.stellmangreene.pbprdf.Event
 import com.stellmangreene.pbprdf.GamePeriodInfo

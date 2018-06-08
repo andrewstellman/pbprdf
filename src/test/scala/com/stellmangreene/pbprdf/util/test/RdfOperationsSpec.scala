@@ -5,18 +5,18 @@ import java.io.PrintStream
 
 import scala.language.postfixOps
 
-import org.openrdf.model.vocabulary.OWL
-import org.openrdf.model.vocabulary.RDF
-import org.openrdf.model.vocabulary.RDFS
-import org.openrdf.repository.Repository
-import org.openrdf.repository.sail.SailRepository
-import org.openrdf.rio.RDFFormat
-import org.openrdf.sail.memory.MemoryStore
+import org.eclipse.rdf4j.model.vocabulary.OWL
+import org.eclipse.rdf4j.model.vocabulary.RDF
+import org.eclipse.rdf4j.model.vocabulary.RDFS
+import org.eclipse.rdf4j.repository.Repository
+import org.eclipse.rdf4j.repository.sail.SailRepository
+import org.eclipse.rdf4j.sail.memory.MemoryStore
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers
 
 import com.stellmangreene.pbprdf.util.RdfOperations._
+import org.eclipse.rdf4j.rio.RDFFormat
 
 /**
  * Unit tests for the RdfOperations trait that provides implicit RDF operations
@@ -66,7 +66,7 @@ WHERE {
 """)
 
     results.map(bindingSet => s"label=${bindingSet.getValue("label")} comment=${bindingSet.getValue("comment")}").toSeq should be(
-      Seq("""label="This is a second label" comment="This is a second comment""""))
+      Seq("""label="This is a second label"^^<http://www.w3.org/2001/XMLSchema#string> comment="This is a second comment"^^<http://www.w3.org/2001/XMLSchema#string>"""))
   }
 
   it should "treat Aduna iterations (like TupleQueryResult objects) as an iterator that can only be traversed once" in {
@@ -111,12 +111,12 @@ WHERE {
     val statements = rep.statements.toSet
     statements.map(_.toString) should be(
       Set(
-        """(test:entity1, http://www.w3.org/2000/01/rdf-schema#comment, "This is a comment") [null]""",
+        """(test:entity1, http://www.w3.org/2000/01/rdf-schema#comment, "This is a comment"^^<http://www.w3.org/2001/XMLSchema#string>) [null]""",
         """(test:entity1, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#Thing) [null]""",
-        """(test:entity1, http://www.w3.org/2000/01/rdf-schema#label, "This is a label") [null]""",
+        """(test:entity1, http://www.w3.org/2000/01/rdf-schema#label, "This is a label"^^<http://www.w3.org/2001/XMLSchema#string>) [null]""",
         """(test:entity2, test:predicate#is, "true"^^<http://www.w3.org/2001/XMLSchema#boolean>) [test:context]""",
-        """(test:entity2, http://www.w3.org/2000/01/rdf-schema#comment, "This is a second comment") [test:context]""",
-        """(test:entity2, http://www.w3.org/2000/01/rdf-schema#label, "This is a second label") [test:context]""",
+        """(test:entity2, http://www.w3.org/2000/01/rdf-schema#comment, "This is a second comment"^^<http://www.w3.org/2001/XMLSchema#string>) [test:context]""",
+        """(test:entity2, http://www.w3.org/2000/01/rdf-schema#label, "This is a second label"^^<http://www.w3.org/2001/XMLSchema#string>) [test:context]""",
         """(test:entity2, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2002/07/owl#Thing) [test:context]"""))
   }
 

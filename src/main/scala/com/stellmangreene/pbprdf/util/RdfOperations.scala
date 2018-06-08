@@ -1,23 +1,23 @@
 package com.stellmangreene.pbprdf.util
 
 import scala.language.implicitConversions
-import org.openrdf.query.QueryLanguage
-import org.openrdf.query.TupleQueryResult
-import org.openrdf.repository.Repository
-import info.aduna.iteration.Iteration
-import org.openrdf.model.vocabulary.RDF
-import org.openrdf.model.Resource
-import org.openrdf.model.Value
-import org.openrdf.model.URI
-import org.openrdf.rio.RDFFormat
 import java.io.FileOutputStream
-import org.openrdf.rio.Rio
-import org.openrdf.model.impl.LinkedHashModel
-import info.aduna.iteration.Iterations
 import com.stellmangreene.pbprdf.model.Ontology
-import org.openrdf.model.vocabulary.RDFS
-import org.openrdf.model.vocabulary.XMLSchema
 import com.typesafe.scalalogging.LazyLogging
+import org.eclipse.rdf4j.query.TupleQueryResult
+import org.eclipse.rdf4j.rio.RDFFormat
+import org.eclipse.rdf4j.common.iteration.Iteration
+import org.eclipse.rdf4j.rio.Rio
+import org.eclipse.rdf4j.model.impl.LinkedHashModel
+import org.eclipse.rdf4j.common.iteration.Iterations
+import org.eclipse.rdf4j.model.URI
+import org.eclipse.rdf4j.model.Value
+import org.eclipse.rdf4j.model.Resource
+import org.eclipse.rdf4j.repository.Repository
+import org.eclipse.rdf4j.model.vocabulary.RDFS
+import org.eclipse.rdf4j.model.vocabulary.RDF
+import org.eclipse.rdf4j.query.QueryLanguage
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema
 
 // TODO: Move this into a separate project, publish it to Maven Central, and add it as a dependency (including the ontology annotatins and ontology file generation)
 

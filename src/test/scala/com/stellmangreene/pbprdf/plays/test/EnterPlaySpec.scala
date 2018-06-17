@@ -39,6 +39,8 @@ class EnterPlaySpec extends FlatSpec with Matchers {
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Enters",
+          "http://stellman-greene.com/pbprdf#awayScore -> 21",
+          "http://stellman-greene.com/pbprdf#homeScore -> 26",
           s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
           "http://stellman-greene.com/pbprdf#period -> 1",
           "http://stellman-greene.com/pbprdf#time -> 8:00",

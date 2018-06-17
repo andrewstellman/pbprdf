@@ -433,4 +433,18 @@ object Ontology {
     range = "http://www.w3.org/2001/XMLSchema#int")
   val SECONDS_UNTIL_NEXT_EVENT = valueFactory.createIRI(NAMESPACE, "secondsUntilNextEvent")
 
+  // Scores
+
+  @OntologyProperty(
+    label = "Score for the home team",
+    domain = "http://stellman-greene.com/pbprdf#Event",
+    range = "http://www.w3.org/2001/XMLSchema#int")
+  val HOME_SCORE = valueFactory.createIRI(NAMESPACE, "homeScore")
+
+  @OntologyProperty(
+    label = "Score for the away team",
+    domain = "http://stellman-greene.com/pbprdf#Event",
+    range = "http://www.w3.org/2001/XMLSchema#int")
+  val AWAY_SCORE = valueFactory.createIRI(NAMESPACE, "awayScore")
+
 }

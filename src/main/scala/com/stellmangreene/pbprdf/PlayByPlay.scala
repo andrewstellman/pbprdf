@@ -19,7 +19,6 @@ import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.format.DateTimeFormat
 import javax.xml.datatype.DatatypeFactory
 
-//TODO: Add triples for the current score (e.g. "10-4") -- grep -r "CURRENTLY IGNORED" src/main/scala
 //TODO: Add triples for the box score, test against official box scores
 //TODO: Add triples for the players on the court for each possession
 

@@ -19,7 +19,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDF
  * Emma Meesseman blocks Camille Little 's 2-foot  jumper
  * Krystal Thomas blocks Erin Phillips' 3-foot  layup
  *
- * @param gameID
+ * @param gameIri
  *        Unique ID of the game
  * @param eventNumber
  *        Sequential number of this event
@@ -31,6 +31,8 @@ import org.eclipse.rdf4j.model.vocabulary.RDF
  *        Description of the play (eg. "Alyssa Thomas makes free throw 2 of 2")
  * @param score
  *        Game score ("10-4") - CURRENTLY IGNORED
+ * @param gamePeriodInfo
+ *        GamePeriodInfo for converting game time to seconds
  *
  * @author andrewstellman
  */

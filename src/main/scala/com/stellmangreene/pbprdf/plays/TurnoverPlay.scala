@@ -26,7 +26,7 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  * Ivory Latta  bad pass (Kelsey Bone steals)
  * Kara Lawson kicked ball violation
  *
- * @param gameID
+ * @param gameIri
  *        Unique ID of the game
  * @param eventNumber
  *        Sequential number of this event
@@ -38,6 +38,8 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  *        Description of the play (eg. "Alyssa Thomas makes free throw 2 of 2")
  * @param score
  *        Game score ("10-4") - CURRENTLY IGNORED
+ * @param gamePeriodInfo
+ *        GamePeriodInfo for converting game time to seconds
  *
  * @author andrewstellman
  */

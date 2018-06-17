@@ -27,7 +27,7 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  * Alyssa Thomas makes free throw 2 of 2
  * Alex Bentley makes technical free throw
  *
- * @param gameID
+ * @param gameIri
  *        Unique ID of the game
  * @param eventNumber
  *        Sequential number of this event
@@ -39,6 +39,8 @@ import com.stellmangreene.pbprdf.util.RdfOperations._
  *        Description of the play (eg. "Alyssa Thomas makes free throw 2 of 2")
  * @param score
  *        Game score ("10-4") - CURRENTLY IGNORED
+ * @param gamePeriodInfo
+ *        GamePeriodInfo for converting game time to seconds
  *
  * @author andrewstellman
  */

@@ -56,6 +56,7 @@ case class Event(gameIri: IRI, eventNumber: Int, period: Int, time: String, desc
     val valueFactory = rep.getValueFactory
     rep.addTriples(eventTriples(valueFactory))
     rep.addTriples(secondsIntoGameTriple(valueFactory))
+    rep.addTriples(scoreTriples(valueFactory))
   }
 
   /** Generates the type, period, time, and label triples that every event must have */
@@ -78,6 +79,20 @@ case class Event(gameIri: IRI, eventNumber: Int, period: Int, time: String, desc
 
     })
       .getOrElse(Set[(Resource, IRI, Value)]())
+  }
+
+  /** Generate the score triples */
+  private def scoreTriples(valueFactory: ValueFactory): Set[(Resource, IRI, Value)] = {
+    val scoreRegex = """\s*(\d+)\s*-\s*(\d+)\s*""".r
+    score match {
+      case scoreRegex(awayScore, homeScore) => Set(
+        (eventIri, Ontology.AWAY_SCORE, valueFactory.createLiteral(awayScore.toInt)),
+        (eventIri, Ontology.HOME_SCORE, valueFactory.createLiteral(homeScore.toInt)))
+      case _ => {
+        logger.warn(s"Unable to parse score in play: $play")
+        Set()
+      }
+    }
   }
 
   /** Returns a text description of this event */

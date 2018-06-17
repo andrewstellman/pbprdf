@@ -39,6 +39,8 @@ class ReboundPlaySpec extends FlatSpec with Matchers {
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Play",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Rebound",
         "http://www.w3.org/1999/02/22-rdf-syntax-ns#type -> http://stellman-greene.com/pbprdf#Event",
+        "http://stellman-greene.com/pbprdf#awayScore -> 31",
+        "http://stellman-greene.com/pbprdf#homeScore -> 30",
         s"http://stellman-greene.com/pbprdf#inGame -> ${testIri.stringValue}",
         "http://stellman-greene.com/pbprdf#period -> 2",
         "http://stellman-greene.com/pbprdf#time -> 4:02",

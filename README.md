@@ -5,82 +5,35 @@ Here's an article by that explains gives some more detail about the project: *[N
 
 Here's an example of an analysis that you can do with pbprdf: *[Analysis: 3-point shot percentage after other team makes or misses](https://gist.github.com/andrewstellman/4872dbb9dc7593e56abddbe8b998b509)*
 
+## Running pbprdf
 
-Install and run
-===============
+To run pbprdf, download the latest release from the Releases page: https://github.com/andrewstellman/pbprdf/releases and make sure Java 8 or later is in your path.
 
-__Prerequisite: [sbt](http://www.scala-sbt.org/) 1.x and Java 8 or later must be in your path__
-* [Installing SBT](https://www.scala-sbt.org/1.x/docs/Setup.html)
-* [Install sbt 1.x on Mac](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html)
-* [Install sbt 1.x on Unix](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
-* [Install sbt 1.x on Windows](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html)
+The release distribution contains an archive with the following files:
+* `pbprdf.jar` - the binary
+* `pbprdf` - Mac/Unix shell script to run pbprdf
+* `pbprdf.bat` - Windows batch file to run pbprdf
+* shell scripts to fetch WNBA or NBA play-by-play files
 
-Mac or Unix: 
-```
-$ git clone https://github.com/andrewstellman/pbprdf.git
-$ cd pbprdf
-$ sbt assembly
-$ ./pbprdf
-```
+### Example: Analyze a set of games
 
-Windows:
-```
-C:\Users\Public\src>git clone https://github.com/andrewstellman/pbprdf.git
-C:\Users\Public\src>cd pbprdf
-C:\Users\Public\src\pbprdf>sbt assembly
-C:\Users\Public\src\pbprdf>pbprdf
-```
-
-*(The above commands use [sbt-assembly](https://github.com/sbt/sbt-assembly) to create a fat JAR.)*
-
-Other useful build commands
----------------------------
-
-Compile the code and run the unit tests:
-```
-$ sbt compile test
-```
-
-Generate Eclipse project files (via [sbteclipse](https://github.com/sbt/sbteclipse):
-```
-$ sbt eclipse
-```
-
-Generate sample Turtle from the unit test data and print it to the console
-
-using the script:
-```
-$ ./pbprdf src/test/resources/com/stellmangreene/pbprdf/test/htmldata/
-```
-
-via SBT:
-```
-$ sbt "run src/test/resources/com/stellmangreene/pbprdf/test/htmldata/"
-```
-
-Examples
-========
-
-Example: Analyze a set of games
--------------------------------
-
-Step 1: Clone the pbprdf repository
-```
-$ git clone https://github.com/andrewstellman/pbprdf.git
-$ cd pbprdf
-```
-
-Step 2: Download a set of play-by-play HTML files
+Step 1: Download a set of play-by-play HTML files
 ```
 $ ./fetch-wnba-play-by-plays.sh
 ```
 
-Step 3: Run pbprdf and generate the Turtle file for the 2014 WNBA playoffs
+This will create a folder called `data/retrieved_*` (with a timestamp at the end of the folder name) with subdirectories for various seasons and playoffs. Move the folder for a season or playoff into the current folder (in this example, the folder with the 2014 playoffs):
+
 ```
-$ ./pbprdf data/wnba-2014-playoffs/ wnba-2014-playoffs.ttl
+$ mv data/retrieved_*/wnba-2018-playoffs .
 ```
 
-Step 4: Import the Turtle file into RDF4J Server
+Step 2: Run pbprdf and generate the Turtle file for the 2014 WNBA playoffs
+```
+$ ./pbprdf wnba-2018-playoffs/ wnba-2018-playoffs.ttl
+```
+
+Step 3: Import the Turtle file into RDF4J Server
 *(see instructions at the bottom for spinning up an RDF4J server, loading data into it, and connecting to it with the RDF4J console)
 ```
 $ console -s http://localhost:8080/rdf4j-server pbprdf-database
@@ -105,7 +58,7 @@ Data has been added to the repository (427100 ms)
 
 __See 'Setting up RDF4J Server' below for details on setting up RDF4J server__
 
-Step 5: Run SPARQL queries
+Step 4: Run SPARQL queries
 ```
 pbprdf-database> SPARQL
 enter multi-line SPARQL query (terminate with line containing single '.')
@@ -146,8 +99,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 ```
 
 
-Example: Load the ontology into RDF4J Server
---------------------------------------------
+### Example: Load the ontology into RDF4J Server
 
 Step 1: Generate the ontology
 ```
@@ -201,11 +153,10 @@ Evaluating SPARQL query...
 20 result(s) (60 ms)
 ```
 
-Other Useful Queries
-====================
+## Other Useful Queries
 
-Clutch Shots
-------------
+### Clutch Shots
+
 ```
 SELECT ?playerName ?shotsTaken ?shotsMade ?shotPercentage
 WHERE 
@@ -249,8 +200,8 @@ WHERE
 ORDER BY DESC(?shotPercentage)
 ```
 
-Shots made and missed at Target Center in the first five minutes
-----------------------------------------------------------------
+### Shots made and missed at Target Center in the first five minutes
+
 ```
 SELECT ?game ?gameTime ?shotsTaken ?shotsMade ?shotsMadePercentage ?shotsMissed ?shotsMissedPercentage
 WHERE 
@@ -292,8 +243,7 @@ WHERE
 LIMIT 100
 ```
 
-Setting up RDF4J Server
-=======================
+## Setting up RDF4J Server
 
 One effective way to execute SPARQL queries against these files is to use [RDF4J Server, Workbench, and Console](http://docs.rdf4j.org/server-workbench-console/). RDF4J Server and its GUI, RDF Workbench, are both web applications that run in an application server like Tomcat.
 
@@ -336,3 +286,54 @@ pbprdf-database>
 
 __Step 5: Import your Turtle file__
 You can use the instructions above to import your `*.ttl` or `*.ttl.zip` files into your newly created database. You can either use the RDF4J console or RDF4J workbench GUI to execute SPARQL queries.
+
+
+## Building pbprdf
+
+__Prerequisite: [sbt](http://www.scala-sbt.org/) 1.x and Java 8 or later must be in your path__
+* [Installing SBT](https://www.scala-sbt.org/1.x/docs/Setup.html)
+* [Install sbt 1.x on Mac](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html)
+* [Install sbt 1.x on Unix](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
+* [Install sbt 1.x on Windows](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html)
+
+Mac or Unix: 
+```
+$ git clone https://github.com/andrewstellman/pbprdf.git
+$ cd pbprdf
+$ sbt assembly
+$ ./pbprdf
+```
+
+Windows:
+```
+C:\Users\Public\src>git clone https://github.com/andrewstellman/pbprdf.git
+C:\Users\Public\src>cd pbprdf
+C:\Users\Public\src\pbprdf>sbt assembly
+C:\Users\Public\src\pbprdf>pbprdf
+```
+
+*(The above commands use [sbt-assembly](https://github.com/sbt/sbt-assembly) to create a fat JAR.)*
+
+### Other useful build commands
+
+Compile the code and run the unit tests:
+```
+$ sbt compile test
+```
+
+Generate Eclipse project files (via [sbteclipse](https://github.com/sbt/sbteclipse):
+```
+$ sbt eclipse
+```
+
+Generate sample Turtle from the unit test data and print it to the console
+
+using the script:
+```
+$ ./pbprdf src/test/resources/com/stellmangreene/pbprdf/test/htmldata/
+```
+
+via SBT:
+```
+$ sbt "run src/test/resources/com/stellmangreene/pbprdf/test/htmldata/"
+```

@@ -22,9 +22,15 @@ Step 1: Download a set of play-by-play HTML files
 $ ./fetch-wnba-play-by-plays.sh
 ```
 
+This will create a folder called `data/retrieved_*` (with a timestamp at the end of the folder name) with subdirectories for various seasons and playoffs. Move the folder for a season or playoff into the current folder (in this example, the folder with the 2014 playoffs):
+
+```
+$ mv data/retrieved_*/wnba-2014-playoffs .
+```
+
 Step 2: Run pbprdf and generate the Turtle file for the 2014 WNBA playoffs
 ```
-$ ./pbprdf data/wnba-2014-playoffs/ wnba-2014-playoffs.ttl
+$ ./pbprdf wnba-2014-playoffs/ wnba-2014-playoffs.ttl
 ```
 
 Step 3: Import the Turtle file into RDF4J Server

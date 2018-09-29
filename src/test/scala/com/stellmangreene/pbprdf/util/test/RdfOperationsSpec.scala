@@ -96,7 +96,7 @@ WHERE {
     var standardOutput = myOut.toString
     standardOutput.split("\n")
       .toSet
-      .filter(!_.contains("Writing Turtle to standard output")) /* remove the log message */ should be(
+      .filter(s => !s.contains("Writing Turtle to standard output") && !s.contains("WARN")) /* remove the log messages */ should be(
         Set(
           """<test:entity1> <http://www.w3.org/2000/01/rdf-schema#label> "This is a label" .""",
           """<test:entity1> <http://www.w3.org/2000/01/rdf-schema#comment> "This is a comment" .""",

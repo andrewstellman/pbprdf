@@ -4,13 +4,22 @@ FOLDER=data/retrieved_`date +%s`
 echo "Fetching play-by-play files into $FOLDER"
 mkdir -p $FOLDER/
 
-# fetch 2017 regular season
-mkdir $FOLDER/wnba-2017-season
-for ((i=400927392;i<=400927595;i++))
+# fetch 2018 playoffs
+mkdir $FOLDER/wnba-2018-playoffs
+for i in 401074453 401074454 401074455 401074456 401074459 401074457 401074460 401074458 401074473 401074461 401074462 401074463 401074465 401074464 401079693 401079694 401079695
 do
-   curl http://www.espn.com/wnba/playbyplay?gameId=$i > $FOLDER/wnba-2017-season/$i.html
-   curl http://www.espn.com/wnba/game?gameId=$i > $FOLDER/wnba-2017-season/$i-gameinfo.html
+   curl http://www.espn.com/wnba/playbyplay?gameId=$i > $FOLDER/wnba-2018-playoffs/$i.html
+   curl http://www.espn.com/wnba/game?gameId=$i > $FOLDER/wnba-2018-playoffs/$i-gameinfo.html
 done
+
+# fetch 2018 regular season
+mkdir $FOLDER/wnba-2018-season
+for ((i=401018781;i<=401018984;i++))
+do
+   curl http://www.espn.com/wnba/playbyplay?gameId=$i > $FOLDER/wnba-2018-season/$i.html
+   curl http://www.espn.com/wnba/game?gameId=$i > $FOLDER/wnba-2018-season/$i-gameinfo.html
+done
+
 
 # fetch 2017 playoffs
 mkdir $FOLDER/wnba-2017-playoffs
@@ -20,13 +29,12 @@ do
    curl http://www.espn.com/wnba/game?gameId=$i > $FOLDER/wnba-2017-playoffs/$i-gameinfo.html
 done
 
-
-# fetch 2016 regular season
-mkdir $FOLDER/wnba-2016-season
-for ((i=400864357;i<=400864495;i++))
+# fetch 2017 regular season
+mkdir $FOLDER/wnba-2017-season
+for ((i=400927392;i<=400927595;i++))
 do
-   curl http://www.espn.com/wnba/playbyplay?gameId=$i > $FOLDER/wnba-2016-season/$i.html
-   curl http://www.espn.com/wnba/game?gameId=$i > $FOLDER/wnba-2016-season/$i-gameinfo.html
+   curl http://www.espn.com/wnba/playbyplay?gameId=$i > $FOLDER/wnba-2017-season/$i.html
+   curl http://www.espn.com/wnba/game?gameId=$i > $FOLDER/wnba-2017-season/$i-gameinfo.html
 done
 
 
@@ -36,6 +44,14 @@ for i in 400910430 400910431 400910450 400910451 400910452 400910457 400910453 4
 do
    curl http://www.espn.com/wnba/playbyplay?gameId=$i > $FOLDER/wnba-2016-playoffs/$i.html
    curl http://www.espn.com/wnba/game?gameId=$i > $FOLDER/wnba-2016-playoffs/$i-gameinfo.html
+done
+
+# fetch 2016 regular season
+mkdir $FOLDER/wnba-2016-season
+for ((i=400864357;i<=400864495;i++))
+do
+   curl http://www.espn.com/wnba/playbyplay?gameId=$i > $FOLDER/wnba-2016-season/$i.html
+   curl http://www.espn.com/wnba/game?gameId=$i > $FOLDER/wnba-2016-season/$i-gameinfo.html
 done
 
 

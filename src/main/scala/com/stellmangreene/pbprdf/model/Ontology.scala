@@ -350,7 +350,7 @@ object Ontology {
 
   @OntologyClass(label = "Player that was ejected")
   @OntologySubClassOf(subClassOf = Array("http://stellman-greene.com/pbprdf#Event", "http://stellman-greene.com/pbprdf#Play"))
-  val PLAYER_EJECTED = valueFactory.createIRI(NAMESPACE, "playerEjected")
+  val PLAYER_EJECTED = valueFactory.createIRI(NAMESPACE, "PlayerEjected")
 
   // Players entering
 

@@ -1,5 +1,5 @@
-11:54:19.806 [main] INFO  com.stellmangreene.pbprdf.PbpRdfApp$ - Writing ontology statements
-11:54:19.961 [main] INFO  c.s.p.u.RdfOperations$RepositoryImplicitOperations - Writing Turtle to standard output
+18:32:20.611 [main] INFO  com.stellmangreene.pbprdf.PbpRdfApp$ - Writing ontology statements
+18:32:20.796 [main] INFO  c.s.p.u.RdfOperations$RepositoryImplicitOperations - Writing Turtle to standard output
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .

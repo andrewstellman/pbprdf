@@ -44,7 +44,7 @@ class EjectionPlaySpec extends FlatSpec with Matchers {
           "http://stellman-greene.com/pbprdf#secondsIntoGame -> 2330",
           "http://stellman-greene.com/pbprdf#secondsLeftInPeriod -> 70",
           "http://stellman-greene.com/pbprdf#forTeam -> http://stellman-greene.com/pbprdf/teams/Wings",
-          "http://stellman-greene.com/pbprdf#playerEjected -> http://stellman-greene.com/pbprdf/players/Aerial_Powers",
+          "http://stellman-greene.com/pbprdf#PlayerEjected -> http://stellman-greene.com/pbprdf/players/Aerial_Powers",
           "http://www.w3.org/2000/01/rdf-schema#label -> Wings: Aerial Powers ejected"))
   }
 

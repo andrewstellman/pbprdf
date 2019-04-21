@@ -1,3 +1,5 @@
+11:54:19.806 [main] INFO  com.stellmangreene.pbprdf.PbpRdfApp$ - Writing ontology statements
+11:54:19.961 [main] INFO  c.s.p.u.RdfOperations$RepositoryImplicitOperations - Writing Turtle to standard output
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -321,6 +323,16 @@ pbprdf:secondsSincePreviousEvent rdfs:label "The number of seconds since the pre
 	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
 
 pbprdf:secondsUntilNextEvent rdfs:label "The number of seconds until the next event" ;
+	rdfs:range xsd:int ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:homeScore rdfs:label "Score for the home team" ;
+	rdfs:range xsd:int ;
+	rdfs:domain pbprdf:Event ;
+	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .
+
+pbprdf:awayScore rdfs:label "Score for the away team" ;
 	rdfs:range xsd:int ;
 	rdfs:domain pbprdf:Event ;
 	a <http://www.w3.org/2002/07/owl#DatatypeProperty> .

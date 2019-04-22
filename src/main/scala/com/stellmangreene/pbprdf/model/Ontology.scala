@@ -258,7 +258,7 @@ object Ontology {
 
   @OntologyProperty(
     label = "The player that blocked the shot",
-    domain = "http://stellman-greene.com/pbprdf#Shot",
+    domain = "http://stellman-greene.com/pbprdf#Block",
     range = "http://stellman-greene.com/pbprdf#Player")
   @OntologyObjectProperty
   val SHOT_BLOCKED_BY = valueFactory.createIRI(NAMESPACE, "shotBlockedBy")

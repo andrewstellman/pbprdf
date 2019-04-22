@@ -219,7 +219,7 @@ pbprdf:shotPoints rdfs:label "The number of points scored by the shot" ;
 
 pbprdf:shotBlockedBy rdfs:label "The player that blocked the shot" ;
 	rdfs:range pbprdf:Player ;
-	rdfs:domain pbprdf:Shot ;
+	rdfs:domain pbprdf:Block ;
 	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
 
 pbprdf:foulCommittedBy rdfs:label "The player who committed the foul" ;

@@ -348,9 +348,12 @@ object Ontology {
   @OntologySubClassOf(subClassOf = Array("http://stellman-greene.com/pbprdf#Event", "http://stellman-greene.com/pbprdf#Play"))
   val EJECTION = valueFactory.createIRI(NAMESPACE, "Ejection")
 
-  @OntologyClass(label = "Player that was ejected")
-  @OntologySubClassOf(subClassOf = Array("http://stellman-greene.com/pbprdf#Event", "http://stellman-greene.com/pbprdf#Play"))
-  val PLAYER_EJECTED = valueFactory.createIRI(NAMESPACE, "PlayerEjected")
+  @OntologyProperty(
+    label = "The player that was ejected",
+    domain = "http://stellman-greene.com/pbprdf#Ejection",
+    range = "http://stellman-greene.com/pbprdf#Player")
+  @OntologyObjectProperty
+  val PLAYER_EJECTED = valueFactory.createIRI(NAMESPACE, "playerEjected")
 
   // Players entering
 

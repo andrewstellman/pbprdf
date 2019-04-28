@@ -66,10 +66,6 @@ pbprdf:Ejection a <http://www.w3.org/2002/07/owl#Class> ;
 	rdfs:label "An ejection" ;
 	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
 
-pbprdf:PlayerEjected a <http://www.w3.org/2002/07/owl#Class> ;
-	rdfs:label "Player that was ejected" ;
-	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
-
 pbprdf:Enters a <http://www.w3.org/2002/07/owl#Class> ;
 	rdfs:label "A player entering the game" ;
 	rdfs:subClassOf pbprdf:Event , pbprdf:Play .
@@ -273,6 +269,11 @@ pbprdf:technicalFoulNumber rdfs:label "The technical foul number for a player" ;
 	rdfs:domain pbprdf:TechnicalFoul ;
 	a <http://www.w3.org/2002/07/owl#DatatypeProperty> ;
 	rdfs:comment "Will be 1 for first technical foul, 2 for 2nd" .
+
+pbprdf:playerEjected rdfs:label "The player that was ejected" ;
+	rdfs:range pbprdf:Player ;
+	rdfs:domain pbprdf:Ejection ;
+	a <http://www.w3.org/2002/07/owl#ObjectProperty> .
 
 pbprdf:playerEntering rdfs:label "The player entering the game" ;
 	rdfs:range pbprdf:Player ;

@@ -274,11 +274,11 @@ Functional tests derived directly from the specifications. Each test should be t
 
 - At least **one spec-derived test per major section** of each spec document
 - At least **one scenario test per QUALITY.md scenario** — exact 1:1 mapping, using matching names
-- At least **3 negative tests** that verify bad input is rejected or handled gracefully
-- At least **2 boundary tests** that verify behavior at edges (zero, empty, maximum, first, last)
-- At least **1 cross-variant test per major feature** if the project handles multiple input types
+- At least **5 negative tests** that verify bad input is rejected or handled gracefully
+- At least **5 boundary tests** that verify behavior at edges (zero, empty, maximum, first, last, type boundaries)
+- At least **30% of tests should be cross-variant** if the project handles multiple input types (parametrized or looped across all variants)
 
-For a medium-sized project (5–15 source files), expect 25–40+ functional tests. If you've written fewer than 20, you've probably missed spec requirements or skimmed the defensive code patterns.
+For a medium-sized project (5–15 source files), **target 35–50 functional tests.** If you've written fewer than 25, you've almost certainly missed spec requirements or skimmed the defensive code patterns. Count the defensive code patterns you found in Step 5 — each one should have at least one dedicated test.
 
 ### How to Write Spec-Derived Tests
 
@@ -313,6 +313,35 @@ class TestSpecRequirements:
 - **Robust** — It uses real data (fixtures from the actual system), not synthetic data
 - **Cross-variant** — If the project handles multiple input types, test all of them
 - **Regression-ready** — Once this test passes, any future change that breaks it is a regression
+- **Tests at the right layer** — Test the *behavior* you care about, not a side effect. If the requirement is "bad input doesn't produce wrong output," test the mapper output — don't just test that the schema validator rejects the input. Schema validation is an implementation detail; the requirement is about the output.
+
+### Cross-Variant Testing Strategy
+
+If the project handles multiple input types (leagues, formats, locales, etc.), cross-variant coverage is where silent bugs hide. **At least 30% of your tests should exercise all variants**, not just one.
+
+**Use `@pytest.mark.parametrize` or fixture parametrization** to avoid duplicating test logic:
+
+```python
+@pytest.mark.parametrize("graph,raw", [
+    ("nba_graph", "nba_raw"),
+    ("wnba_graph", "wnba_raw"),
+    ("ncaam_graph", "ncaam_raw"),
+    ("ncaaw_graph", "ncaaw_raw"),
+], indirect=True)
+def test_feature_works_across_all_variants(self, graph, raw):
+    """Spec: Feature X must work for all input variants."""
+    # Same assertion logic, different data
+```
+
+If `@pytest.mark.parametrize` doesn't fit your fixture pattern, loop explicitly:
+
+```python
+def test_feature_works_across_all_variants(self, nba_graph, wnba_graph, ncaam_graph, ncaaw_graph):
+    for graph in [nba_graph, wnba_graph, ncaam_graph, ncaaw_graph]:
+        # Assert the property holds for every variant
+```
+
+**Which tests should be cross-variant?** Any test that verifies a property that *should* hold regardless of input type: entity identity, required properties, chain links, structural completeness, defensive handling. Only tests that verify variant-*specific* behavior (like "NBA has 4 quarters of 12 minutes") should be single-variant.
 
 ### Common Anti-Patterns to Avoid
 
@@ -347,7 +376,7 @@ class TestFitnessScenarios:
 
 ### Boundary and Negative Tests
 
-Write a dedicated test class for edge cases and error handling:
+Write a dedicated test class for edge cases and error handling. **This class should be substantial** — aim for at least as many boundary/negative tests as you have scenario tests. Every defensive code pattern from Step 5 is a test candidate.
 
 ```python
 class TestBoundariesAndEdgeCases:
@@ -363,6 +392,27 @@ class TestBoundariesAndEdgeCases:
 ```
 
 For every `try/except`, `if X is None`, or normalization function you found in Step 5, there should be at least one test that actually triggers that code path.
+
+**Systematic approach for finding boundary tests:** Walk each mapper module and list every guard clause, type check, and fallback. Then write tests for:
+
+- **Missing fields**: What if an optional field is absent? (Set to `None` or remove the key.)
+- **Wrong types**: What if a string field gets an int, or vice versa?
+- **Empty values**: What if a list is empty? A string is empty? A dict has no keys?
+- **Boundary values**: Zero, negative, maximum, first element, last element.
+- **Cross-module boundaries**: What if Module A produces unusual but valid output — does Module B handle it?
+
+If you found 10+ defensive patterns in Step 5 but only wrote 4 boundary tests, go back and write more. The ratio of defensive patterns to boundary tests should be close to 1:1.
+
+### Testing at the Right Layer
+
+A common mistake is testing an *implementation mechanism* instead of the *requirement*. For example, if the requirement is "invalid attendance values must not produce bad output," there are two ways to test this:
+
+- **Wrong layer (testing the mechanism):** Assert that the Pydantic model raises `ValidationError` when given a bad value. This tests the validation *mechanism*, not the *requirement*. If someone later changes the validation approach (e.g., from Pydantic to a manual check), this test breaks even though the requirement is still met.
+- **Right layer (testing the requirement):** Feed the bad value through the full mapping pipeline and assert the output doesn't contain an attendance triple. This tests the *outcome* the requirement specifies.
+
+When writing tests, ask: "What does the *spec* say should happen?" The spec says "invalid data should not appear in output" — not "Pydantic should raise ValidationError." Test the spec, not the implementation.
+
+**Exception:** When a spec explicitly mandates a specific mechanism (e.g., "must fail-fast at the schema layer"), testing that mechanism is appropriate. But this is rare — most specs describe outcomes, not mechanisms.
 
 ### Running the Tests
 
@@ -572,21 +622,24 @@ Tell the agent where to find:
 Before verifying, honestly assess your work against these benchmarks:
 
 **test_functional.py size check:**
-- Fewer than 15 tests → You almost certainly missed spec requirements. Go back to Step 4 and walk each spec section.
-- 15–25 tests → Acceptable for a small project. Review whether you tested negative cases and boundaries.
-- 25–40+ tests → This is where a thorough job lands for a medium-sized project.
+- Fewer than 20 tests → You almost certainly missed spec requirements. Go back to Step 4 and walk each spec section.
+- 20–30 tests → Acceptable for a small project. Review whether you tested negative cases and boundaries.
+- 30–50+ tests → This is where a thorough job lands for a medium-sized project. Aim here.
 
 **Scenario coverage check:**
-- Count the scenarios in QUALITY.md. Count the `test_scenario_*` functions. The numbers must match.
+- Count the scenarios in QUALITY.md. Count the `test_scenario_*` functions. The numbers must match exactly.
 
 **Cross-variant check:**
-- If the project handles N input variants, what percentage of tests exercise all N? If less than 30%, you need more parametrized tests.
+- If the project handles N input variants, what percentage of tests exercise all N? **If less than 30%, you need more parametrized tests.** Count them explicitly: tests that loop or parametrize over all variants, divided by total tests. This is the most common gap.
 
-**Negative test check:**
-- How many tests verify that bad/missing/malformed input is handled correctly? If fewer than 3, you skipped the defensive code patterns from Step 5.
+**Boundary and negative test check:**
+- How many tests verify that bad/missing/malformed input is handled correctly? **If fewer than 5 boundary tests and 5 negative tests, go back to Step 5** and count the defensive patterns you found. Each one is a test you haven't written yet.
 
 **Assertion depth check:**
 - Scan your assertions. How many are `assert X in Y` (presence) vs. `assert X == Y` (value)? If more than half are presence-only, strengthen them.
+
+**Layer check:**
+- For each test, ask: "Am I testing the *requirement* or the *mechanism*?" If any test asserts that a specific exception type is raised rather than asserting the output is correct, reconsider whether you're testing at the right layer.
 
 ### Verify the Documentation
 
@@ -615,9 +668,11 @@ Before verifying, honestly assess your work against these benchmarks:
     - Do any tests assert presence (`(s, p, None) in graph`) without checking the actual value? If so, check the value.
     - Do any negative tests assert only one consequence of rejection? If so, assert all consequences (type absence, property absence, link absence).
 
-11. **Cross-variant coverage exists.** If the project handles multiple input types/formats/leagues, at least 30% of tests should parametrize across all variants. Verify this by counting.
+11. **Cross-variant coverage exists.** If the project handles multiple input types/formats/leagues, at least 30% of tests should parametrize or loop across all variants. Count them explicitly. If you have 40 tests, at least 12 should be cross-variant.
 
-12. **Negative and boundary tests exist.** There must be at least 3 tests that mutate input to trigger defensive code paths, and at least 2 tests that exercise boundary conditions. If they're missing, add them.
+12. **Negative and boundary tests exist.** There must be at least 5 tests that mutate input to trigger defensive code paths, and at least 5 tests that exercise boundary conditions. Count the defensive patterns from Step 5 — the number of boundary/negative tests should approach the number of patterns.
+
+13. **Tests verify outcomes, not mechanisms.** Scan each test for assertions about exception types (e.g., `except ValidationError`). If a test only checks that a specific exception is raised without also verifying the pipeline output, it's testing the mechanism, not the requirement. Rewrite it to test the outcome the spec requires.
 
 ---
 

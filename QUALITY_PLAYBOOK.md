@@ -6,6 +6,28 @@
 
 ---
 
+## How to Use This Playbook
+
+This playbook is self-contained. Point your AI assistant at it and tell it what to do:
+
+```
+Read @QUALITY_PLAYBOOK.md and generate the quality infrastructure.
+```
+
+```
+Read @QUALITY_PLAYBOOK.md and update the functional tests.
+```
+
+```
+Read @QUALITY_PLAYBOOK.md and execute the integration tests.
+```
+
+The playbook will guide you through exploring the codebase, finding specifications, and generating all deliverables. You do not need to provide additional context — the playbook tells you how to discover everything you need from the project folder.
+
+**If the quality infrastructure already exists** (i.e., `tests/QUALITY.md`, `tests/test_functional.py`, etc. are already present), do not regenerate from scratch. Instead, read the existing files, understand what's there, and update or extend them based on the current state of the codebase and specs.
+
+---
+
 ## Terminology
 
 These definitions are used consistently throughout this playbook:
@@ -46,7 +68,7 @@ You will also create output directories:
 
 **Do not write any files yet.** Spend the first phase understanding the project. The quality infrastructure must be grounded in this specific codebase — not generic advice.
 
-### Step 1: Identify the Project's Domain and Stack
+### Step 1: Identify the Project's Domain, Stack, and Specifications
 
 Read the README, any existing documentation, and `pyproject.toml` / `package.json` / `Cargo.toml` / equivalent. Answer:
 
@@ -54,6 +76,19 @@ Read the README, any existing documentation, and `pyproject.toml` / `package.jso
 - What language and key dependencies does it use?
 - What are the external systems it talks to? (APIs, databases, file formats, etc.)
 - What is the project's primary output? (A file, a service response, a UI, transformed data, etc.)
+
+**Find the specifications.** Specifications (intent documents, architecture docs, API specs, design decision records) are the source of truth for functional tests. Search for them in this order:
+
+1. `AGENTS.md` or `CLAUDE.md` in the project root — these often list spec locations
+2. `specs/` directory
+3. `docs/` directory
+4. `spec/`, `design/`, `architecture/`, or `adr/` directories
+5. Any `.md` files in the project root that look like specifications (not README, not CHANGELOG)
+6. Comments or docstrings in the code that reference spec documents
+
+If you cannot find any specification documents, **ask the user** where the intent specifications live. Do not guess. Do not proceed to generate functional tests without specs — the whole point is that tests are derived from requirements, and requirements live in specs.
+
+Record the spec file paths — you will need them in Step 4 and when generating `test_functional.py` and `RUN_SPEC_AUDIT.md`.
 
 ### Step 2: Map the Architecture
 
@@ -75,7 +110,7 @@ Read every test file. Answer:
 
 ### Step 4: Read the Specifications
 
-Read every specification, architectural document, and design decision file. These are the source of truth for functional tests. Answer:
+Read every specification file you discovered in Step 1. These are the source of truth for functional tests. Answer:
 
 - What does the spec say each module should produce?
 - What specific properties, formats, or values does the spec guarantee?

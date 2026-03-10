@@ -38,7 +38,10 @@ def _competition(raw: dict[str, Any]) -> dict[str, Any]:
 
 
 def _venue_location(raw: dict[str, Any]) -> str | None:
-    venue = raw.get("gameInfo", {}).get("venue", {})
+    game_info = raw.get("gameInfo", {})
+    if not isinstance(game_info, dict):
+        return None
+    venue = game_info.get("venue", {})
     if not isinstance(venue, dict):
         return None
     bits: list[str] = []

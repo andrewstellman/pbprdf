@@ -34,7 +34,7 @@ These definitions are used consistently throughout this playbook:
 
 - **Functional testing** — Verify the product meets its functional requirements. Given specific input, does the code produce the output the specs say it should? Functional tests are automated and executable.
 - **Regression testing** — Verify that previously working functionality still works after changes. Regression tests lock in known-correct behavior so that future changes don't silently break it. Every functional test becomes a regression test once it passes.
-- **Integration testing** — Verify that components work together, including end-to-end flows across module boundaries. Integration tests exercise the real pipeline, often with real or realistic data, and may involve external systems (databases, APIs, triplestores, etc.).
+- **Integration testing** — Verify that components work together, including end-to-end flows across module boundaries. Integration tests exercise the real pipeline, often with real or realistic data, and may involve external systems (databases, APIs, external services, etc.).
 - **Spec audit** — A static analysis where AI models read the code and compare it against written specifications, looking for divergence, missing features, undocumented behavior, and phantom specs. No code is executed. Valuable but distinct from testing.
 - **Acceptance testing** — Verify the system works for the end user's actual use case, under realistic conditions. Often manual or semi-automated.
 
@@ -127,14 +127,13 @@ This is the most important step. You are looking for defensive code patterns —
 
 ```bash
 # Find null/None guards
-grep -rn "is None" src/
-grep -rn "if not " src/
+grep -rn "null\|nil\|None\|undefined" src/
 
-# Find try/except blocks
-grep -rn "except" src/
+# Find try/catch/exception blocks
+grep -rn "catch\|except\|rescue" src/
 
 # Find normalization/sanitization functions
-grep -rn "def _" src/    # private helper functions are often defensive
+grep -rn "private\|internal\|def _\|function _" src/    # private helper functions are often defensive
 
 # Find sentinel value checks
 grep -rn "== 0" src/
@@ -163,20 +162,20 @@ Beyond grep, also look for:
 
 If the project has a schema validation layer (Pydantic models, JSON Schema, TypeScript interfaces, etc.), **read the schema definitions now** — before you write any tests. For every field you found a defensive pattern for in Step 5, record:
 
-- The field name and its schema type (e.g., `attendance: Optional[int]`)
-- What values the schema accepts (e.g., `int` or `None`)
-- What values the schema rejects (e.g., `str`, `dict`, `list`)
+- The field name and its schema type (e.g., `metadata: Optional[MetadataType]`)
+- What values the schema accepts (e.g., `MetadataType` object, `None`)
+- What values the schema rejects (e.g., `string`, `number`, `list`)
 
-You will need this in File 2 when writing mutation-based tests. If you skip this step, you will write mutations that the schema rejects before they reach the code you're trying to test — producing `ValidationError` failures instead of meaningful boundary tests.
+You will need this in File 2 when writing mutation-based tests. If you skip this step, you will write mutations that the schema rejects before they reach the code you're trying to test — producing validation errors instead of meaningful boundary tests.
 
 **Example mapping:**
 
 | Field | Schema Type | Accepts | Rejects |
 |-------|-----------|---------|---------|
-| `gameInfo` | `Optional[GameInfo]` | `GameInfo` dict, `None` | `str`, `int`, `list` |
-| `attendance` | `Optional[int]` | `int`, `None` | `str`, `dict` |
-| `officials` | `list[Official]` | list of `Official` dicts, `[]` | `[None, "x"]`, `None` |
-| `coordinate` | `Optional[dict]` | `{"x": int, "y": int}`, `None` | `"bad"`, `[1,2]` |
+| `metadata` | `Optional[MetadataObject]` | `MetadataObject`, `null` | `string`, `number`, `array` |
+| `count_field` | `Optional[integer]` | `integer`, `null` | `string`, `object` |
+| `child_list` | `array[ChildObject]` | array of objects, `[]` | `[null, "invalid"]`, `null` |
+| `optional_object` | `Optional[object]` | `{"key": value, ...}`, `null` | `"bad"`, `[1,2]` |
 
 When you get to writing boundary/negative tests, use the "Accepts" column to choose mutation values that reach the mapper.
 
@@ -291,15 +290,13 @@ Functional tests derived directly from the specifications. Each test should be t
 
 ### Minimum Thresholds
 
-**Do not stop at 5–10 tests.** A typical project with 3+ spec documents should produce:
+**Do not stop at 5–10 tests.** Calculate your minimum test count using this formula:
 
-- At least **one spec-derived test per major section** of each spec document
-- At least **one scenario test per QUALITY.md scenario** — exact 1:1 mapping, using matching names
-- At least **5 negative tests** that verify bad input is rejected or handled gracefully
-- At least **5 boundary tests** that verify behavior at edges (zero, empty, maximum, first, last, type boundaries)
-- At least **30% of tests should be cross-variant** if the project handles multiple input types (parametrized or looped across all variants)
+**Your minimum test count = (testable spec sections) + (QUALITY.md scenarios) + (defensive patterns from Step 5)**
 
-For a medium-sized project (5–15 source files), **target 35–50 functional tests.** If you've written fewer than 25, you've almost certainly missed spec requirements or skimmed the defensive code patterns. Count the defensive code patterns you found in Step 5 — each one should have at least one dedicated test.
+For example: 12 spec sections + 10 scenarios + 15 defensive patterns found = 37 tests minimum.
+
+For a medium-sized project (5–15 source files), this typically yields **35–50 functional tests.** If you've written fewer than your formula minimum, you've almost certainly missed spec requirements or skimmed the defensive code patterns. Count the defensive code patterns you found in Step 5 — each one should have at least one dedicated test.
 
 ### How to Write Spec-Derived Tests
 
@@ -313,15 +310,12 @@ For each requirement, write a test that:
 
 Example structure:
 
-```python
-class TestSpecRequirements:
-    """Tests derived from spec requirements.
+```
+# Pseudocode — adapt to your test framework (pytest, Jest, JUnit, etc.)
 
-    Each test references the specific spec section it verifies.
-    """
-
-    def test_requirement_from_spec_section_N(self, fixture):
-        """Spec: V2_ARCHITECTURE_SPEC.md Section N says X should produce Y."""
+TestSpecRequirements:
+    test_requirement_from_spec_section_N(fixture):
+        """Spec: [Document] Section N says X should produce Y."""
         result = process(fixture)
         # Assert the specific property the spec guarantees
         assert result.property == expected_value
@@ -334,37 +328,39 @@ class TestSpecRequirements:
 - **Robust** — It uses real data (fixtures from the actual system), not synthetic data
 - **Cross-variant** — If the project handles multiple input types, test all of them
 - **Regression-ready** — Once this test passes, any future change that breaks it is a regression
-- **Tests at the right layer** — Test the *behavior* you care about, not a side effect. If the requirement is "bad input doesn't produce wrong output," test the mapper output — don't just test that the schema validator rejects the input. Schema validation is an implementation detail; the requirement is about the output.
+- **Tests at the right layer** — Test the *behavior* you care about, not a side effect. If the requirement is "invalid data doesn't produce wrong output," test the pipeline output — don't just test that the schema validator rejects the input. Schema validation is an implementation detail; the requirement is about the output.
 
 ### Cross-Variant Testing Strategy
 
-If the project handles multiple input types (leagues, formats, locales, etc.), cross-variant coverage is where silent bugs hide. **At least 30% of your tests should exercise all variants**, not just one.
+If the project handles multiple input types (configurations, formats, locales, etc.), cross-variant coverage is where silent bugs hide. **At least 30% of your tests should exercise all variants**, not just one.
 
-**Use `@pytest.mark.parametrize` or fixture parametrization** to avoid duplicating test logic:
+**Rationale:** If a requirement applies to all variants, it should be tested on all variants. Testing on one variant and hoping it works on the others is a classic source of silent bugs.
 
-```python
-@pytest.mark.parametrize("graph,raw", [
-    ("nba_graph", "nba_raw"),
-    ("wnba_graph", "wnba_raw"),
-    ("ncaam_graph", "ncaam_raw"),
-    ("ncaaw_graph", "ncaaw_raw"),
-], indirect=True)
-def test_feature_works_across_all_variants(self, graph, raw):
-    """Spec: Feature X must work for all input variants."""
-    # Same assertion logic, different data
+**Use your framework's parametrization** to avoid duplicating test logic:
+
+```
+# Pseudocode — use your framework's parametrization
+# pytest: @pytest.mark.parametrize
+# Jest: test.each([...])
+# JUnit: @ParameterizedTest @MethodSource
+
+for each variant in [variant_a, variant_b, variant_c]:
+    test_feature_works(variant):
+        output = process(variant.input)
+        assert output has expected_property
 ```
 
-If `@pytest.mark.parametrize` doesn't fit your fixture pattern, loop explicitly:
+If parametrization doesn't fit your fixture pattern, loop explicitly:
 
-```python
-def test_feature_works_across_all_variants(self, nba_graph, wnba_graph, ncaam_graph, ncaaw_graph):
-    for graph in [nba_graph, wnba_graph, ncaam_graph, ncaaw_graph]:
+```
+def test_feature_works_across_all_variants(self, variant_a, variant_b, variant_c):
+    for variant in [variant_a, variant_b, variant_c]:
         # Assert the property holds for every variant
 ```
 
-**Which tests should be cross-variant?** Any test that verifies a property that *should* hold regardless of input type: entity identity, required properties, chain links, structural completeness, defensive handling. Only tests that verify variant-*specific* behavior (like "NBA has 4 quarters of 12 minutes") should be single-variant.
+**Which tests should be cross-variant?** Any test that verifies a property that *should* hold regardless of input type: entity identity, structural properties, required links, temporal fields, domain-specific semantics. Only tests that verify variant-*specific* behavior should be single-variant.
 
-**After writing all your tests, do a cross-variant audit.** Go through every test in `TestSpecRequirements` and ask: "Does this requirement apply to all input variants?" If yes and the test only uses one variant's fixture, convert it. Common candidates include: roster structure, player/team IDs, event time fields, play metadata, shot semantics, event chain links, win probability snapshots, and venue/officials. These are universal requirements — testing them on one variant and hoping the others work is exactly the kind of silent bug this playbook exists to prevent.
+**After writing all your tests, do a cross-variant audit.** Go through every test in `TestSpecRequirements` and ask: "Does this requirement apply to all input variants?" If yes and the test only uses one variant's fixture, convert it. Common candidates include: structural completeness, identity verification, required field presence, data relationships, semantic correctness, and integration points. These are universal requirements — testing them on one variant and hoping the others work is exactly the kind of silent bug this playbook exists to prevent.
 
 **Target:** Count your cross-variant tests (those that loop or parametrize over all variants) and divide by total tests. If the result is below 30%, convert more single-variant tests before you're done.
 
@@ -372,38 +368,38 @@ def test_feature_works_across_all_variants(self, nba_graph, wnba_graph, ncaam_gr
 
 These patterns look like tests but don't catch real bugs. **Do not write tests that do any of these:**
 
-- **`LIMIT 1` existence checks.** Finding one correct result doesn't mean all results are correct. If you need to check existence, also check count or verify the common case.
-- **Presence-only assertions.** Asserting `(entity, property, None) in graph` only proves the triple exists — not that the value is correct. Assert the actual value.
-- **Single-variant testing.** If the project handles 4 input types but you only test 1, you're leaving 75% of the behavior unverified. Use `@pytest.mark.parametrize` or loop over all variants.
-- **Positive-only testing.** You must test that bad input does NOT produce output. If sentinel coordinates should be dropped, assert the triple is absent. If unknown types should not be classified, assert every known type is absent.
-- **Incomplete negative assertions.** When testing that something is rejected, assert ALL consequences are absent — not just one. If an unrecognized play should have no play-specific properties, check for absence of type, `forTeam`, actor links, etc.
-- **Catching exceptions instead of checking output.** If a test does `try: process(bad_input); except SomeError: pass`, it's testing that the code *crashes in a specific way* — not that it *handles the input correctly*. The spec says "bad input should not produce bad output." Test the output, not the exception. Here's the pattern to avoid and the fix:
+- **Existence-only checks.** Finding one correct result doesn't mean all results are correct. If you need to check existence, also check count or verify the common case.
+- **Presence-only assertions.** Asserting a value is present only proves it exists — not that it's correct. Assert the actual value.
+- **Single-variant testing.** If the project handles multiple input types but you only test one, you're leaving coverage gaps unverified. Use parametrization or loop over all variants.
+- **Positive-only testing.** You must test that invalid input does NOT produce bad output. If invalid values should be dropped, assert the field is absent. If unknown types should not be classified, assert every expected type is absent.
+- **Incomplete negative assertions.** When testing that something is rejected, assert ALL consequences are absent — not just one. If unrecognized input should have no special properties, check for absence of type, related-entity links, role references, etc.
+- **Catching exceptions instead of checking output.** If a test does `try: process(bad_input); except Error: pass`, it's testing that the code *crashes in a specific way* — not that it *handles the input correctly*. The spec says "bad input should not produce bad output." Test the output, not the exception. Here's the pattern to avoid and the fix:
 
-```python
-# WRONG — tests the mechanism (Pydantic validation), not the requirement
-def test_bad_value_rejected(self, fixture):
-    fixture["field"] = "invalid"  # Schema rejects this before mapper runs!
+```
+# WRONG — tests the validation mechanism, not the requirement
+test_bad_value_rejected(fixture):
+    fixture.field = "invalid"  # Schema rejects this before processing!
     try:
         process(fixture)
-        assert False, "Expected ValidationError"
-    except ValidationError:
-        pass  # This tells you nothing about the output
+        fail("Expected validation error")
+    catch ValidationError:
+        pass  # Tells you nothing about the output
 
 # RIGHT — tests the requirement using a schema-valid mutation (see Step 5b)
-def test_bad_value_not_in_output(self, fixture):
-    fixture["field"] = None  # Schema accepts None for Optional[int]
-    graph = process(fixture)
-    assert (entity, property, None) not in graph  # Bad data is absent
-    assert any(graph.triples((None, RDF.type, ExpectedType)))  # Rest still works
+test_bad_value_not_in_output(fixture):
+    fixture.field = null  # Schema accepts null for optional fields
+    output = process(fixture)
+    assert output does not contain field_property  # Bad data is absent
+    assert output contains expected_type  # Rest still works
 ```
 
-The WRONG test fails with `ValidationError` because `"invalid"` isn't a valid type for the field. The RIGHT test uses `None` (which the schema accepts for `Optional` fields) so the mutation reaches the mapper. If someone later refactors the validation, the RIGHT test still catches bugs while the WRONG test breaks for no reason. **Always check your Step 5b schema map before choosing mutation values.**
+The WRONG test fails with a validation error because `"invalid"` isn't a valid type for the field. The RIGHT test uses `null` (which the schema accepts for `Optional` fields) so the mutation reaches the mapper. If someone later refactors the validation, the RIGHT test still catches bugs while the WRONG test breaks for no reason. **Always check your Step 5b schema map before choosing mutation values.**
 
 ### Fitness-to-Purpose Scenario Tests
 
 For **each** scenario in QUALITY.md that can be automated, write a test. This must be a 1:1 mapping — every scenario gets its own test, named to match the scenario.
 
-```python
+```
 class TestFitnessScenarios:
     """Tests for fitness-to-purpose scenarios from QUALITY.md.
 
@@ -422,9 +418,9 @@ class TestFitnessScenarios:
 
 ### Boundary and Negative Tests
 
-Write a dedicated test class for edge cases and error handling. **This class should be substantial** — aim for at least as many boundary/negative tests as you have scenario tests. Every defensive code pattern from Step 5 is a test candidate.
+Write a dedicated test class for edge cases and error handling. **This class should be substantial** — aim for at least as many boundary/negative tests as you have defensive patterns from Step 5.
 
-```python
+```
 class TestBoundariesAndEdgeCases:
     """Tests for boundary conditions, malformed input, and error handling.
 
@@ -437,32 +433,32 @@ class TestBoundariesAndEdgeCases:
         # Assert the system handles it gracefully (no crash, correct fallback)
 ```
 
-For every `try/except`, `if X is None`, or normalization function you found in Step 5, there should be at least one test that actually triggers that code path.
+For every null check, try/catch, or normalization function you found in Step 5, there should be at least one test that actually triggers that code path.
 
 **Critical: Use your Step 5b schema map when choosing mutation values.** Every mutation must produce a value the schema accepts — otherwise the test fails with a validation error instead of testing the defensive code you care about. Refer to the field type mapping you built in Step 5b. Use values from the "Accepts" column, never the "Rejects" column.
 
-For example, if you want to test that missing attendance doesn't produce a bad triple, don't set attendance to `"not-a-number"` (the schema rejects strings for `Optional[int]`). Set it to `None` (which the schema accepts) and verify the mapper produces no attendance triple. The test should verify the *output*, not provoke a schema crash.
+For example, if you want to test that missing fields don't produce bad output, don't set the field to an invalid type (the schema rejects it). Set it to `null` (which the schema accepts) and verify the mapper produces correct output without that field. The test should verify the *output*, not provoke a schema crash.
 
 **Systematic approach for finding boundary tests:** Walk each mapper module and list every guard clause, type check, and fallback. Then write tests for:
 
-- **Missing fields**: What if an optional field is absent? (Set to `None` or remove the key.)
-- **Wrong types**: What if a string field gets an int, or vice versa?
+- **Missing fields**: What if an optional field is absent? (Set to `null` or remove the key.)
+- **Wrong types**: What if a field of one type gets a different type?
 - **Empty values**: What if a list is empty? A string is empty? A dict has no keys?
 - **Boundary values**: Zero, negative, maximum, first element, last element.
 - **Cross-module boundaries**: What if Module A produces unusual but valid output — does Module B handle it?
 
 If you found 10+ defensive patterns in Step 5 but only wrote 4 boundary tests, go back and write more. The ratio of defensive patterns to boundary tests should be close to 1:1.
 
-**After writing all your tests, do a boundary audit.** List every `if X is None`, `isinstance()` check, `try/except`, and fallback default in the core mapper modules. Count them. Then count your boundary/negative tests. If the test count is less than 80% of the pattern count, you need more tests. For example, if you found 15 defensive patterns across the mapper modules, you should have at least 12 boundary/negative tests.
+**After writing all your tests, do a boundary audit.** List every null check, type check, try/catch, and fallback default in the core mapper modules. Count them. Then count your boundary/negative tests. If the test count is less than your defensive pattern count, you need more tests.
 
 ### Testing at the Right Layer
 
-A common mistake is testing an *implementation mechanism* instead of the *requirement*. For example, if the requirement is "invalid attendance values must not produce bad output," there are two ways to test this:
+A common mistake is testing an *implementation mechanism* instead of the *requirement*. For example, if the requirement is "invalid values must not produce bad output," there are two ways to test this:
 
-- **Wrong layer (testing the mechanism):** Assert that the Pydantic model raises `ValidationError` when given a bad value. This tests the validation *mechanism*, not the *requirement*. If someone later changes the validation approach (e.g., from Pydantic to a manual check), this test breaks even though the requirement is still met.
-- **Right layer (testing the requirement):** Feed the bad value through the full mapping pipeline and assert the output doesn't contain an attendance triple. This tests the *outcome* the requirement specifies.
+- **Wrong layer (testing the mechanism):** Assert that the schema validator rejects the bad value. This tests the validation *mechanism*, not the *requirement*. If someone later changes the validation approach, this test breaks even though the requirement is still met.
+- **Right layer (testing the requirement):** Feed a schema-valid bad value through the full mapping pipeline and assert the output doesn't contain bad data. This tests the *outcome* the requirement specifies.
 
-When writing tests, ask: "What does the *spec* say should happen?" The spec says "invalid data should not appear in output" — not "Pydantic should raise ValidationError." Test the spec, not the implementation.
+When writing tests, ask: "What does the *spec* say should happen?" The spec says "invalid data should not appear in output" — not "validation layer should reject it." Test the spec, not the implementation.
 
 **Exception:** When a spec explicitly mandates a specific mechanism (e.g., "must fail-fast at the schema layer"), testing that mechanism is appropriate. But this is rare — most specs describe outcomes, not mechanisms.
 
@@ -470,13 +466,18 @@ When writing tests, ask: "What does the *spec* say should happen?" The spec says
 
 These tests should run as part of the normal test suite:
 
-```bash
+```
 # Run all tests including functional tests
-pytest tests/ -v
+[your test runner] [test directory] --verbose
 
 # Run only functional tests
-pytest tests/test_functional.py -v
+[your test runner] [functional test file] --verbose
 ```
+
+Adapt the commands to your project's test framework. Examples:
+- pytest: `pytest tests/ -v` and `pytest tests/test_functional.py -v`
+- Jest: `npm test` and `npm test -- test_functional.js`
+- JUnit: `mvn test` and `mvn test -Dtest=TestFunctional`
 
 ---
 
@@ -550,7 +551,7 @@ Design checks that exercise the full pipeline end-to-end. Include:
 - **Output correctness** — Don't just check "output exists" — verify specific properties of the output.
 - **Component boundaries** — Does the output of module A correctly feed into module B?
 
-Where possible, encode integration checks as automated tests in a `test_integration.py` file so they can run with `pytest`. The Markdown protocol should describe both the automated tests and any manual verification steps that require external systems.
+Where possible, encode integration checks as automated tests in a `test_integration.py` file so they can run with your test runner. The Markdown protocol should describe both the automated tests and any manual verification steps that require external systems.
 
 #### Reporting Format
 Define a structured report format so results are comparable across runs. Include a summary table and a place for detailed findings.
@@ -597,9 +598,9 @@ Write a prompt that will be given identically to all three AI tools. It must inc
 #### Triage Process
 
 After all three models report, merge findings:
-- 🟢 Found by all three → highest confidence
-- 🟡 Found by two → high confidence
-- 🔴 Found by one → needs verification
+- Found by all three → highest confidence
+- Found by two → high confidence
+- Found by one → needs verification
 
 Categorize each finding:
 - **Spec bug** — Spec is wrong, code is fine → update spec
@@ -658,7 +659,7 @@ The data flow in one diagram or description. List each module with a one-line pu
 5–7 non-obvious decisions. These are the things an AI would "fix" if it didn't know the context. Example: "We use hash(id) not sequential index for seeding because sequential seeds create correlated random streams."
 
 #### Known Quirks / Gotchas (Bulleted)
-Things from external systems that surprised you. Example: "The API returns sentinel values (-2147483647) instead of null for missing coordinates."
+Things from external systems that surprised you. Example: "The API returns sentinel values for missing fields instead of null."
 
 #### Quality Docs Pointer
 Tell the agent where to find:
@@ -678,9 +679,9 @@ Tell the agent where to find:
 Before verifying, honestly assess your work against these benchmarks:
 
 **test_functional.py size check:**
-- Fewer than 20 tests → You almost certainly missed spec requirements. Go back to Step 4 and walk each spec section.
-- 20–30 tests → Acceptable for a small project. Review whether you tested negative cases and boundaries.
-- 30–50+ tests → This is where a thorough job lands for a medium-sized project. Aim here.
+- Fewer than your formula minimum → You almost certainly missed spec requirements. Go back to Step 4 and walk each spec section.
+- At your formula minimum → Review whether you tested negative cases and boundaries.
+- Well above your minimum → This is where a thorough job lands for a medium-sized project. Aim here.
 
 **Scenario coverage check:**
 - Count the scenarios in QUALITY.md. Count the `test_scenario_*` functions. The numbers must match exactly.
@@ -689,16 +690,16 @@ Before verifying, honestly assess your work against these benchmarks:
 - If the project handles N input variants, what percentage of tests exercise all N? **If less than 30%, you need more parametrized tests.** Count them explicitly: tests that loop or parametrize over all variants, divided by total tests. This is the most common gap.
 
 **Boundary and negative test check:**
-- How many tests verify that bad/missing/malformed input is handled correctly? **If fewer than 5 boundary tests and 5 negative tests, go back to Step 5** and count the defensive patterns you found. Each one is a test you haven't written yet.
+- How many tests verify that invalid/missing/malformed input is handled correctly? Count the defensive patterns from Step 5. Your boundary/negative test count should approach your defensive pattern count. If significantly lower, go back to Step 5 and identify the patterns you haven't tested.
 
 **Assertion depth check:**
-- Scan your assertions. How many are `assert X in Y` (presence) vs. `assert X == Y` (value)? If more than half are presence-only, strengthen them.
+- Scan your assertions. How many are presence checks vs. value checks? If more than half are presence-only, strengthen them.
 
 **Layer check:**
-- For each test, ask: "Am I testing the *requirement* or the *mechanism*?" If any test asserts that a specific exception type is raised rather than asserting the output is correct, reconsider whether you're testing at the right layer.
+- For each test, ask: "Am I testing the *requirement* or the *mechanism*?" If any test asserts that a specific error type is raised rather than asserting the output is correct, reconsider whether you're testing at the right layer.
 
 **Mutation validity check:**
-- For every test that mutates a fixture, verify the mutation value is in the "Accepts" column of your Step 5b schema map. If any mutation uses a type the schema rejects (e.g., setting an `Optional[int]` to a string), the test will fail with a validation error instead of testing the defensive code. Fix the mutation to use a schema-valid value like `None`, `0`, or `[]`.
+- For every test that mutates a fixture, verify the mutation value is in the "Accepts" column of your Step 5b schema map. If any mutation uses a type the schema rejects, the test will fail with a validation error instead of testing the defensive code. Fix the mutation to use a schema-valid value like `null`, `0`, or `[]`.
 
 ### Verify the Documentation
 
@@ -716,7 +717,7 @@ Before verifying, honestly assess your work against these benchmarks:
 
 6. **All existing tests still pass.** Your new files should not break anything.
 
-7. **`test_functional.py` passes.** Run it: `pytest tests/test_functional.py -v`. Every test should pass.
+7. **`test_functional.py` passes.** Run it with your test runner. Every test should pass.
 
 8. **Every QUALITY.md scenario has a named test.** For each fitness-to-purpose scenario N, there must be a test named `test_scenario_N_*` in `test_functional.py`. If the QUALITY.md has 10 scenarios, there must be at least 10 scenario tests. If a scenario can't be automated, it must be explicitly marked as requiring the Human Gate in QUALITY.md.
 
@@ -724,14 +725,14 @@ Before verifying, honestly assess your work against these benchmarks:
 
 10. **Tests are not theater.** For each test, ask: "If I deleted the function body being tested, would this test fail?" If the answer is no, rewrite the test. Specifically check:
     - Do any tests use `LIMIT 1` to find one example and call it done? If so, add a count or exhaustive check.
-    - Do any tests assert presence (`(s, p, None) in graph`) without checking the actual value? If so, check the value.
-    - Do any negative tests assert only one consequence of rejection? If so, assert all consequences (type absence, property absence, link absence).
+    - Do any tests assert presence without checking the actual value? If so, check the value.
+    - Do any negative tests assert only one consequence of rejection? If so, assert all consequences.
 
-11. **Cross-variant coverage exists.** If the project handles multiple input types/formats/leagues, at least 30% of tests should parametrize or loop across all variants. Count them explicitly. If you have 40 tests, at least 12 should be cross-variant.
+11. **Cross-variant coverage exists.** If the project handles multiple input types/formats/configurations, at least 30% of tests should parametrize or loop across all variants. Count them explicitly. If you have 40 tests, at least 12 should be cross-variant.
 
-12. **Negative and boundary tests exist.** There must be at least 5 tests that mutate input to trigger defensive code paths, and at least 5 tests that exercise boundary conditions. Count the defensive patterns from Step 5 — the number of boundary/negative tests should approach the number of patterns.
+12. **Negative and boundary tests exist.** Count the defensive patterns from Step 5. Your boundary/negative test count should be close to this number. If significantly lower, write more tests targeting the defensive patterns you haven't covered.
 
-13. **Tests verify outcomes, not mechanisms.** Scan each test for assertions about exception types (e.g., `except ValidationError`). If a test only checks that a specific exception is raised without also verifying the pipeline output, it's testing the mechanism, not the requirement. Rewrite it to test the outcome the spec requires.
+13. **Tests verify outcomes, not mechanisms.** Scan each test for assertions about error types. If a test only checks that a specific error is raised without also verifying the pipeline output, it's testing the mechanism, not the requirement. Rewrite it to test the outcome the spec requires.
 
 ---
 
@@ -739,7 +740,7 @@ Before verifying, honestly assess your work against these benchmarks:
 
 ### Automated Tests (Functional + Regression)
 ```bash
-pytest tests/ -v
+[your test runner] [test directory] --verbose
 ```
 Run every time. This is your automated safety net. Once a functional test passes, it becomes a regression test — any future change that breaks it is a regression.
 
@@ -763,7 +764,7 @@ Give to 3 independent AI tools. Merge findings. Triage. Convert confirmed findin
 
 ### The Workflow for a Typical Release
 
-1. **Run automated tests** — `pytest tests/ -v` (~1 min)
+1. **Run automated tests** — `[your test runner] [test directory]` (~1 min)
 2. **Code review** — 2+ AI tools review recent changes (~10 min)
 3. **Fix** — Write a fix spec, implement in batches, verify
 4. **Integration test** — Full pipeline tests (~15 min)

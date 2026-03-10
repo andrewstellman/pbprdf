@@ -1,36 +1,25 @@
-*.class
-*.log
-pbprdf.jar
+# Python cache/build artifacts
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
 
-# sbt specific
-.cache
-.history
-.lib/
-dist/*
-target/
-lib_managed/
-src_managed/
-project/boot/
-project/plugins/project/
-project/project/
-
-# Scala-IDE specific
-.scala_dependencies
-.worksheet
-/bin/
-
-# sbt-eclipse specific (Eclipse project files)
-.cache-main
-.cache-tests
-.classpath
-.project
-.settings/
-
-# data folders
-data/
-tmp/
-logs/
+# Runtime cache; keep directory only
+data/raw/*
+!data/raw/.gitkeep
 
 # MacOS
 .DS_Store
 
+# IDE
+.vscode/
+.idea/
+
+# Claude session data
+.claude/

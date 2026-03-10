@@ -1,0 +1,452 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pbprdf: <http://stellman-greene.com/pbprdf#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+pbprdf:EndOfGame a owl:Class ;
+    rdfs:label "EndOfGame" .
+
+pbprdf:EndOfPeriod a owl:Class ;
+    rdfs:label "EndOfPeriod" .
+
+pbprdf:FiveSecondViolation a owl:Class ;
+    rdfs:label "FiveSecondViolation" .
+
+pbprdf:awayScore a owl:DatatypeProperty ;
+    rdfs:label "awayScore" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:int .
+
+pbprdf:awayTeam a owl:ObjectProperty ;
+    rdfs:label "awayTeam" ;
+    rdfs:domain pbprdf:Game ;
+    rdfs:range pbprdf:Team .
+
+pbprdf:coordinateX a owl:DatatypeProperty ;
+    rdfs:label "coordinateX" ;
+    rdfs:domain pbprdf:CourtCoordinate ;
+    rdfs:range xsd:int .
+
+pbprdf:coordinateY a owl:DatatypeProperty ;
+    rdfs:label "coordinateY" ;
+    rdfs:domain pbprdf:CourtCoordinate ;
+    rdfs:range xsd:int .
+
+pbprdf:espnAthleteId a owl:DatatypeProperty ;
+    rdfs:label "espnAthleteId" ;
+    rdfs:domain pbprdf:Player ;
+    rdfs:range xsd:string .
+
+pbprdf:espnEventId a owl:DatatypeProperty ;
+    rdfs:label "espnEventId" ;
+    rdfs:domain pbprdf:Game ;
+    rdfs:range xsd:string .
+
+pbprdf:espnPlayId a owl:DatatypeProperty ;
+    rdfs:label "espnPlayId" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:string .
+
+pbprdf:espnSequenceNumber a owl:DatatypeProperty ;
+    rdfs:label "espnSequenceNumber" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:string .
+
+pbprdf:espnTeamId a owl:DatatypeProperty ;
+    rdfs:label "espnTeamId" ;
+    rdfs:domain pbprdf:Team ;
+    rdfs:range xsd:string .
+
+pbprdf:eventNumber a owl:DatatypeProperty ;
+    rdfs:label "eventNumber" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:int .
+
+pbprdf:forTeam a owl:ObjectProperty ;
+    rdfs:label "forTeam" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range pbprdf:Team .
+
+pbprdf:foulCommittedBy a owl:ObjectProperty ;
+    rdfs:label "foulCommittedBy" ;
+    rdfs:domain pbprdf:Foul ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:foulDrawnBy a owl:ObjectProperty ;
+    rdfs:label "foulDrawnBy" ;
+    rdfs:domain pbprdf:Foul ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:gameLocation a owl:DatatypeProperty ;
+    rdfs:label "gameLocation" ;
+    rdfs:domain pbprdf:Game ;
+    rdfs:range xsd:string .
+
+pbprdf:gameTime a owl:DatatypeProperty ;
+    rdfs:label "gameTime" ;
+    rdfs:domain pbprdf:Game ;
+    rdfs:range xsd:dateTime .
+
+pbprdf:hasAwayTeamRoster a owl:ObjectProperty ;
+    rdfs:label "hasAwayTeamRoster" ;
+    rdfs:domain pbprdf:Game ;
+    rdfs:range pbprdf:Roster .
+
+pbprdf:hasCoordinate a owl:ObjectProperty ;
+    rdfs:label "hasCoordinate" ;
+    rdfs:domain pbprdf:Play ;
+    rdfs:range pbprdf:CourtCoordinate .
+
+pbprdf:hasGameFormat a owl:ObjectProperty ;
+    rdfs:label "hasGameFormat" ;
+    rdfs:domain pbprdf:Game ;
+    rdfs:range pbprdf:GameFormat .
+
+pbprdf:hasHomeTeamRoster a owl:ObjectProperty ;
+    rdfs:label "hasHomeTeamRoster" ;
+    rdfs:domain pbprdf:Game ;
+    rdfs:range pbprdf:Roster .
+
+pbprdf:hasPlayType a owl:ObjectProperty ;
+    rdfs:label "hasPlayType" ;
+    rdfs:domain pbprdf:Play ;
+    rdfs:range pbprdf:PlayType .
+
+pbprdf:hasPlayer a owl:ObjectProperty ;
+    rdfs:label "hasPlayer" ;
+    rdfs:domain pbprdf:Roster ;
+    rdfs:range pbprdf:Player .
+
+pbprdf:homeScore a owl:DatatypeProperty ;
+    rdfs:label "homeScore" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:int .
+
+pbprdf:homeTeam a owl:ObjectProperty ;
+    rdfs:label "homeTeam" ;
+    rdfs:domain pbprdf:Game ;
+    rdfs:range pbprdf:Team .
+
+pbprdf:inGame a owl:ObjectProperty ;
+    rdfs:label "inGame" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range pbprdf:Game .
+
+pbprdf:isCharge a owl:DatatypeProperty ;
+    rdfs:label "isCharge" ;
+    rdfs:domain pbprdf:Foul ;
+    rdfs:range xsd:boolean .
+
+pbprdf:isDelayOfGame a owl:DatatypeProperty ;
+    rdfs:label "isDelayOfGame" ;
+    rdfs:domain pbprdf:TechnicalFoul ;
+    rdfs:range xsd:boolean .
+
+pbprdf:isLooseBallFoul a owl:DatatypeProperty ;
+    rdfs:label "isLooseBallFoul" ;
+    rdfs:domain pbprdf:Foul ;
+    rdfs:range xsd:boolean .
+
+pbprdf:isOffensive a owl:DatatypeProperty ;
+    rdfs:label "isOffensive" ;
+    rdfs:domain pbprdf:Foul ;
+    rdfs:range xsd:boolean .
+
+pbprdf:isOfficial a owl:DatatypeProperty ;
+    rdfs:label "isOfficial" ;
+    rdfs:domain pbprdf:Timeout ;
+    rdfs:range xsd:boolean .
+
+pbprdf:isPersonalBlockingFoul a owl:DatatypeProperty ;
+    rdfs:label "isPersonalBlockingFoul" ;
+    rdfs:domain pbprdf:Foul ;
+    rdfs:range xsd:boolean .
+
+pbprdf:isScoringPlay a owl:DatatypeProperty ;
+    rdfs:label "isScoringPlay" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:boolean .
+
+pbprdf:isShootingFoul a owl:DatatypeProperty ;
+    rdfs:label "isShootingFoul" ;
+    rdfs:domain pbprdf:Foul ;
+    rdfs:range xsd:boolean .
+
+pbprdf:isShootingPlay a owl:DatatypeProperty ;
+    rdfs:label "isShootingPlay" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:boolean .
+
+pbprdf:isThreeSecond a owl:DatatypeProperty ;
+    rdfs:label "isThreeSecond" ;
+    rdfs:domain pbprdf:TechnicalFoul ;
+    rdfs:range xsd:boolean .
+
+pbprdf:jumpBallAwayPlayer a owl:ObjectProperty ;
+    rdfs:label "jumpBallAwayPlayer" ;
+    rdfs:domain pbprdf:JumpBall ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:jumpBallGainedPossession a owl:ObjectProperty ;
+    rdfs:label "jumpBallGainedPossession" ;
+    rdfs:domain pbprdf:JumpBall ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:jumpBallHomePlayer a owl:ObjectProperty ;
+    rdfs:label "jumpBallHomePlayer" ;
+    rdfs:domain pbprdf:JumpBall ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:leagueCode a owl:DatatypeProperty ;
+    rdfs:label "leagueCode" ;
+    rdfs:domain pbprdf:GameFormat ;
+    rdfs:range xsd:string .
+
+pbprdf:nextEvent a owl:ObjectProperty ;
+    rdfs:label "nextEvent" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range pbprdf:Event .
+
+pbprdf:overtimePeriodLengthMinutes a owl:DatatypeProperty ;
+    rdfs:label "overtimePeriodLengthMinutes" ;
+    rdfs:domain pbprdf:GameFormat ;
+    rdfs:range xsd:int .
+
+pbprdf:period a owl:DatatypeProperty ;
+    rdfs:label "period" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:int .
+
+pbprdf:playTypeId a owl:DatatypeProperty ;
+    rdfs:label "playTypeId" ;
+    rdfs:domain pbprdf:PlayType ;
+    rdfs:range xsd:string .
+
+pbprdf:playTypeText a owl:DatatypeProperty ;
+    rdfs:label "playTypeText" ;
+    rdfs:domain pbprdf:PlayType ;
+    rdfs:range xsd:string .
+
+pbprdf:playerEjected a owl:ObjectProperty ;
+    rdfs:label "playerEjected" ;
+    rdfs:domain pbprdf:Ejection ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:playerEntering a owl:ObjectProperty ;
+    rdfs:label "playerEntering" ;
+    rdfs:domain pbprdf:Enters ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:playerExiting a owl:ObjectProperty ;
+    rdfs:label "playerExiting" ;
+    rdfs:domain pbprdf:Enters ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:pointsAttempted a owl:DatatypeProperty ;
+    rdfs:label "pointsAttempted" ;
+    rdfs:domain pbprdf:Play ;
+    rdfs:range xsd:int .
+
+pbprdf:previousEvent a owl:ObjectProperty ;
+    rdfs:label "previousEvent" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range pbprdf:Event .
+
+pbprdf:reboundedBy a owl:ObjectProperty ;
+    rdfs:label "reboundedBy" ;
+    rdfs:domain pbprdf:Rebound ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:regulationPeriodCount a owl:DatatypeProperty ;
+    rdfs:label "regulationPeriodCount" ;
+    rdfs:domain pbprdf:GameFormat ;
+    rdfs:range xsd:int .
+
+pbprdf:regulationPeriodLengthMinutes a owl:DatatypeProperty ;
+    rdfs:label "regulationPeriodLengthMinutes" ;
+    rdfs:domain pbprdf:GameFormat ;
+    rdfs:range xsd:int .
+
+pbprdf:regulationPeriodType a owl:DatatypeProperty ;
+    rdfs:label "regulationPeriodType" ;
+    rdfs:domain pbprdf:GameFormat ;
+    rdfs:range xsd:string .
+
+pbprdf:rosterTeam a owl:ObjectProperty ;
+    rdfs:label "rosterTeam" ;
+    rdfs:domain pbprdf:Roster ;
+    rdfs:range pbprdf:Team .
+
+pbprdf:scoreValue a owl:DatatypeProperty ;
+    rdfs:label "scoreValue" ;
+    rdfs:domain pbprdf:Play ;
+    rdfs:range xsd:int .
+
+pbprdf:secondsIntoGame a owl:DatatypeProperty ;
+    rdfs:label "secondsIntoGame" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:int .
+
+pbprdf:secondsLeftInPeriod a owl:DatatypeProperty ;
+    rdfs:label "secondsLeftInPeriod" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:int .
+
+pbprdf:secondsSincePreviousEvent a owl:DatatypeProperty ;
+    rdfs:label "secondsSincePreviousEvent" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:int .
+
+pbprdf:secondsUntilNextEvent a owl:DatatypeProperty ;
+    rdfs:label "secondsUntilNextEvent" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:int .
+
+pbprdf:shortDescription a owl:DatatypeProperty ;
+    rdfs:label "shortDescription" ;
+    rdfs:domain pbprdf:Play ;
+    rdfs:range xsd:string .
+
+pbprdf:shotAssistedBy a owl:ObjectProperty ;
+    rdfs:label "shotAssistedBy" ;
+    rdfs:domain pbprdf:Shot ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:shotBlockedBy a owl:ObjectProperty ;
+    rdfs:label "shotBlockedBy" ;
+    rdfs:domain pbprdf:Block ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:shotBy a owl:ObjectProperty ;
+    rdfs:label "shotBy" ;
+    rdfs:domain pbprdf:Shot ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:shotMade a owl:DatatypeProperty ;
+    rdfs:label "shotMade" ;
+    rdfs:domain pbprdf:Shot ;
+    rdfs:range xsd:boolean .
+
+pbprdf:shotPoints a owl:DatatypeProperty ;
+    rdfs:label "shotPoints" ;
+    rdfs:domain pbprdf:Shot ;
+    rdfs:range xsd:int .
+
+pbprdf:shotType a owl:DatatypeProperty ;
+    rdfs:label "shotType" ;
+    rdfs:domain pbprdf:Shot ;
+    rdfs:range xsd:string .
+
+pbprdf:stolenBy a owl:ObjectProperty ;
+    rdfs:label "stolenBy" ;
+    rdfs:domain pbprdf:Turnover ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:technicalFoulNumber a owl:DatatypeProperty ;
+    rdfs:label "technicalFoulNumber" ;
+    rdfs:domain pbprdf:TechnicalFoul ;
+    rdfs:range xsd:int .
+
+pbprdf:time a owl:DatatypeProperty ;
+    rdfs:label "time" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:string .
+
+pbprdf:timeoutDuration a owl:DatatypeProperty ;
+    rdfs:label "timeoutDuration" ;
+    rdfs:domain pbprdf:Timeout ;
+    rdfs:range xsd:string .
+
+pbprdf:turnedOverBy a owl:ObjectProperty ;
+    rdfs:label "turnedOverBy" ;
+    rdfs:domain pbprdf:Turnover ;
+    rdfs:range pbprdf:Player ;
+    rdfs:subPropertyOf pbprdf:involvedPlayer .
+
+pbprdf:turnoverType a owl:DatatypeProperty ;
+    rdfs:label "turnoverType" ;
+    rdfs:domain pbprdf:Turnover ;
+    rdfs:range xsd:string .
+
+pbprdf:wallclockTime a owl:DatatypeProperty ;
+    rdfs:label "wallclockTime" ;
+    rdfs:domain pbprdf:Event ;
+    rdfs:range xsd:dateTime .
+
+pbprdf:Block a owl:Class ;
+    rdfs:label "Block" ;
+    rdfs:subClassOf pbprdf:Shot .
+
+pbprdf:Ejection a owl:Class ;
+    rdfs:label "Ejection" .
+
+pbprdf:Rebound a owl:Class ;
+    rdfs:label "Rebound" .
+
+pbprdf:Enters a owl:Class ;
+    rdfs:label "Enters" .
+
+pbprdf:Timeout a owl:Class ;
+    rdfs:label "Timeout" .
+
+pbprdf:CourtCoordinate a owl:Class ;
+    rdfs:label "CourtCoordinate" .
+
+pbprdf:JumpBall a owl:Class ;
+    rdfs:label "JumpBall" .
+
+pbprdf:PlayType a owl:Class ;
+    rdfs:label "PlayType" .
+
+pbprdf:TechnicalFoul a owl:Class ;
+    rdfs:label "TechnicalFoul" .
+
+pbprdf:Turnover a owl:Class ;
+    rdfs:label "Turnover" .
+
+pbprdf:Roster a owl:Class ;
+    rdfs:label "Roster" .
+
+pbprdf:Team a owl:Class ;
+    rdfs:label "Team" .
+
+pbprdf:GameFormat a owl:Class ;
+    rdfs:label "GameFormat" .
+
+pbprdf:Play a owl:Class ;
+    rdfs:label "Play" ;
+    rdfs:subClassOf pbprdf:Event .
+
+pbprdf:Shot a owl:Class ;
+    rdfs:label "Shot" .
+
+pbprdf:Foul a owl:Class ;
+    rdfs:label "Foul" .
+
+pbprdf:Game a owl:Class ;
+    rdfs:label "Game" .
+
+pbprdf:involvedPlayer a owl:ObjectProperty ;
+    rdfs:label "involvedPlayer" ;
+    rdfs:domain pbprdf:Play ;
+    rdfs:range pbprdf:Player .
+
+pbprdf:Player a owl:Class ;
+    rdfs:label "Player" .
+
+pbprdf:Event a owl:Class ;
+    rdfs:label "Event" .
+

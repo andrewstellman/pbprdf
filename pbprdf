@@ -1,6 +1,0 @@
-#!/bin/sh
-
-JAVA_OPT="-Xms2G -Xmx8G"
-
-java $JAVA_OPT -jar pbprdf.jar $*
-

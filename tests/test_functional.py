@@ -212,6 +212,65 @@ class TestSpecRequirements:
         assert (PBPRDF.homeWinProbability, RDF.type, OWL.DatatypeProperty) in graph
         assert (PBPRDF.snapshotForPlay, RDF.type, OWL.ObjectProperty) in graph
 
+    def test_spec_game_format_has_league_code_for_all_variants(self, nba_graph, wnba_graph, ncaam_graph, ncaaw_graph):
+        """Spec: GameFormat nodes include leagueCode for all supported leagues."""
+        expected_codes = {"NBA", "WNBA", "NCAAM", "NCAAW"}
+        seen: set[str] = set()
+        for graph in [nba_graph, wnba_graph, ncaam_graph, ncaaw_graph]:
+            fmt = next(graph.subjects(RDF.type, PBPRDF.GameFormat))
+            seen.add(str(next(graph.objects(fmt, PBPRDF.leagueCode))))
+        assert seen == expected_codes
+
+    def test_spec_v1_game_location_compatibility_retained(self, nba_graph):
+        """Spec: V1-compatible gameLocation flat string remains available."""
+        game = next(nba_graph.subjects(RDF.type, PBPRDF.Game))
+        location = str(next(nba_graph.objects(game, PBPRDF.gameLocation)))
+        assert location
+        assert "," in location
+
+    def test_spec_involved_player_superproperty_materialized(self, nba_graph):
+        """Spec: role properties are also materialized as involvedPlayer links."""
+        count = _count(
+            nba_graph,
+            """
+            PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
+            SELECT (COUNT(?play) AS ?c) WHERE {
+              ?play pbprdf:shotBy ?p ;
+                    pbprdf:involvedPlayer ?p .
+            }
+            """,
+        )
+        assert count > 50
+
+    def test_spec_structured_play_type_nodes_have_required_fields(self, nba_graph):
+        """Spec: hasPlayType links include both playTypeId and playTypeText."""
+        count = _count(
+            nba_graph,
+            """
+            PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
+            SELECT (COUNT(?play) AS ?c) WHERE {
+              ?play pbprdf:hasPlayType ?t .
+              ?t pbprdf:playTypeId ?id ;
+                 pbprdf:playTypeText ?text .
+            }
+            """,
+        )
+        assert count > 300
+
+    def test_spec_win_probability_includes_tie_probability(self, nba_graph):
+        """Spec: win probability snapshots include tieProbability field."""
+        count = _count(
+            nba_graph,
+            """
+            PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
+            SELECT (COUNT(?snap) AS ?c) WHERE {
+              ?snap a pbprdf:WinProbabilitySnapshot ;
+                    pbprdf:tieProbability ?tp .
+            }
+            """,
+        )
+        assert count > 100
+
 
 class TestFitnessScenarios:
     """1:1 automated tests for QUALITY.md scenarios."""
@@ -380,3 +439,56 @@ class TestBoundariesAndEdgeCases:
         for row in rows:
             prob = float(row[0])
             assert 0.0 <= prob <= 1.0
+
+    def test_negative_unknown_team_id_does_not_emit_for_team(self, nba_raw):
+        raw = copy.deepcopy(nba_raw)
+        raw["plays"][0]["team"] = {"id": "NON_EXISTENT_TEAM"}
+        graph = map_game_json(raw)
+        event = _first_play_iri(raw)
+        assert (event, PBPRDF.forTeam, None) not in graph
+
+    def test_negative_unknown_actor_id_is_still_typed_player(self, nba_raw):
+        raw = copy.deepcopy(nba_raw)
+        unknown_id = "999999999"
+        raw["plays"][0]["participants"] = [{"athlete": {"id": unknown_id}, "type": "shooter"}]
+        graph = map_game_json(raw)
+        count = _count(
+            graph,
+            f"""
+            PREFIX pbprdf: <http://stellman-greene.com/pbprdf#>
+            SELECT (COUNT(?p) AS ?c) WHERE {{
+              ?p a pbprdf:Player ;
+                 pbprdf:espnAthleteId "{unknown_id}" .
+            }}
+            """,
+        )
+        assert count == 1
+
+    def test_boundary_missing_format_uses_default_period_lengths(self, nba_raw):
+        raw = copy.deepcopy(nba_raw)
+        raw["format"] = None
+        graph = map_game_json(raw)
+        fmt = next(graph.subjects(RDF.type, PBPRDF.GameFormat))
+        assert int(next(graph.objects(fmt, PBPRDF.regulationPeriodCount))) == 4
+        assert int(next(graph.objects(fmt, PBPRDF.regulationPeriodLengthMinutes))) == 12
+        assert int(next(graph.objects(fmt, PBPRDF.overtimePeriodLengthMinutes))) == 5
+
+    def test_boundary_invalid_format_values_fallback_to_defaults(self, nba_raw):
+        raw = copy.deepcopy(nba_raw)
+        raw["format"]["regulation"]["periods"] = "oops"
+        raw["format"]["regulation"]["clock"] = "nope"
+        raw["format"]["overtime"]["clock"] = "bad"
+        try:
+            map_game_json(raw)
+            assert False, "Expected schema validation failure for invalid format values"
+        except ValidationError:
+            pass
+
+    def test_boundary_overtime_seconds_uses_ot_clock(self, nba_raw):
+        raw = copy.deepcopy(nba_raw)
+        raw["plays"][0]["period"]["number"] = 5
+        raw["plays"][0]["clock"]["displayValue"] = "4:00"
+        graph = map_game_json(raw)
+        event = _first_play_iri(raw)
+        assert int(next(graph.objects(event, PBPRDF.secondsLeftInPeriod))) == 240
+        assert int(next(graph.objects(event, PBPRDF.secondsIntoGame))) == 2940

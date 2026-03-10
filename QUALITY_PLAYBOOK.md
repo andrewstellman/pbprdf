@@ -24,7 +24,7 @@ Read @QUALITY_PLAYBOOK.md and execute the integration tests.
 
 The playbook will guide you through exploring the codebase, finding specifications, and generating all deliverables. You do not need to provide additional context — the playbook tells you how to discover everything you need from the project folder.
 
-**If the quality infrastructure already exists** (i.e., `tests/QUALITY.md`, `tests/test_functional.py`, etc. are already present), do not regenerate from scratch. Instead, read the existing files, understand what's there, and update or extend them based on the current state of the codebase and specs.
+**If the quality infrastructure already exists** (i.e., `tests/QUALITY.md`, `tests/test_functional.py`, etc. are already present), read the existing files first, then **evaluate them against the self-check benchmarks** in the "Did You Go Deep Enough?" section below. If the existing tests fall short on any benchmark (test count, cross-variant coverage, boundary/negative count, layer correctness, assertion depth), add or rewrite tests until all benchmarks pass. Do not assume existing files are complete — treat them as a starting point that may need significant expansion.
 
 ---
 

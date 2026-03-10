@@ -63,9 +63,5 @@ Modules:
 
 ## Quality Docs
 
-- Quality constitution and scenarios: `tests/QUALITY.md`
-- Functional/regression safety net: `tests/test_functional.py`
-- Code review protocol: `tests/RUN_CODE_REVIEW.md`
-- Integration test protocol: `tests/RUN_INTEGRATION_TESTS.md`
-- Spec audit protocol: `tests/RUN_SPEC_AUDIT.md`
+- Quality playbook (generates quality infrastructure): `QUALITY_PLAYBOOK.md`
 - Intent/spec documents: `specs/V2_ARCHITECTURE_SPEC.md`, `specs/V2_TARGET_ONTOLOGY_DELTA.md`, `specs/V1_SPEC.md`, `specs/CURSOR_PHASE2_TRIPLESTORE.md`

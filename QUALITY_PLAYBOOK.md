@@ -159,6 +159,27 @@ Beyond grep, also look for:
 
 **Minimum bar:** You should find at least 2–3 defensive patterns **per source file** in the core logic modules. If you're finding fewer, you're skimming — read the function bodies, not just the signatures.
 
+### Step 5b: Map the Schema Types for Mutation-Sensitive Fields
+
+If the project has a schema validation layer (Pydantic models, JSON Schema, TypeScript interfaces, etc.), **read the schema definitions now** — before you write any tests. For every field you found a defensive pattern for in Step 5, record:
+
+- The field name and its schema type (e.g., `attendance: Optional[int]`)
+- What values the schema accepts (e.g., `int` or `None`)
+- What values the schema rejects (e.g., `str`, `dict`, `list`)
+
+You will need this in File 2 when writing mutation-based tests. If you skip this step, you will write mutations that the schema rejects before they reach the code you're trying to test — producing `ValidationError` failures instead of meaningful boundary tests.
+
+**Example mapping:**
+
+| Field | Schema Type | Accepts | Rejects |
+|-------|-----------|---------|---------|
+| `gameInfo` | `Optional[GameInfo]` | `GameInfo` dict, `None` | `str`, `int`, `list` |
+| `attendance` | `Optional[int]` | `int`, `None` | `str`, `dict` |
+| `officials` | `list[Official]` | list of `Official` dicts, `[]` | `[None, "x"]`, `None` |
+| `coordinate` | `Optional[dict]` | `{"x": int, "y": int}`, `None` | `"bad"`, `[1,2]` |
+
+When you get to writing boundary/negative tests, use the "Accepts" column to choose mutation values that reach the mapper.
+
 ### Step 6: Identify the Project's Specific Quality Risks
 
 Every project has a different failure profile. Ask:
@@ -361,22 +382,22 @@ These patterns look like tests but don't catch real bugs. **Do not write tests t
 ```python
 # WRONG — tests the mechanism (Pydantic validation), not the requirement
 def test_bad_value_rejected(self, fixture):
-    fixture["field"] = "invalid"
+    fixture["field"] = "invalid"  # Schema rejects this before mapper runs!
     try:
         process(fixture)
         assert False, "Expected ValidationError"
     except ValidationError:
         pass  # This tells you nothing about the output
 
-# RIGHT — tests the requirement (bad data absent from output)
+# RIGHT — tests the requirement using a schema-valid mutation (see Step 5b)
 def test_bad_value_not_in_output(self, fixture):
-    fixture["field"] = "invalid"
+    fixture["field"] = None  # Schema accepts None for Optional[int]
     graph = process(fixture)
     assert (entity, property, None) not in graph  # Bad data is absent
     assert any(graph.triples((None, RDF.type, ExpectedType)))  # Rest still works
 ```
 
-If the code raises an exception before producing output, that's fine — the test still passes because the bad data never makes it to the output. But if someone later refactors the validation to silently skip instead of raising, the RIGHT test still catches bugs while the WRONG test breaks for no reason.
+The WRONG test fails with `ValidationError` because `"invalid"` isn't a valid type for the field. The RIGHT test uses `None` (which the schema accepts for `Optional` fields) so the mutation reaches the mapper. If someone later refactors the validation, the RIGHT test still catches bugs while the WRONG test breaks for no reason. **Always check your Step 5b schema map before choosing mutation values.**
 
 ### Fitness-to-Purpose Scenario Tests
 
@@ -418,13 +439,9 @@ class TestBoundariesAndEdgeCases:
 
 For every `try/except`, `if X is None`, or normalization function you found in Step 5, there should be at least one test that actually triggers that code path.
 
-**Critical: Mutations must survive the validation layer.** If the project uses schema validation (Pydantic, JSON Schema, TypeScript types, etc.), your fixture mutations must produce values that pass validation but still exercise the defensive code you're targeting. For example:
+**Critical: Use your Step 5b schema map when choosing mutation values.** Every mutation must produce a value the schema accepts — otherwise the test fails with a validation error instead of testing the defensive code you care about. Refer to the field type mapping you built in Step 5b. Use values from the "Accepts" column, never the "Rejects" column.
 
-- If attendance is typed `Optional[int]`, you can't set it to `"not-a-number"` — the schema rejects it before the mapper runs. Instead, set it to `None` (which the schema allows) and verify the mapper handles `None` correctly.
-- If gameInfo is typed `Optional[GameInfo]`, you can't set it to `"bad-data"` — the schema rejects non-dict values. Instead, set it to `None`.
-- If officials is typed `list[Official]`, you can't inject `[None, "x"]` — the schema rejects non-Official elements. Instead, use an empty list `[]`.
-
-**Read the model/schema definitions before writing mutations.** Check what types each field accepts (especially `Optional` fields, default values, and union types). Mutate to values that are *valid at the schema level* but exercise *mapper-level* defensive logic. If you don't do this, your tests will fail with schema validation errors instead of testing the behavior you care about.
+For example, if you want to test that missing attendance doesn't produce a bad triple, don't set attendance to `"not-a-number"` (the schema rejects strings for `Optional[int]`). Set it to `None` (which the schema accepts) and verify the mapper produces no attendance triple. The test should verify the *output*, not provoke a schema crash.
 
 **Systematic approach for finding boundary tests:** Walk each mapper module and list every guard clause, type check, and fallback. Then write tests for:
 
@@ -679,6 +696,9 @@ Before verifying, honestly assess your work against these benchmarks:
 
 **Layer check:**
 - For each test, ask: "Am I testing the *requirement* or the *mechanism*?" If any test asserts that a specific exception type is raised rather than asserting the output is correct, reconsider whether you're testing at the right layer.
+
+**Mutation validity check:**
+- For every test that mutates a fixture, verify the mutation value is in the "Accepts" column of your Step 5b schema map. If any mutation uses a type the schema rejects (e.g., setting an `Optional[int]` to a string), the test will fail with a validation error instead of testing the defensive code. Fix the mutation to use a schema-valid value like `None`, `0`, or `[]`.
 
 ### Verify the Documentation
 

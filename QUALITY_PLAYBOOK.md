@@ -610,6 +610,10 @@ When models disagree on factual claims: deploy a read-only probe (give one model
 
 This is the shortest file but arguably the most-read. Every AI session starts here.
 
+**If `AGENTS.md` already exists**, do not regenerate it from scratch. Instead, read the existing file and verify that the Quality Docs section accurately points to all generated quality files (`tests/QUALITY.md`, `tests/test_functional.py`, `tests/RUN_CODE_REVIEW.md`, `tests/RUN_INTEGRATION_TESTS.md`, `tests/RUN_SPEC_AUDIT.md`, and spec document locations). Update paths or add missing entries if needed, but preserve the existing content — it was likely curated by a human or a prior session.
+
+**If `AGENTS.md` does not exist**, create it with the following structure:
+
 ### Structure
 
 #### Paragraph 1: What Is This Project? (3–4 sentences)

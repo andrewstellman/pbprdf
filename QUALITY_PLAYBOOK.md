@@ -121,14 +121,43 @@ That last question is the most important. Every spec requirement without a corre
 
 ### Step 5: Find the Skeletons — Real Bugs and Design Decisions
 
-This is the most important step. Search for evidence of:
+This is the most important step. You are looking for defensive code patterns — each one is evidence of a past failure or a known risk. **Search systematically, not casually.**
+
+**Grep the codebase for defensive patterns.** Use these searches (adapt to the project's language):
+
+```bash
+# Find null/None guards
+grep -rn "is None" src/
+grep -rn "if not " src/
+
+# Find try/except blocks
+grep -rn "except" src/
+
+# Find normalization/sanitization functions
+grep -rn "def _" src/    # private helper functions are often defensive
+
+# Find sentinel value checks
+grep -rn "== 0" src/
+grep -rn "< 0" src/
+grep -rn "> " src/
+
+# Find fallback/default logic
+grep -rn "default" src/
+grep -rn "fallback" src/
+grep -rn "else:" src/
+```
+
+**For each match, ask:** "What failure does this prevent? What input would make this code path execute?" That's a fitness-to-purpose scenario.
+
+Beyond grep, also look for:
 
 - **Bugs that were fixed** — Look at git history, TODO comments, workarounds, defensive code that checks for things that "shouldn't happen."
-- **Edge cases handled** — Defensive `if None` checks, try/except blocks, data normalization functions. Each one is evidence of a past failure.
 - **Design decisions** — Comments explaining "why" not just "what." Configuration that could have been hardcoded but isn't. Abstractions that exist for a reason.
 - **External data quirks** — Any place the code normalizes, validates, or rejects input from an external system.
+- **Parsing functions** — Every parser (regex, string splitting, format detection) has failure modes. What happens with malformed input? Empty input? Unexpected types?
+- **Boundary conditions** — What happens at the edges? Zero values, empty strings, maximum ranges, first/last elements, type boundaries.
 
-These become your fitness-to-purpose scenarios. Every normalization function, every bounds check, every "skip if None" guard is a scar from a real problem. Document them.
+**Minimum bar:** You should find at least 2–3 defensive patterns **per source file** in the core logic modules. If you're finding fewer, you're skimming — read the function bodies, not just the signatures.
 
 ### Step 6: Identify the Project's Specific Quality Risks
 
@@ -204,7 +233,7 @@ This is the heart of the quality constitution. Write 5–10 scenarios, each foll
 4. **Git blame / commit messages** — "Fix crash when X is missing" → Scenario: X can be missing.
 5. **Comments explaining "why"** — "We use hash(id) not sequential index because..." → Scenario about correctness under that constraint.
 
-If you find fewer than 5 scenarios, you haven't looked hard enough. Every non-trivial codebase has at least 5 places where the code handles unexpected input or makes a non-obvious design choice.
+**Minimum bar:** You should find at least **2 scenarios per core module** (the modules identified in Step 2 as most complex or most fragile). If you find fewer than 8–10 scenarios total, you haven't looked hard enough. Every non-trivial codebase has at least 8 places where the code handles unexpected input or makes a non-obvious design choice. Grep for `if.*is None`, `try/except`, and private helper functions — each one is a candidate scenario.
 
 **Critical:** Each scenario's "How to verify" section must map to at least one automated test in `test_functional.py`. If a scenario can't be verified by an automated test, note why (it may require the Human Gate) — but most scenarios should be testable.
 
@@ -239,9 +268,23 @@ List things that require human judgment. These vary by project but typically inc
 
 Functional tests derived directly from the specifications. Each test should be traceable to a specific requirement in the spec or a fitness-to-purpose scenario in QUALITY.md.
 
+### Minimum Thresholds
+
+**Do not stop at 5–10 tests.** A typical project with 3+ spec documents should produce:
+
+- At least **one spec-derived test per major section** of each spec document
+- At least **one scenario test per QUALITY.md scenario** — exact 1:1 mapping, using matching names
+- At least **3 negative tests** that verify bad input is rejected or handled gracefully
+- At least **2 boundary tests** that verify behavior at edges (zero, empty, maximum, first, last)
+- At least **1 cross-variant test per major feature** if the project handles multiple input types
+
+For a medium-sized project (5–15 source files), expect 25–40+ functional tests. If you've written fewer than 20, you've probably missed spec requirements or skimmed the defensive code patterns.
+
 ### How to Write Spec-Derived Tests
 
-For each requirement you found in Step 4 ("Read the Specifications"), write a test that:
+**Walk each spec document section by section.** For each section, ask: "What testable requirement does this section state?" Then write a test. Don't cherry-pick — be systematic.
+
+For each requirement, write a test that:
 
 1. **Sets up** the input (load a fixture, create test data, configure the system)
 2. **Executes** the code under test (call the function, run the pipeline, make the request)
@@ -271,9 +314,19 @@ class TestSpecRequirements:
 - **Cross-variant** — If the project handles multiple input types, test all of them
 - **Regression-ready** — Once this test passes, any future change that breaks it is a regression
 
+### Common Anti-Patterns to Avoid
+
+These patterns look like tests but don't catch real bugs. **Do not write tests that do any of these:**
+
+- **`LIMIT 1` existence checks.** Finding one correct result doesn't mean all results are correct. If you need to check existence, also check count or verify the common case.
+- **Presence-only assertions.** Asserting `(entity, property, None) in graph` only proves the triple exists — not that the value is correct. Assert the actual value.
+- **Single-variant testing.** If the project handles 4 input types but you only test 1, you're leaving 75% of the behavior unverified. Use `@pytest.mark.parametrize` or loop over all variants.
+- **Positive-only testing.** You must test that bad input does NOT produce output. If sentinel coordinates should be dropped, assert the triple is absent. If unknown types should not be classified, assert every known type is absent.
+- **Incomplete negative assertions.** When testing that something is rejected, assert ALL consequences are absent — not just one. If an unrecognized play should have no play-specific properties, check for absence of type, `forTeam`, actor links, etc.
+
 ### Fitness-to-Purpose Scenario Tests
 
-For each scenario in QUALITY.md that can be automated, write a test:
+For **each** scenario in QUALITY.md that can be automated, write a test. This must be a 1:1 mapping — every scenario gets its own test, named to match the scenario.
 
 ```python
 class TestFitnessScenarios:
@@ -291,6 +344,25 @@ class TestFitnessScenarios:
         # Assert the fix is still in place
         assert condition_that_prevents_the_failure
 ```
+
+### Boundary and Negative Tests
+
+Write a dedicated test class for edge cases and error handling:
+
+```python
+class TestBoundariesAndEdgeCases:
+    """Tests for boundary conditions, malformed input, and error handling.
+
+    Each test targets a defensive code pattern found in Step 5.
+    """
+
+    def test_malformed_input_handled_gracefully(self, fixture):
+        """Defensive pattern: function_name() guards against X."""
+        # Mutate fixture to trigger the defensive code path
+        # Assert the system handles it gracefully (no crash, correct fallback)
+```
+
+For every `try/except`, `if X is None`, or normalization function you found in Step 5, there should be at least one test that actually triggers that code path.
 
 ### Running the Tests
 
@@ -495,6 +567,27 @@ Tell the agent where to find:
 
 ## After Creating All Files: Verification
 
+### Self-Check: Did You Go Deep Enough?
+
+Before verifying, honestly assess your work against these benchmarks:
+
+**test_functional.py size check:**
+- Fewer than 15 tests → You almost certainly missed spec requirements. Go back to Step 4 and walk each spec section.
+- 15–25 tests → Acceptable for a small project. Review whether you tested negative cases and boundaries.
+- 25–40+ tests → This is where a thorough job lands for a medium-sized project.
+
+**Scenario coverage check:**
+- Count the scenarios in QUALITY.md. Count the `test_scenario_*` functions. The numbers must match.
+
+**Cross-variant check:**
+- If the project handles N input variants, what percentage of tests exercise all N? If less than 30%, you need more parametrized tests.
+
+**Negative test check:**
+- How many tests verify that bad/missing/malformed input is handled correctly? If fewer than 3, you skipped the defensive code patterns from Step 5.
+
+**Assertion depth check:**
+- Scan your assertions. How many are `assert X in Y` (presence) vs. `assert X == Y` (value)? If more than half are presence-only, strengthen them.
+
 ### Verify the Documentation
 
 1. **QUALITY.md scenarios reference real code.** Every scenario should mention actual function names, file names, or patterns that exist in the codebase. Grep for them.
@@ -513,11 +606,18 @@ Tell the agent where to find:
 
 7. **`test_functional.py` passes.** Run it: `pytest tests/test_functional.py -v`. Every test should pass.
 
-8. **Every QUALITY.md scenario has a test.** For each fitness-to-purpose scenario, there should be at least one test in `test_functional.py` that would fail if the scenario regressed. If a scenario can't be automated, it should be explicitly marked as requiring the Human Gate.
+8. **Every QUALITY.md scenario has a named test.** For each fitness-to-purpose scenario N, there must be a test named `test_scenario_N_*` in `test_functional.py`. If the QUALITY.md has 10 scenarios, there must be at least 10 scenario tests. If a scenario can't be automated, it must be explicitly marked as requiring the Human Gate in QUALITY.md.
 
-9. **Every spec requirement has a test.** Review the specs and verify that key requirements are covered. 100% spec-to-test traceability isn't always practical, but high-risk requirements (identified in Step 6) must have tests.
+9. **Every spec section was considered.** Walk each spec document section by section. For each section, verify either (a) a test covers it, or (b) the section contains no testable requirements. If you find more than 3 testable spec sections without tests, add more tests.
 
-10. **Tests are not theater.** For each test, ask: "If I deleted the function body being tested, would this test fail?" If the answer is no, rewrite the test.
+10. **Tests are not theater.** For each test, ask: "If I deleted the function body being tested, would this test fail?" If the answer is no, rewrite the test. Specifically check:
+    - Do any tests use `LIMIT 1` to find one example and call it done? If so, add a count or exhaustive check.
+    - Do any tests assert presence (`(s, p, None) in graph`) without checking the actual value? If so, check the value.
+    - Do any negative tests assert only one consequence of rejection? If so, assert all consequences (type absence, property absence, link absence).
+
+11. **Cross-variant coverage exists.** If the project handles multiple input types/formats/leagues, at least 30% of tests should parametrize across all variants. Verify this by counting.
+
+12. **Negative and boundary tests exist.** There must be at least 3 tests that mutate input to trigger defensive code paths, and at least 2 tests that exercise boundary conditions. If they're missing, add them.
 
 ---
 

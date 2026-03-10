@@ -343,6 +343,10 @@ def test_feature_works_across_all_variants(self, nba_graph, wnba_graph, ncaam_gr
 
 **Which tests should be cross-variant?** Any test that verifies a property that *should* hold regardless of input type: entity identity, required properties, chain links, structural completeness, defensive handling. Only tests that verify variant-*specific* behavior (like "NBA has 4 quarters of 12 minutes") should be single-variant.
 
+**After writing all your tests, do a cross-variant audit.** Go through every test in `TestSpecRequirements` and ask: "Does this requirement apply to all input variants?" If yes and the test only uses one variant's fixture, convert it. Common candidates include: roster structure, player/team IDs, event time fields, play metadata, shot semantics, event chain links, win probability snapshots, and venue/officials. These are universal requirements — testing them on one variant and hoping the others work is exactly the kind of silent bug this playbook exists to prevent.
+
+**Target:** Count your cross-variant tests (those that loop or parametrize over all variants) and divide by total tests. If the result is below 30%, convert more single-variant tests before you're done.
+
 ### Common Anti-Patterns to Avoid
 
 These patterns look like tests but don't catch real bugs. **Do not write tests that do any of these:**
@@ -352,6 +356,27 @@ These patterns look like tests but don't catch real bugs. **Do not write tests t
 - **Single-variant testing.** If the project handles 4 input types but you only test 1, you're leaving 75% of the behavior unverified. Use `@pytest.mark.parametrize` or loop over all variants.
 - **Positive-only testing.** You must test that bad input does NOT produce output. If sentinel coordinates should be dropped, assert the triple is absent. If unknown types should not be classified, assert every known type is absent.
 - **Incomplete negative assertions.** When testing that something is rejected, assert ALL consequences are absent — not just one. If an unrecognized play should have no play-specific properties, check for absence of type, `forTeam`, actor links, etc.
+- **Catching exceptions instead of checking output.** If a test does `try: process(bad_input); except SomeError: pass`, it's testing that the code *crashes in a specific way* — not that it *handles the input correctly*. The spec says "bad input should not produce bad output." Test the output, not the exception. Here's the pattern to avoid and the fix:
+
+```python
+# WRONG — tests the mechanism (Pydantic validation), not the requirement
+def test_bad_value_rejected(self, fixture):
+    fixture["field"] = "invalid"
+    try:
+        process(fixture)
+        assert False, "Expected ValidationError"
+    except ValidationError:
+        pass  # This tells you nothing about the output
+
+# RIGHT — tests the requirement (bad data absent from output)
+def test_bad_value_not_in_output(self, fixture):
+    fixture["field"] = "invalid"
+    graph = process(fixture)
+    assert (entity, property, None) not in graph  # Bad data is absent
+    assert any(graph.triples((None, RDF.type, ExpectedType)))  # Rest still works
+```
+
+If the code raises an exception before producing output, that's fine — the test still passes because the bad data never makes it to the output. But if someone later refactors the validation to silently skip instead of raising, the RIGHT test still catches bugs while the WRONG test breaks for no reason.
 
 ### Fitness-to-Purpose Scenario Tests
 
@@ -402,6 +427,8 @@ For every `try/except`, `if X is None`, or normalization function you found in S
 - **Cross-module boundaries**: What if Module A produces unusual but valid output — does Module B handle it?
 
 If you found 10+ defensive patterns in Step 5 but only wrote 4 boundary tests, go back and write more. The ratio of defensive patterns to boundary tests should be close to 1:1.
+
+**After writing all your tests, do a boundary audit.** List every `if X is None`, `isinstance()` check, `try/except`, and fallback default in the core mapper modules. Count them. Then count your boundary/negative tests. If the test count is less than 80% of the pattern count, you need more tests. For example, if you found 15 defensive patterns across the mapper modules, you should have at least 12 boundary/negative tests.
 
 ### Testing at the Right Layer
 

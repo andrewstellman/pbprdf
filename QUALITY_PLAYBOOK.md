@@ -418,6 +418,14 @@ class TestBoundariesAndEdgeCases:
 
 For every `try/except`, `if X is None`, or normalization function you found in Step 5, there should be at least one test that actually triggers that code path.
 
+**Critical: Mutations must survive the validation layer.** If the project uses schema validation (Pydantic, JSON Schema, TypeScript types, etc.), your fixture mutations must produce values that pass validation but still exercise the defensive code you're targeting. For example:
+
+- If attendance is typed `Optional[int]`, you can't set it to `"not-a-number"` — the schema rejects it before the mapper runs. Instead, set it to `None` (which the schema allows) and verify the mapper handles `None` correctly.
+- If gameInfo is typed `Optional[GameInfo]`, you can't set it to `"bad-data"` — the schema rejects non-dict values. Instead, set it to `None`.
+- If officials is typed `list[Official]`, you can't inject `[None, "x"]` — the schema rejects non-Official elements. Instead, use an empty list `[]`.
+
+**Read the model/schema definitions before writing mutations.** Check what types each field accepts (especially `Optional` fields, default values, and union types). Mutate to values that are *valid at the schema level* but exercise *mapper-level* defensive logic. If you don't do this, your tests will fail with schema validation errors instead of testing the behavior you care about.
+
 **Systematic approach for finding boundary tests:** Walk each mapper module and list every guard clause, type check, and fallback. Then write tests for:
 
 - **Missing fields**: What if an optional field is absent? (Set to `None` or remove the key.)

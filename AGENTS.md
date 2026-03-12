@@ -63,7 +63,7 @@ Modules:
 
 ## Quality Docs
 
-- Quality playbook (generates quality infrastructure): `QUALITY_PLAYBOOK.md`
+- Quality playbook (generates quality infrastructure): `quality/QUALITY_PLAYBOOK.md`
 - Quality constitution and scenarios: `quality/QUALITY.md`
 - Functional/regression safety net: `quality/test_functional.py`
 - Code review protocol: `quality/RUN_CODE_REVIEW.md`

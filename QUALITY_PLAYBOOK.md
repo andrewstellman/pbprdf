@@ -24,7 +24,7 @@ Read @QUALITY_PLAYBOOK.md and execute the integration tests.
 
 The playbook will guide you through exploring the codebase, finding specifications, and generating all deliverables. You do not need to provide additional context — the playbook tells you how to discover everything you need from the project folder.
 
-**If the quality infrastructure already exists** (i.e., `tests/QUALITY.md`, `tests/test_functional.py`, etc. are already present), read the existing files first, then **evaluate them against the self-check benchmarks** in the "Did You Go Deep Enough?" section below. If the existing tests fall short on any benchmark (test count, cross-variant coverage, boundary/negative count, layer correctness, assertion depth), add or rewrite tests until all benchmarks pass. Do not assume existing files are complete — treat them as a starting point that may need significant expansion.
+**If the quality infrastructure already exists** (i.e., `quality/QUALITY.md`, `quality/test_functional.py`, etc. are already present), read the existing files first, then **evaluate them against the self-check benchmarks** in the "Did You Go Deep Enough?" section below. If the existing tests fall short on any benchmark (test count, cross-variant coverage, boundary/negative count, layer correctness, assertion depth), add or rewrite tests until all benchmarks pass. Do not assume existing files are complete — treat them as a starting point that may need significant expansion.
 
 ---
 
@@ -48,19 +48,21 @@ You will create six files that together form a repeatable quality system, plus a
 
 | File | What It Is | Executes Code? |
 |------|-----------|----------------|
-| `tests/QUALITY.md` | Quality constitution — coverage targets, fitness-to-purpose scenarios, testing discipline | No |
-| `tests/test_functional.py` | Automated functional tests derived from specifications | **Yes** |
-| `tests/RUN_CODE_REVIEW.md` | Code review protocol with guardrails that prevent hallucinated findings | No |
-| `tests/RUN_INTEGRATION_TESTS.md` | Integration test protocol — end-to-end pipeline across all variants | **Yes** |
-| `tests/RUN_SPEC_AUDIT.md` | Council of Three multi-model spec audit protocol | No |
+| `quality/QUALITY.md` | Quality constitution — coverage targets, fitness-to-purpose scenarios, testing discipline | No |
+| `quality/test_functional.py` | Automated functional tests derived from specifications | **Yes** |
+| `quality/RUN_CODE_REVIEW.md` | Code review protocol with guardrails that prevent hallucinated findings | No |
+| `quality/RUN_INTEGRATION_TESTS.md` | Integration test protocol — end-to-end pipeline across all variants | **Yes** |
+| `quality/RUN_SPEC_AUDIT.md` | Council of Three multi-model spec audit protocol | No |
 | `AGENTS.md` | Bootstrap context for any AI session working on this project | No |
 
 You will also create output directories:
-- `tests/code_reviews/`
-- `tests/spec_audits/`
-- `tests/results/`
+- `quality/code_reviews/`
+- `quality/spec_audits/`
+- `quality/results/`
 
 **The critical deliverable is `test_functional.py`.** The Markdown protocols are documentation for humans and AI agents. The functional tests are the automated safety net that runs every time.
+
+**Note:** The `quality/` folder is separate from the project's unit test folder. If the test framework requires configuration to discover tests here (e.g., a `conftest.py` for pytest, a `jest.config.js` section for Jest), create it. Reuse existing test fixtures from the project's test folder rather than duplicating them.
 
 ---
 
@@ -190,7 +192,7 @@ Every project has a different failure profile. Ask:
 
 ---
 
-## File 1: `tests/QUALITY.md` — Quality Constitution
+## File 1: `quality/QUALITY.md` — Quality Constitution
 
 This is the foundational document. It defines what "quality" means for this project and makes the bar explicit, persistent, and inherited by every AI session.
 
@@ -280,7 +282,7 @@ List things that require human judgment. These vary by project but typically inc
 
 ---
 
-## File 2: `tests/test_functional.py` — Automated Functional and Regression Tests
+## File 2: `quality/test_functional.py` — Automated Functional and Regression Tests
 
 **This is the most important deliverable.** The Markdown files are documentation. This file is the safety net.
 
@@ -475,13 +477,13 @@ These tests should run as part of the normal test suite:
 ```
 
 Adapt the commands to your project's test framework. Examples:
-- pytest: `pytest tests/ -v` and `pytest tests/test_functional.py -v`
+- pytest: `pytest quality/ -v` and `pytest quality/test_functional.py -v`
 - Jest: `npm test` and `npm test -- test_functional.js`
 - JUnit: `mvn test` and `mvn test -Dtest=TestFunctional`
 
 ---
 
-## File 3: `tests/RUN_CODE_REVIEW.md` — Code Review Protocol
+## File 3: `quality/RUN_CODE_REVIEW.md` — Code Review Protocol
 
 ### Structure
 
@@ -520,7 +522,7 @@ End with a summary: total by severity, files with no findings, overall assessmen
 
 ---
 
-## File 4: `tests/RUN_INTEGRATION_TESTS.md` — Integration Test Protocol
+## File 4: `quality/RUN_INTEGRATION_TESTS.md` — Integration Test Protocol
 
 Integration tests verify that components work together end-to-end. Unlike the functional tests in `test_functional.py` (which test individual requirements), integration tests exercise the full pipeline with real data across all variants.
 
@@ -558,7 +560,7 @@ Define a structured report format so results are comparable across runs. Include
 
 ---
 
-## File 5: `tests/RUN_SPEC_AUDIT.md` — Council of Three Spec Audit Protocol
+## File 5: `quality/RUN_SPEC_AUDIT.md` — Council of Three Spec Audit Protocol
 
 This is a static analysis protocol — AI models read the code and compare it to specifications. No code is executed. It catches a different class of problem than testing: spec-code divergence, undocumented features, phantom specs, and missing implementations.
 
@@ -628,7 +630,7 @@ When models disagree on factual claims: deploy a read-only probe (give one model
 
 This is the shortest file but arguably the most-read. Every AI session starts here.
 
-**If `AGENTS.md` already exists**, do not regenerate it from scratch. Instead, read the existing file and verify that the Quality Docs section accurately points to all generated quality files (`tests/QUALITY.md`, `tests/test_functional.py`, `tests/RUN_CODE_REVIEW.md`, `tests/RUN_INTEGRATION_TESTS.md`, `tests/RUN_SPEC_AUDIT.md`, and spec document locations). Update paths or add missing entries if needed, but preserve the existing content — it was likely curated by a human or a prior session.
+**If `AGENTS.md` already exists**, do not regenerate it from scratch. Instead, read the existing file and verify that the Quality Docs section accurately points to all generated quality files (`quality/QUALITY.md`, `quality/test_functional.py`, `quality/RUN_CODE_REVIEW.md`, `quality/RUN_INTEGRATION_TESTS.md`, `quality/RUN_SPEC_AUDIT.md`, and spec document locations). Update paths or add missing entries if needed, but preserve the existing content — it was likely curated by a human or a prior session.
 
 **If `AGENTS.md` does not exist**, create it with the following structure:
 
@@ -746,19 +748,19 @@ Run every time. This is your automated safety net. Once a functional test passes
 
 ### Code Review (Static)
 ```
-Read tests/RUN_CODE_REVIEW.md and perform a code review.
+Read quality/RUN_CODE_REVIEW.md and perform a code review.
 ```
 Give this to 2+ AI tools independently. Cross-reference findings. Run before releases and after significant changes.
 
 ### Integration Tests (Automated + Manual)
 ```
-Read tests/RUN_INTEGRATION_TESTS.md and run the full integration test suite.
+Read quality/RUN_INTEGRATION_TESTS.md and run the full integration test suite.
 ```
 Exercises the full pipeline end-to-end. Run before releases.
 
 ### Spec Audit — Council of Three (Static)
 ```
-Read tests/RUN_SPEC_AUDIT.md and perform a spec audit.
+Read quality/RUN_SPEC_AUDIT.md and perform a spec audit.
 ```
 Give to 3 independent AI tools. Merge findings. Triage. Convert confirmed findings into new functional tests. Run before major releases or after architectural changes. Budget 2+ hours.
 
